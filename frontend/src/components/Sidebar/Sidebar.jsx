@@ -1,13 +1,21 @@
 import { NavLink } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
 import styles from './Sidebar.module.css';
 
-const navItems = [
-  { to: '/', label: 'Dashboard' },
-  { to: '/profile', label: 'Profile' },
-  { to: '/change-password', label: 'Change Password' }
-];
-
 const Sidebar = () => {
+  const { permissions } = useAuth();
+  const navItems = [
+    { to: '/', label: 'Dashboard' },
+    ...(permissions.includes('driver_view') ? [{ to: '/drivers', label: 'Drivers' }] : []),
+    ...(permissions.includes('vehicle_view') ? [{ to: '/vehicles', label: 'Vehicles' }] : []),
+    ...(permissions.includes('customer_view') ? [{ to: '/customers', label: 'Customers' }] : []),
+    ...(permissions.includes('vehicle_assign')
+      ? [{ to: '/vehicle-assignments', label: 'Assignments' }]
+      : []),
+    { to: '/profile', label: 'Profile' },
+    { to: '/change-password', label: 'Change Password' }
+  ];
+
   return (
     <aside className={styles.sidebar}>
       <div className={styles.brand}>
@@ -32,8 +40,8 @@ const Sidebar = () => {
       </nav>
 
       <div className={styles.footerCard}>
-        <span>Phase 1 Ready</span>
-        <p>Authentication, RBAC, and admin foundation completed for future delivery modules.</p>
+        <span>Phase 4 Active</span>
+        <p>Customer master records now sit alongside fleet operations to prepare bookings, pricing, billing, and reporting.</p>
       </div>
     </aside>
   );

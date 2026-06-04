@@ -1,0 +1,304 @@
+.page {
+  display: grid;
+  gap: 20px;
+}
+
+.toolbar,
+.filterCard,
+.tableCard,
+.formCard,
+.errorBox {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(17, 51, 82, 0.08);
+}
+
+.toolbar {
+  padding: 28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  background:
+    radial-gradient(circle at top right, rgba(112, 255, 211, 0.22), transparent 30%),
+    linear-gradient(145deg, #15324e 0%, #1f6f78 100%);
+  color: #ffffff;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #b7ffdf;
+  margin-bottom: 8px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.pageCopy {
+  margin: 8px 0 0;
+  color: #5f7692;
+}
+
+.toolbar .pageCopy {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.primaryLink,
+.secondaryLink,
+.secondaryButton,
+.textButton,
+.deleteButton {
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font: inherit;
+}
+
+.primaryLink,
+.secondaryLink,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 14px;
+  padding: 0 18px;
+  font-weight: 600;
+}
+
+.primaryLink {
+  background: #b7ffdf;
+  color: #15324e;
+}
+
+.secondaryLink,
+.secondaryButton {
+  background: #edf8f7;
+  color: #173f4b;
+}
+
+.filterCard,
+.tableCard,
+.formCard {
+  padding: 24px;
+}
+
+.filterGrid,
+.formGrid,
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  color: #35516f;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea,
+.inlineSelect {
+  width: 100%;
+  border: 1px solid #d4e1ee;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #fbfdff;
+  color: #163558;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.filterActions,
+.pagination,
+.submitRow,
+.summaryActions,
+.linkGroup {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filterActions,
+.submitRow {
+  margin-top: 18px;
+}
+
+.statusText {
+  color: #3d5874;
+  font-size: 0.95rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1100px;
+}
+
+.table th,
+.table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e7eef5;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #67829d;
+}
+
+.badge {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.active,
+.verified,
+.available {
+  background: #daf4e6;
+  color: #177245;
+}
+
+.inactive,
+.pending,
+.assigned {
+  background: #edf2f7;
+  color: #587089;
+}
+
+.suspended,
+.rejected,
+.maintenance {
+  background: #fde4dd;
+  color: #b44a28;
+}
+
+.actionStack,
+.documentSummary,
+.documentList,
+.detailGrid,
+.assignmentList {
+  display: grid;
+  gap: 14px;
+}
+
+.actionStack {
+  justify-items: start;
+}
+
+.textLink,
+.textButton,
+.deleteButton {
+  padding: 0;
+  background: transparent;
+  color: #1b5f96;
+}
+
+.deleteButton {
+  color: #c3472e;
+}
+
+.pagination {
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+.paginationActions {
+  display: flex;
+  gap: 10px;
+}
+
+.errorBox {
+  padding: 16px 20px;
+  color: #b44a28;
+  background: #fff5f2;
+}
+
+.emptyState {
+  text-align: center;
+  color: #68809a;
+}
+
+.cardHeader h3,
+.cardHeader p {
+  margin: 0;
+}
+
+.cardHeader p {
+  margin-top: 8px;
+  color: #67829d;
+}
+
+.formShell {
+  display: grid;
+  gap: 20px;
+}
+
+.previewPanel,
+.inlinePreview {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.documentPreview {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 18px;
+  border: 1px solid #d8e3ef;
+}
+
+.documentRow,
+.summaryCard {
+  border: 1px solid #e4edf6;
+  border-radius: 18px;
+  padding: 18px;
+  background: #fbfdff;
+}
+
+.summaryCard {
+  display: grid;
+  gap: 8px;
+}
+
+@media (min-width: 960px) {
+  .detailGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar,
+  .filterGrid,
+  .formGrid,
+  .infoGrid,
+  .pagination {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .table {
+    min-width: 900px;
+  }
+}

@@ -5,8 +5,19 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const path = require('path');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const driverRoutes = require('./routes/driverRoutes');
+const documentRoutes = require('./routes/documentRoutes');
+const vehicleTypeRoutes = require('./routes/vehicleTypeRoutes');
+const vehicleRoutes = require('./routes/vehicleRoutes');
+const vehicleDocumentRoutes = require('./routes/vehicleDocumentRoutes');
+const vehicleAssignmentRoutes = require('./routes/vehicleAssignmentRoutes');
+const customerRoutes = require('./routes/customerRoutes');
+const customerAddressRoutes = require('./routes/customerAddressRoutes');
+const customerDocumentRoutes = require('./routes/customerDocumentRoutes');
+const customerNoteRoutes = require('./routes/customerNoteRoutes');
 const errorHandler = require('./middleware/errorHandler');
 const ApiResponse = require('./utils/ApiResponse');
 
@@ -20,8 +31,9 @@ app.use(
 );
 app.use(helmet());
 app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ extended: true, limit: '15mb' }));
+app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
 
 app.get('/api/health', (req, res) =>
   ApiResponse.success(res, 'Logistics DMS backend is healthy.', {
@@ -32,6 +44,16 @@ app.get('/api/health', (req, res) =>
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/drivers', driverRoutes);
+app.use('/api/documents', documentRoutes);
+app.use('/api/vehicle-types', vehicleTypeRoutes);
+app.use('/api/vehicles', vehicleRoutes);
+app.use('/api/vehicle-documents', vehicleDocumentRoutes);
+app.use('/api/vehicle-assignments', vehicleAssignmentRoutes);
+app.use('/api/customers', customerRoutes);
+app.use('/api/customer-addresses', customerAddressRoutes);
+app.use('/api/customer-documents', customerDocumentRoutes);
+app.use('/api/customer-notes', customerNoteRoutes);
 
 app.use((req, res) => ApiResponse.error(res, 'Route not found.', [], 404));
 app.use(errorHandler);

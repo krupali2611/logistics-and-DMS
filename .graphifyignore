@@ -1,0 +1,43 @@
+# Node
+node_modules/
+dist/
+build/
+backend/node_modules/
+backend/dist/
+backend/build/
+
+frontend/node_modules/
+frontend/dist/
+frontend/public/
+
+# Logs
+logs/
+*.log
+
+# Env
+.env
+.env.*
+
+# Git
+.git/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Images (optional)
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# Large files
+*.zip
+*.pdf
+
+# Coverage
+coverage/
+
+# Temp
+tmp/
+temp/

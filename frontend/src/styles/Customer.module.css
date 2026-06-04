@@ -1,0 +1,342 @@
+.page {
+  display: grid;
+  gap: 20px;
+}
+
+.toolbar,
+.filterCard,
+.tableCard,
+.formCard,
+.errorBox {
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(17, 51, 82, 0.08);
+}
+
+.toolbar {
+  padding: 28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  background:
+    radial-gradient(circle at top right, rgba(255, 232, 182, 0.28), transparent 30%),
+    linear-gradient(145deg, #19354f 0%, #86603b 100%);
+  color: #ffffff;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffe7b8;
+  margin-bottom: 8px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 1.8rem;
+}
+
+.pageCopy {
+  margin: 8px 0 0;
+  color: #5f7692;
+}
+
+.toolbar .pageCopy {
+  color: rgba(255, 255, 255, 0.84);
+}
+
+.primaryLink,
+.secondaryLink,
+.secondaryButton,
+.textButton,
+.deleteButton {
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font: inherit;
+}
+
+.primaryLink,
+.secondaryLink,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  border-radius: 14px;
+  padding: 0 18px;
+  font-weight: 600;
+}
+
+.primaryLink {
+  background: #ffe7b8;
+  color: #26384c;
+}
+
+.secondaryLink,
+.secondaryButton {
+  background: #f7f2ea;
+  color: #4a5967;
+}
+
+.filterCard,
+.tableCard,
+.formCard {
+  padding: 24px;
+}
+
+.filterGrid,
+.formGrid,
+.infoGrid,
+.metricGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  color: #35516f;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1px solid #d9e2eb;
+  border-radius: 14px;
+  padding: 12px 14px;
+  background: #fbfdff;
+  color: #163558;
+}
+
+.checkboxField {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.checkboxField input {
+  width: auto;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.filterActions,
+.pagination,
+.submitRow,
+.summaryActions,
+.linkGroup {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filterActions,
+.submitRow {
+  margin-top: 18px;
+}
+
+.statusText {
+  color: #3d5874;
+  font-size: 0.95rem;
+}
+
+.tableWrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1000px;
+}
+
+.table th,
+.table td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #e7eef5;
+  text-align: left;
+  vertical-align: top;
+}
+
+.table th {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #67829d;
+}
+
+.badge {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.active,
+.verified {
+  background: #daf4e6;
+  color: #177245;
+}
+
+.inactive,
+.pending {
+  background: #edf2f7;
+  color: #587089;
+}
+
+.blocked,
+.rejected {
+  background: #fde4dd;
+  color: #b44a28;
+}
+
+.actionStack,
+.documentSummary,
+.detailGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.actionStack {
+  justify-items: start;
+}
+
+.textLink,
+.textButton,
+.deleteButton {
+  padding: 0;
+  background: transparent;
+  color: #1b5f96;
+}
+
+.deleteButton {
+  color: #c3472e;
+}
+
+.pagination {
+  justify-content: space-between;
+  margin-top: 18px;
+}
+
+.paginationActions {
+  display: flex;
+  gap: 10px;
+}
+
+.errorBox {
+  padding: 16px 20px;
+  color: #b44a28;
+  background: #fff5f2;
+}
+
+.emptyState {
+  text-align: center;
+  color: #68809a;
+}
+
+.cardHeader h3,
+.cardHeader p {
+  margin: 0;
+}
+
+.cardHeader p {
+  margin-top: 8px;
+  color: #67829d;
+}
+
+.formShell {
+  display: grid;
+  gap: 20px;
+}
+
+.inlinePreview {
+  margin-top: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.documentPreview {
+  width: 100%;
+  max-width: 280px;
+  border-radius: 18px;
+  border: 1px solid #d8e3ef;
+}
+
+.summaryCard,
+.noteCard,
+.metricCard {
+  border: 1px solid #e4edf6;
+  border-radius: 18px;
+  padding: 18px;
+  background: #fbfdff;
+}
+
+.summaryCard,
+.noteCard {
+  display: grid;
+  gap: 8px;
+}
+
+.metricCard {
+  text-align: center;
+}
+
+.metricCard strong {
+  display: block;
+  font-size: 1.5rem;
+  color: #183654;
+}
+
+.metricCard span {
+  color: #67829d;
+}
+
+.addressBlock {
+  margin: 0;
+  line-height: 1.8;
+  color: #35516f;
+}
+
+.noteCard p {
+  margin: 0;
+  color: #30485f;
+  line-height: 1.7;
+}
+
+.noteMeta {
+  color: #7b8fa3;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 960px) {
+  .detailGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .toolbar,
+  .filterGrid,
+  .formGrid,
+  .infoGrid,
+  .metricGrid,
+  .pagination {
+    grid-template-columns: 1fr;
+    display: grid;
+  }
+
+  .table {
+    min-width: 900px;
+  }
+}
