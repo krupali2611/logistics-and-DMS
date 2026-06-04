@@ -1,0 +1,222 @@
+{
+  "E:\\logistics-and-DMS\\backend\\config\\config.js": {
+    "mtime": 1780570123.528809,
+    "hash": "11a2e636e0f8cbd1ec1ee42103bcb080"
+  },
+  "E:\\logistics-and-DMS\\backend\\migrations\\20260604153000-enable-uuid-extension.js": {
+    "mtime": 1780570123.528809,
+    "hash": "bce02d317326acd0f58e4b28b182a9c2"
+  },
+  "E:\\logistics-and-DMS\\backend\\migrations\\20260604153100-create-roles.js": {
+    "mtime": 1780570123.5437655,
+    "hash": "b77cc8a0d386613559bf73f2b2935712"
+  },
+  "E:\\logistics-and-DMS\\backend\\migrations\\20260604153200-create-permissions.js": {
+    "mtime": 1780570123.5459378,
+    "hash": "2bc601b3a3d0a6370936a4ab3688bb56"
+  },
+  "E:\\logistics-and-DMS\\backend\\migrations\\20260604153300-create-users.js": {
+    "mtime": 1780570123.5479517,
+    "hash": "5f9b91f46c0834f128c71a2868a49651"
+  },
+  "E:\\logistics-and-DMS\\backend\\migrations\\20260604153400-create-role-permissions.js": {
+    "mtime": 1780570123.5479517,
+    "hash": "0673fcf53cafd8f0c8771eae583d25ba"
+  },
+  "E:\\logistics-and-DMS\\backend\\migrations\\20260604153500-create-user-roles.js": {
+    "mtime": 1780570123.5479517,
+    "hash": "dc1c3bb582bf48f09ea868f48ded45ab"
+  },
+  "E:\\logistics-and-DMS\\backend\\seeders\\20260604154000-default-admin-seeder.js": {
+    "mtime": 1780570123.5597315,
+    "hash": "28fd0db8f7a4b89bbe762ee1fb8a5e22"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\app.js": {
+    "mtime": 1780570123.5625415,
+    "hash": "a62152875615ecab3a4e44f3d7c111f2"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\server.js": {
+    "mtime": 1780570123.592012,
+    "hash": "1133a009183ba08c40e0dfa18d1a39fe"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\config\\database.js": {
+    "mtime": 1780570123.5630517,
+    "hash": "f0d4cee37cdf5898495f10ea5941d2de"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\config\\jwt.js": {
+    "mtime": 1780570123.565072,
+    "hash": "cfddab033e44975c6703292d3635c1e0"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\config\\sequelizeOptions.js": {
+    "mtime": 1780570123.5670886,
+    "hash": "f8a75155ba7217f07949dd19dfba79d3"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\controllers\\authController.js": {
+    "mtime": 1780570123.5689743,
+    "hash": "16c41b446b8df4555948e023a9f88ccf"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\controllers\\userController.js": {
+    "mtime": 1780570123.5700538,
+    "hash": "6d2ab598cb86c10722bc87b63e447424"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\middleware\\authMiddleware.js": {
+    "mtime": 1780570123.5720673,
+    "hash": "d855b6d4495714ebcf69426abcbe536f"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\middleware\\errorHandler.js": {
+    "mtime": 1780570123.5740807,
+    "hash": "565e1a95f73e7e502e72d2f25aa042f7"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\middleware\\permissionMiddleware.js": {
+    "mtime": 1780570123.5740807,
+    "hash": "983c45db828422f8ed988b6617e8ff44"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\middleware\\rateLimiter.js": {
+    "mtime": 1780570123.575828,
+    "hash": "1583d2d19c8452aa943dd5b59669babf"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\middleware\\validationMiddleware.js": {
+    "mtime": 1780570123.575828,
+    "hash": "5442201ef41108d5a5ea89d5b7089f6b"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\models\\index.js": {
+    "mtime": 1780570123.5851529,
+    "hash": "01ec693233bc2b134ee597ec84953e4e"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\models\\Permission.js": {
+    "mtime": 1780570123.575828,
+    "hash": "c651a326af85258ad1dab823aca0d0cf"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\models\\Role.js": {
+    "mtime": 1780570123.575828,
+    "hash": "52f1cd664585d742c57b76d7f5fc6791"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\models\\RolePermission.js": {
+    "mtime": 1780570123.5838928,
+    "hash": "0714aef9c08297294a8e3f5e0b72a84a"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\models\\User.js": {
+    "mtime": 1780570123.5851529,
+    "hash": "f659155e062a44b3a8d75a15b8395c1f"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\models\\UserRole.js": {
+    "mtime": 1780570123.5851529,
+    "hash": "c6422fda7cffca8edc504d673881bc42"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\routes\\authRoutes.js": {
+    "mtime": 1780570123.5851529,
+    "hash": "b5af4684b7f000013408d5000678c8ff"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\routes\\userRoutes.js": {
+    "mtime": 1780570123.5851529,
+    "hash": "9418b2d90de7e8d60597e9192baa3662"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\seeders\\defaultAdminSeeder.js": {
+    "mtime": 1780570123.592012,
+    "hash": "4e7e65e4119f6298c62be47941493fde"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\services\\authService.js": {
+    "mtime": 1780570123.592012,
+    "hash": "9936cd98e55ff881ce0c45420a93aa43"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\services\\userService.js": {
+    "mtime": 1780570123.592012,
+    "hash": "1d3db3109c36d6d5b446d27b0cbc8ddc"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\utils\\ApiResponse.js": {
+    "mtime": 1780570123.592012,
+    "hash": "39dcfbe2a56172d30e9b5b071b8faa31"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\utils\\AppError.js": {
+    "mtime": 1780570123.592012,
+    "hash": "96ba0671ea7bcbee4f732d9b44ea4d7c"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\utils\\asyncHandler.js": {
+    "mtime": 1780570123.592012,
+    "hash": "b167b79d6c7f2f7c513aeea37c964087"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\validators\\authValidator.js": {
+    "mtime": 1780570123.592012,
+    "hash": "534b704062a2f1683bbd249a74143a8d"
+  },
+  "E:\\logistics-and-DMS\\backend\\src\\validators\\userValidator.js": {
+    "mtime": 1780570123.592012,
+    "hash": "1ce427fea7032f6b42faad01e52a8d3f"
+  },
+  "E:\\logistics-and-DMS\\docs\\POSTGRESQL_SCHEMA.sql": {
+    "mtime": 1780570123.6080458,
+    "hash": "ddb20a42228d58d43260edca1932f768"
+  },
+  "E:\\logistics-and-DMS\\frontend\\vite.config.js": {
+    "mtime": 1780570123.6653678,
+    "hash": "61e2f407c4695689974e91c6a8314423"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\App.jsx": {
+    "mtime": 1780570123.6194258,
+    "hash": "0ba8c7022073eebd5c23321468f55a51"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\main.jsx": {
+    "mtime": 1780570123.6431284,
+    "hash": "79c20a82583532b94adf81627d90294b"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\api\\axiosInstance.js": {
+    "mtime": 1780570123.6194258,
+    "hash": "759b3ef9151935df044f37b2e50779e9"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\components\\Button\\Button.jsx": {
+    "mtime": 1780570123.6245108,
+    "hash": "3731b9ea4243c664e869f5ad370fc94f"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\components\\Header\\Header.jsx": {
+    "mtime": 1780570123.6245108,
+    "hash": "2ba0d03c9acb43aa2175416fdbac86fe"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\components\\Input\\Input.jsx": {
+    "mtime": 1780570123.6245108,
+    "hash": "f771ab4f5268b1f20af471af497388d5"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\components\\Loader\\Loader.jsx": {
+    "mtime": 1780570123.634149,
+    "hash": "c4fd02494ffa74c991be76961f19dfbd"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\components\\Sidebar\\Sidebar.jsx": {
+    "mtime": 1780570123.636163,
+    "hash": "d1a0583556845d0cc5b4db4dd7e7cf28"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\context\\AuthContext.jsx": {
+    "mtime": 1780570123.6411145,
+    "hash": "0253b1262d325d277428f6f27e4fda4b"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\layouts\\AdminLayout.jsx": {
+    "mtime": 1780570123.6411145,
+    "hash": "fc9ef3d549ba5a61eba8ec8849361d71"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\pages\\auth\\Login.jsx": {
+    "mtime": 1780570123.6473544,
+    "hash": "33c4d6dd97184b2726edf4b57c1ace50"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\pages\\dashboard\\Dashboard.jsx": {
+    "mtime": 1780570123.6493688,
+    "hash": "1c4d54c9359f8af8859cd088fe6ab557"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\pages\\profile\\Profile.jsx": {
+    "mtime": 1780570123.6556761,
+    "hash": "6a19ecbe06a458e26da3d8088722bdd9"
+  },
+  "E:\\logistics-and-DMS\\frontend\\src\\routes\\ProtectedRoute.jsx": {
+    "mtime": 1780570123.6556761,
+    "hash": "1501846a8489cdfe923ca4c643da5247"
+  },
+  "E:\\logistics-and-DMS\\README.md": {
+    "mtime": 1780570123.528809,
+    "hash": "c2b320b19981dff01de5a63713d12dfc"
+  },
+  "E:\\logistics-and-DMS\\docs\\API_DOCUMENTATION.md": {
+    "mtime": 1780570123.6080458,
+    "hash": "b2934aec0903cb3cafe2a4450c4b871c"
+  },
+  "E:\\logistics-and-DMS\\frontend\\index.html": {
+    "mtime": 1780570123.6080458,
+    "hash": "a733d7b44fd4272d5c0c627b15c7db8b"
+  }
+}

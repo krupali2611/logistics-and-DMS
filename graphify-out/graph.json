@@ -10373,3 +10373,2312 @@
   ],
   "hyperedges": []
 }
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "config.js",
+      "file_type": "code",
+      "source_file": "backend/config/config.js",
+      "source_location": "L1",
+      "id": "backend_config_config_js",
+      "community": 28,
+      "norm_label": "config.js"
+    },
+    {
+      "label": "20260604153000-enable-uuid-extension.js",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153000-enable-uuid-extension.js",
+      "source_location": "L1",
+      "id": "backend_migrations_20260604153000_enable_uuid_extension_js",
+      "community": 8,
+      "norm_label": "20260604153000-enable-uuid-extension.js"
+    },
+    {
+      "label": "up()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153000-enable-uuid-extension.js",
+      "source_location": "L4",
+      "id": "migrations_20260604153000_enable_uuid_extension_up",
+      "community": 8,
+      "norm_label": "up()"
+    },
+    {
+      "label": "down()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153000-enable-uuid-extension.js",
+      "source_location": "L8",
+      "id": "migrations_20260604153000_enable_uuid_extension_down",
+      "community": 8,
+      "norm_label": "down()"
+    },
+    {
+      "label": "20260604153100-create-roles.js",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153100-create-roles.js",
+      "source_location": "L1",
+      "id": "backend_migrations_20260604153100_create_roles_js",
+      "community": 9,
+      "norm_label": "20260604153100-create-roles.js"
+    },
+    {
+      "label": "up()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153100-create-roles.js",
+      "source_location": "L4",
+      "id": "migrations_20260604153100_create_roles_up",
+      "community": 9,
+      "norm_label": "up()"
+    },
+    {
+      "label": "down()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153100-create-roles.js",
+      "source_location": "L39",
+      "id": "migrations_20260604153100_create_roles_down",
+      "community": 9,
+      "norm_label": "down()"
+    },
+    {
+      "label": "20260604153200-create-permissions.js",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153200-create-permissions.js",
+      "source_location": "L1",
+      "id": "backend_migrations_20260604153200_create_permissions_js",
+      "community": 10,
+      "norm_label": "20260604153200-create-permissions.js"
+    },
+    {
+      "label": "up()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153200-create-permissions.js",
+      "source_location": "L4",
+      "id": "migrations_20260604153200_create_permissions_up",
+      "community": 10,
+      "norm_label": "up()"
+    },
+    {
+      "label": "down()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153200-create-permissions.js",
+      "source_location": "L34",
+      "id": "migrations_20260604153200_create_permissions_down",
+      "community": 10,
+      "norm_label": "down()"
+    },
+    {
+      "label": "20260604153300-create-users.js",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153300-create-users.js",
+      "source_location": "L1",
+      "id": "backend_migrations_20260604153300_create_users_js",
+      "community": 11,
+      "norm_label": "20260604153300-create-users.js"
+    },
+    {
+      "label": "up()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153300-create-users.js",
+      "source_location": "L4",
+      "id": "migrations_20260604153300_create_users_up",
+      "community": 11,
+      "norm_label": "up()"
+    },
+    {
+      "label": "down()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153300-create-users.js",
+      "source_location": "L60",
+      "id": "migrations_20260604153300_create_users_down",
+      "community": 11,
+      "norm_label": "down()"
+    },
+    {
+      "label": "20260604153400-create-role-permissions.js",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153400-create-role-permissions.js",
+      "source_location": "L1",
+      "id": "backend_migrations_20260604153400_create_role_permissions_js",
+      "community": 12,
+      "norm_label": "20260604153400-create-role-permissions.js"
+    },
+    {
+      "label": "up()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153400-create-role-permissions.js",
+      "source_location": "L4",
+      "id": "migrations_20260604153400_create_role_permissions_up",
+      "community": 12,
+      "norm_label": "up()"
+    },
+    {
+      "label": "down()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153400-create-role-permissions.js",
+      "source_location": "L51",
+      "id": "migrations_20260604153400_create_role_permissions_down",
+      "community": 12,
+      "norm_label": "down()"
+    },
+    {
+      "label": "20260604153500-create-user-roles.js",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153500-create-user-roles.js",
+      "source_location": "L1",
+      "id": "backend_migrations_20260604153500_create_user_roles_js",
+      "community": 13,
+      "norm_label": "20260604153500-create-user-roles.js"
+    },
+    {
+      "label": "up()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153500-create-user-roles.js",
+      "source_location": "L4",
+      "id": "migrations_20260604153500_create_user_roles_up",
+      "community": 13,
+      "norm_label": "up()"
+    },
+    {
+      "label": "down()",
+      "file_type": "code",
+      "source_file": "backend/migrations/20260604153500-create-user-roles.js",
+      "source_location": "L51",
+      "id": "migrations_20260604153500_create_user_roles_down",
+      "community": 13,
+      "norm_label": "down()"
+    },
+    {
+      "label": "20260604154000-default-admin-seeder.js",
+      "file_type": "code",
+      "source_file": "backend/seeders/20260604154000-default-admin-seeder.js",
+      "source_location": "L1",
+      "id": "backend_seeders_20260604154000_default_admin_seeder_js",
+      "community": 6,
+      "norm_label": "20260604154000-default-admin-seeder.js"
+    },
+    {
+      "label": "up()",
+      "file_type": "code",
+      "source_file": "backend/seeders/20260604154000-default-admin-seeder.js",
+      "source_location": "L6",
+      "id": "seeders_20260604154000_default_admin_seeder_up",
+      "community": 6,
+      "norm_label": "up()"
+    },
+    {
+      "label": "down()",
+      "file_type": "code",
+      "source_file": "backend/seeders/20260604154000-default-admin-seeder.js",
+      "source_location": "L10",
+      "id": "seeders_20260604154000_default_admin_seeder_down",
+      "community": 6,
+      "norm_label": "down()"
+    },
+    {
+      "label": "app.js",
+      "file_type": "code",
+      "source_file": "backend/src/app.js",
+      "source_location": "L1",
+      "id": "backend_src_app_js",
+      "community": 29,
+      "norm_label": "app.js"
+    },
+    {
+      "label": "server.js",
+      "file_type": "code",
+      "source_file": "backend/src/server.js",
+      "source_location": "L1",
+      "id": "backend_src_server_js",
+      "community": 16,
+      "norm_label": "server.js"
+    },
+    {
+      "label": "startServer()",
+      "file_type": "code",
+      "source_file": "backend/src/server.js",
+      "source_location": "L8",
+      "id": "src_server_startserver",
+      "community": 16,
+      "norm_label": "startserver()"
+    },
+    {
+      "label": "database.js",
+      "file_type": "code",
+      "source_file": "backend/src/config/database.js",
+      "source_location": "L1",
+      "id": "backend_src_config_database_js",
+      "community": 30,
+      "norm_label": "database.js"
+    },
+    {
+      "label": "jwt.js",
+      "file_type": "code",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L1",
+      "id": "backend_src_config_jwt_js",
+      "community": 0,
+      "norm_label": "jwt.js"
+    },
+    {
+      "label": "signAccessToken()",
+      "file_type": "code",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L3",
+      "id": "config_jwt_signaccesstoken",
+      "community": 0,
+      "norm_label": "signaccesstoken()"
+    },
+    {
+      "label": "signRefreshToken()",
+      "file_type": "code",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L8",
+      "id": "config_jwt_signrefreshtoken",
+      "community": 0,
+      "norm_label": "signrefreshtoken()"
+    },
+    {
+      "label": "signResetToken()",
+      "file_type": "code",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L13",
+      "id": "config_jwt_signresettoken",
+      "community": 0,
+      "norm_label": "signresettoken()"
+    },
+    {
+      "label": "verifyAccessToken()",
+      "file_type": "code",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L18",
+      "id": "config_jwt_verifyaccesstoken",
+      "community": 0,
+      "norm_label": "verifyaccesstoken()"
+    },
+    {
+      "label": "verifyRefreshToken()",
+      "file_type": "code",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L21",
+      "id": "config_jwt_verifyrefreshtoken",
+      "community": 0,
+      "norm_label": "verifyrefreshtoken()"
+    },
+    {
+      "label": "verifyResetToken()",
+      "file_type": "code",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L24",
+      "id": "config_jwt_verifyresettoken",
+      "community": 0,
+      "norm_label": "verifyresettoken()"
+    },
+    {
+      "label": "sequelizeOptions.js",
+      "file_type": "code",
+      "source_file": "backend/src/config/sequelizeOptions.js",
+      "source_location": "L1",
+      "id": "backend_src_config_sequelizeoptions_js",
+      "community": 17,
+      "norm_label": "sequelizeoptions.js"
+    },
+    {
+      "label": "buildSequelizeOptions()",
+      "file_type": "code",
+      "source_file": "backend/src/config/sequelizeOptions.js",
+      "source_location": "L1",
+      "id": "config_sequelizeoptions_buildsequelizeoptions",
+      "community": 17,
+      "norm_label": "buildsequelizeoptions()"
+    },
+    {
+      "label": "authController.js",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L1",
+      "id": "backend_src_controllers_authcontroller_js",
+      "community": 5,
+      "norm_label": "authcontroller.js"
+    },
+    {
+      "label": "login()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L4",
+      "id": "controllers_authcontroller_login",
+      "community": 5,
+      "norm_label": "login()"
+    },
+    {
+      "label": "refresh()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L9",
+      "id": "controllers_authcontroller_refresh",
+      "community": 5,
+      "norm_label": "refresh()"
+    },
+    {
+      "label": "logout()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L14",
+      "id": "controllers_authcontroller_logout",
+      "community": 5,
+      "norm_label": "logout()"
+    },
+    {
+      "label": "forgotPassword()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L19",
+      "id": "controllers_authcontroller_forgotpassword",
+      "community": 5,
+      "norm_label": "forgotpassword()"
+    },
+    {
+      "label": "resetPassword()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L33",
+      "id": "controllers_authcontroller_resetpassword",
+      "community": 5,
+      "norm_label": "resetpassword()"
+    },
+    {
+      "label": "userController.js",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L1",
+      "id": "backend_src_controllers_usercontroller_js",
+      "community": 3,
+      "norm_label": "usercontroller.js"
+    },
+    {
+      "label": "listUsers()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L5",
+      "id": "controllers_usercontroller_listusers",
+      "community": 3,
+      "norm_label": "listusers()"
+    },
+    {
+      "label": "createUser()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L10",
+      "id": "controllers_usercontroller_createuser",
+      "community": 3,
+      "norm_label": "createuser()"
+    },
+    {
+      "label": "updateUser()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L15",
+      "id": "controllers_usercontroller_updateuser",
+      "community": 3,
+      "norm_label": "updateuser()"
+    },
+    {
+      "label": "deleteUser()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L20",
+      "id": "controllers_usercontroller_deleteuser",
+      "community": 3,
+      "norm_label": "deleteuser()"
+    },
+    {
+      "label": "getProfile()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L25",
+      "id": "controllers_usercontroller_getprofile",
+      "community": 3,
+      "norm_label": "getprofile()"
+    },
+    {
+      "label": "updateProfile()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L36",
+      "id": "controllers_usercontroller_updateprofile",
+      "community": 3,
+      "norm_label": "updateprofile()"
+    },
+    {
+      "label": "changePassword()",
+      "file_type": "code",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L41",
+      "id": "controllers_usercontroller_changepassword",
+      "community": 3,
+      "norm_label": "changepassword()"
+    },
+    {
+      "label": "authMiddleware.js",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/authMiddleware.js",
+      "source_location": "L1",
+      "id": "backend_src_middleware_authmiddleware_js",
+      "community": 0,
+      "norm_label": "authmiddleware.js"
+    },
+    {
+      "label": "authMiddleware()",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/authMiddleware.js",
+      "source_location": "L5",
+      "id": "middleware_authmiddleware_authmiddleware",
+      "community": 0,
+      "norm_label": "authmiddleware()"
+    },
+    {
+      "label": "errorHandler.js",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/errorHandler.js",
+      "source_location": "L1",
+      "id": "backend_src_middleware_errorhandler_js",
+      "community": 18,
+      "norm_label": "errorhandler.js"
+    },
+    {
+      "label": "errorHandler()",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/errorHandler.js",
+      "source_location": "L3",
+      "id": "middleware_errorhandler_errorhandler",
+      "community": 18,
+      "norm_label": "errorhandler()"
+    },
+    {
+      "label": "permissionMiddleware.js",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/permissionMiddleware.js",
+      "source_location": "L1",
+      "id": "backend_src_middleware_permissionmiddleware_js",
+      "community": 19,
+      "norm_label": "permissionmiddleware.js"
+    },
+    {
+      "label": "permissionMiddleware()",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/permissionMiddleware.js",
+      "source_location": "L4",
+      "id": "middleware_permissionmiddleware_permissionmiddleware",
+      "community": 19,
+      "norm_label": "permissionmiddleware()"
+    },
+    {
+      "label": "rateLimiter.js",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/rateLimiter.js",
+      "source_location": "L1",
+      "id": "backend_src_middleware_ratelimiter_js",
+      "community": 20,
+      "norm_label": "ratelimiter.js"
+    },
+    {
+      "label": "authLimiter()",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/rateLimiter.js",
+      "source_location": "L1",
+      "id": "middleware_ratelimiter_authlimiter",
+      "community": 20,
+      "norm_label": "authlimiter()"
+    },
+    {
+      "label": "validationMiddleware.js",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/validationMiddleware.js",
+      "source_location": "L1",
+      "id": "backend_src_middleware_validationmiddleware_js",
+      "community": 21,
+      "norm_label": "validationmiddleware.js"
+    },
+    {
+      "label": "validationMiddleware()",
+      "file_type": "code",
+      "source_file": "backend/src/middleware/validationMiddleware.js",
+      "source_location": "L4",
+      "id": "middleware_validationmiddleware_validationmiddleware",
+      "community": 21,
+      "norm_label": "validationmiddleware()"
+    },
+    {
+      "label": "index.js",
+      "file_type": "code",
+      "source_file": "backend/src/models/index.js",
+      "source_location": "L1",
+      "id": "backend_src_models_index_js",
+      "community": 31,
+      "norm_label": "index.js"
+    },
+    {
+      "label": "Permission.js",
+      "file_type": "code",
+      "source_file": "backend/src/models/Permission.js",
+      "source_location": "L1",
+      "id": "backend_src_models_permission_js",
+      "community": 32,
+      "norm_label": "permission.js"
+    },
+    {
+      "label": "Role.js",
+      "file_type": "code",
+      "source_file": "backend/src/models/Role.js",
+      "source_location": "L1",
+      "id": "backend_src_models_role_js",
+      "community": 33,
+      "norm_label": "role.js"
+    },
+    {
+      "label": "RolePermission.js",
+      "file_type": "code",
+      "source_file": "backend/src/models/RolePermission.js",
+      "source_location": "L1",
+      "id": "backend_src_models_rolepermission_js",
+      "community": 34,
+      "norm_label": "rolepermission.js"
+    },
+    {
+      "label": "User.js",
+      "file_type": "code",
+      "source_file": "backend/src/models/User.js",
+      "source_location": "L1",
+      "id": "backend_src_models_user_js",
+      "community": 35,
+      "norm_label": "user.js"
+    },
+    {
+      "label": "UserRole.js",
+      "file_type": "code",
+      "source_file": "backend/src/models/UserRole.js",
+      "source_location": "L1",
+      "id": "backend_src_models_userrole_js",
+      "community": 36,
+      "norm_label": "userrole.js"
+    },
+    {
+      "label": "authRoutes.js",
+      "file_type": "code",
+      "source_file": "backend/src/routes/authRoutes.js",
+      "source_location": "L1",
+      "id": "backend_src_routes_authroutes_js",
+      "community": 37,
+      "norm_label": "authroutes.js"
+    },
+    {
+      "label": "userRoutes.js",
+      "file_type": "code",
+      "source_file": "backend/src/routes/userRoutes.js",
+      "source_location": "L1",
+      "id": "backend_src_routes_userroutes_js",
+      "community": 38,
+      "norm_label": "userroutes.js"
+    },
+    {
+      "label": "defaultAdminSeeder.js",
+      "file_type": "code",
+      "source_file": "backend/src/seeders/defaultAdminSeeder.js",
+      "source_location": "L1",
+      "id": "backend_src_seeders_defaultadminseeder_js",
+      "community": 6,
+      "norm_label": "defaultadminseeder.js"
+    },
+    {
+      "label": "seedDefaultAccessControl()",
+      "file_type": "code",
+      "source_file": "backend/src/seeders/defaultAdminSeeder.js",
+      "source_location": "L24",
+      "id": "seeders_defaultadminseeder_seeddefaultaccesscontrol",
+      "community": 6,
+      "norm_label": "seeddefaultaccesscontrol()"
+    },
+    {
+      "label": "authService.js",
+      "file_type": "code",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L1",
+      "id": "backend_src_services_authservice_js",
+      "community": 0,
+      "norm_label": "authservice.js"
+    },
+    {
+      "label": "buildAuthPayload()",
+      "file_type": "code",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L13",
+      "id": "services_authservice_buildauthpayload",
+      "community": 0,
+      "norm_label": "buildauthpayload()"
+    },
+    {
+      "label": "createTokenSet()",
+      "file_type": "code",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L55",
+      "id": "services_authservice_createtokenset",
+      "community": 0,
+      "norm_label": "createtokenset()"
+    },
+    {
+      "label": "login()",
+      "file_type": "code",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L79",
+      "id": "services_authservice_login",
+      "community": 0,
+      "norm_label": "login()"
+    },
+    {
+      "label": "refresh()",
+      "file_type": "code",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L103",
+      "id": "services_authservice_refresh",
+      "community": 0,
+      "norm_label": "refresh()"
+    },
+    {
+      "label": "logout()",
+      "file_type": "code",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L130",
+      "id": "services_authservice_logout",
+      "community": 0,
+      "norm_label": "logout()"
+    },
+    {
+      "label": "forgotPassword()",
+      "file_type": "code",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L140",
+      "id": "services_authservice_forgotpassword",
+      "community": 0,
+      "norm_label": "forgotpassword()"
+    },
+    {
+      "label": "resetPassword()",
+      "file_type": "code",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L160",
+      "id": "services_authservice_resetpassword",
+      "community": 0,
+      "norm_label": "resetpassword()"
+    },
+    {
+      "label": "userService.js",
+      "file_type": "code",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L1",
+      "id": "backend_src_services_userservice_js",
+      "community": 2,
+      "norm_label": "userservice.js"
+    },
+    {
+      "label": "getUserWithRoles()",
+      "file_type": "code",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L5",
+      "id": "services_userservice_getuserwithroles",
+      "community": 2,
+      "norm_label": "getuserwithroles()"
+    },
+    {
+      "label": "listUsers()",
+      "file_type": "code",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L16",
+      "id": "services_userservice_listusers",
+      "community": 2,
+      "norm_label": "listusers()"
+    },
+    {
+      "label": "createUser()",
+      "file_type": "code",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L28",
+      "id": "services_userservice_createuser",
+      "community": 2,
+      "norm_label": "createuser()"
+    },
+    {
+      "label": "updateUser()",
+      "file_type": "code",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L55",
+      "id": "services_userservice_updateuser",
+      "community": 2,
+      "norm_label": "updateuser()"
+    },
+    {
+      "label": "deleteUser()",
+      "file_type": "code",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L84",
+      "id": "services_userservice_deleteuser",
+      "community": 2,
+      "norm_label": "deleteuser()"
+    },
+    {
+      "label": "getProfile()",
+      "file_type": "code",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L95",
+      "id": "services_userservice_getprofile",
+      "community": 2,
+      "norm_label": "getprofile()"
+    },
+    {
+      "label": "updateProfile()",
+      "file_type": "code",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L105",
+      "id": "services_userservice_updateprofile",
+      "community": 2,
+      "norm_label": "updateprofile()"
+    },
+    {
+      "label": "changePassword()",
+      "file_type": "code",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L118",
+      "id": "services_userservice_changepassword",
+      "community": 2,
+      "norm_label": "changepassword()"
+    },
+    {
+      "label": "ApiResponse.js",
+      "file_type": "code",
+      "source_file": "backend/src/utils/ApiResponse.js",
+      "source_location": "L1",
+      "id": "backend_src_utils_apiresponse_js",
+      "community": 7,
+      "norm_label": "apiresponse.js"
+    },
+    {
+      "label": "ApiResponse",
+      "file_type": "code",
+      "source_file": "backend/src/utils/ApiResponse.js",
+      "source_location": "L1",
+      "id": "utils_apiresponse_apiresponse",
+      "community": 7,
+      "norm_label": "apiresponse"
+    },
+    {
+      "label": ".success()",
+      "file_type": "code",
+      "source_file": "backend/src/utils/ApiResponse.js",
+      "source_location": "L2",
+      "id": "utils_apiresponse_apiresponse_success",
+      "community": 7,
+      "norm_label": ".success()"
+    },
+    {
+      "label": ".error()",
+      "file_type": "code",
+      "source_file": "backend/src/utils/ApiResponse.js",
+      "source_location": "L10",
+      "id": "utils_apiresponse_apiresponse_error",
+      "community": 7,
+      "norm_label": ".error()"
+    },
+    {
+      "label": "AppError.js",
+      "file_type": "code",
+      "source_file": "backend/src/utils/AppError.js",
+      "source_location": "L1",
+      "id": "backend_src_utils_apperror_js",
+      "community": 14,
+      "norm_label": "apperror.js"
+    },
+    {
+      "label": "AppError",
+      "file_type": "code",
+      "source_file": "backend/src/utils/AppError.js",
+      "source_location": "L1",
+      "id": "utils_apperror_apperror",
+      "community": 14,
+      "norm_label": "apperror"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "backend/src/utils/AppError.js",
+      "source_location": "L2",
+      "id": "utils_apperror_apperror_constructor",
+      "community": 14,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": "asyncHandler.js",
+      "file_type": "code",
+      "source_file": "backend/src/utils/asyncHandler.js",
+      "source_location": "L1",
+      "id": "backend_src_utils_asynchandler_js",
+      "community": 22,
+      "norm_label": "asynchandler.js"
+    },
+    {
+      "label": "asyncHandler()",
+      "file_type": "code",
+      "source_file": "backend/src/utils/asyncHandler.js",
+      "source_location": "L1",
+      "id": "utils_asynchandler_asynchandler",
+      "community": 22,
+      "norm_label": "asynchandler()"
+    },
+    {
+      "label": "authValidator.js",
+      "file_type": "code",
+      "source_file": "backend/src/validators/authValidator.js",
+      "source_location": "L1",
+      "id": "backend_src_validators_authvalidator_js",
+      "community": 39,
+      "norm_label": "authvalidator.js"
+    },
+    {
+      "label": "userValidator.js",
+      "file_type": "code",
+      "source_file": "backend/src/validators/userValidator.js",
+      "source_location": "L1",
+      "id": "backend_src_validators_uservalidator_js",
+      "community": 23,
+      "norm_label": "uservalidator.js"
+    },
+    {
+      "label": "nameRule()",
+      "file_type": "code",
+      "source_file": "backend/src/validators/userValidator.js",
+      "source_location": "L3",
+      "id": "validators_uservalidator_namerule",
+      "community": 23,
+      "norm_label": "namerule()"
+    },
+    {
+      "label": "vite.config.js",
+      "file_type": "code",
+      "source_file": "frontend/vite.config.js",
+      "source_location": "L1",
+      "id": "frontend_vite_config_js",
+      "community": 40,
+      "norm_label": "vite.config.js"
+    },
+    {
+      "label": "App.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_app_jsx",
+      "community": 1,
+      "norm_label": "app.jsx"
+    },
+    {
+      "label": "PublicRoute()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L12",
+      "id": "src_app_publicroute",
+      "community": 1,
+      "norm_label": "publicroute()"
+    },
+    {
+      "label": "App()",
+      "file_type": "code",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L17",
+      "id": "src_app_app",
+      "community": 1,
+      "norm_label": "app()"
+    },
+    {
+      "label": "main.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/main.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_main_jsx",
+      "community": 4,
+      "norm_label": "main.jsx"
+    },
+    {
+      "label": "axiosInstance.js",
+      "file_type": "code",
+      "source_file": "frontend/src/api/axiosInstance.js",
+      "source_location": "L1",
+      "id": "frontend_src_api_axiosinstance_js",
+      "community": 4,
+      "norm_label": "axiosinstance.js"
+    },
+    {
+      "label": "flushQueue()",
+      "file_type": "code",
+      "source_file": "frontend/src/api/axiosInstance.js",
+      "source_location": "L22",
+      "id": "api_axiosinstance_flushqueue",
+      "community": 4,
+      "norm_label": "flushqueue()"
+    },
+    {
+      "label": "bindAuthStore()",
+      "file_type": "code",
+      "source_file": "frontend/src/api/axiosInstance.js",
+      "source_location": "L33",
+      "id": "api_axiosinstance_bindauthstore",
+      "community": 4,
+      "norm_label": "bindauthstore()"
+    },
+    {
+      "label": "Button.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Button/Button.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_button_button_jsx",
+      "community": 24,
+      "norm_label": "button.jsx"
+    },
+    {
+      "label": "Button()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Button/Button.jsx",
+      "source_location": "L3",
+      "id": "button_button_button",
+      "community": 24,
+      "norm_label": "button()"
+    },
+    {
+      "label": "Header.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Header/Header.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_header_header_jsx",
+      "community": 1,
+      "norm_label": "header.jsx"
+    },
+    {
+      "label": "Header()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Header/Header.jsx",
+      "source_location": "L6",
+      "id": "header_header_header",
+      "community": 1,
+      "norm_label": "header()"
+    },
+    {
+      "label": "Input.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Input/Input.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_input_input_jsx",
+      "community": 25,
+      "norm_label": "input.jsx"
+    },
+    {
+      "label": "Input()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Input/Input.jsx",
+      "source_location": "L3",
+      "id": "input_input_input",
+      "community": 25,
+      "norm_label": "input()"
+    },
+    {
+      "label": "Loader.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Loader/Loader.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_loader_loader_jsx",
+      "community": 26,
+      "norm_label": "loader.jsx"
+    },
+    {
+      "label": "Loader()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Loader/Loader.jsx",
+      "source_location": "L3",
+      "id": "loader_loader_loader",
+      "community": 26,
+      "norm_label": "loader()"
+    },
+    {
+      "label": "Sidebar.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Sidebar/Sidebar.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_components_sidebar_sidebar_jsx",
+      "community": 27,
+      "norm_label": "sidebar.jsx"
+    },
+    {
+      "label": "Sidebar()",
+      "file_type": "code",
+      "source_file": "frontend/src/components/Sidebar/Sidebar.jsx",
+      "source_location": "L10",
+      "id": "sidebar_sidebar_sidebar",
+      "community": 27,
+      "norm_label": "sidebar()"
+    },
+    {
+      "label": "AuthContext.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/context/AuthContext.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_context_authcontext_jsx",
+      "community": 4,
+      "norm_label": "authcontext.jsx"
+    },
+    {
+      "label": "getStoredSession()",
+      "file_type": "code",
+      "source_file": "frontend/src/context/AuthContext.jsx",
+      "source_location": "L7",
+      "id": "context_authcontext_getstoredsession",
+      "community": 4,
+      "norm_label": "getstoredsession()"
+    },
+    {
+      "label": "AuthProvider()",
+      "file_type": "code",
+      "source_file": "frontend/src/context/AuthContext.jsx",
+      "source_location": "L12",
+      "id": "context_authcontext_authprovider",
+      "community": 4,
+      "norm_label": "authprovider()"
+    },
+    {
+      "label": "useAuth()",
+      "file_type": "code",
+      "source_file": "frontend/src/context/AuthContext.jsx",
+      "source_location": "L97",
+      "id": "context_authcontext_useauth",
+      "community": 1,
+      "norm_label": "useauth()"
+    },
+    {
+      "label": "AdminLayout.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/layouts/AdminLayout.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_layouts_adminlayout_jsx",
+      "community": 15,
+      "norm_label": "adminlayout.jsx"
+    },
+    {
+      "label": "getBreadcrumb()",
+      "file_type": "code",
+      "source_file": "frontend/src/layouts/AdminLayout.jsx",
+      "source_location": "L6",
+      "id": "layouts_adminlayout_getbreadcrumb",
+      "community": 15,
+      "norm_label": "getbreadcrumb()"
+    },
+    {
+      "label": "AdminLayout()",
+      "file_type": "code",
+      "source_file": "frontend/src/layouts/AdminLayout.jsx",
+      "source_location": "L22",
+      "id": "layouts_adminlayout_adminlayout",
+      "community": 15,
+      "norm_label": "adminlayout()"
+    },
+    {
+      "label": "Login.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/auth/Login.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_pages_auth_login_jsx",
+      "community": 1,
+      "norm_label": "login.jsx"
+    },
+    {
+      "label": "Login()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/auth/Login.jsx",
+      "source_location": "L8",
+      "id": "auth_login_login",
+      "community": 1,
+      "norm_label": "login()"
+    },
+    {
+      "label": "Dashboard.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/dashboard/Dashboard.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_pages_dashboard_dashboard_jsx",
+      "community": 1,
+      "norm_label": "dashboard.jsx"
+    },
+    {
+      "label": "Dashboard()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/dashboard/Dashboard.jsx",
+      "source_location": "L4",
+      "id": "dashboard_dashboard_dashboard",
+      "community": 1,
+      "norm_label": "dashboard()"
+    },
+    {
+      "label": "Profile.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/profile/Profile.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_pages_profile_profile_jsx",
+      "community": 1,
+      "norm_label": "profile.jsx"
+    },
+    {
+      "label": "Profile()",
+      "file_type": "code",
+      "source_file": "frontend/src/pages/profile/Profile.jsx",
+      "source_location": "L9",
+      "id": "profile_profile_profile",
+      "community": 1,
+      "norm_label": "profile()"
+    },
+    {
+      "label": "ProtectedRoute.jsx",
+      "file_type": "code",
+      "source_file": "frontend/src/routes/ProtectedRoute.jsx",
+      "source_location": "L1",
+      "id": "frontend_src_routes_protectedroute_jsx",
+      "community": 1,
+      "norm_label": "protectedroute.jsx"
+    },
+    {
+      "label": "ProtectedRoute()",
+      "file_type": "code",
+      "source_file": "frontend/src/routes/ProtectedRoute.jsx",
+      "source_location": "L5",
+      "id": "routes_protectedroute_protectedroute",
+      "community": 1,
+      "norm_label": "protectedroute()"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153000-enable-uuid-extension.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153000_enable_uuid_extension_js",
+      "target": "migrations_20260604153000_enable_uuid_extension_up",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153000-enable-uuid-extension.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153000_enable_uuid_extension_js",
+      "target": "migrations_20260604153000_enable_uuid_extension_down",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153100-create-roles.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153100_create_roles_js",
+      "target": "migrations_20260604153100_create_roles_up",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153100-create-roles.js",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153100_create_roles_js",
+      "target": "migrations_20260604153100_create_roles_down",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153200-create-permissions.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153200_create_permissions_js",
+      "target": "migrations_20260604153200_create_permissions_up",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153200-create-permissions.js",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153200_create_permissions_js",
+      "target": "migrations_20260604153200_create_permissions_down",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153300-create-users.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153300_create_users_js",
+      "target": "migrations_20260604153300_create_users_up",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153300-create-users.js",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153300_create_users_js",
+      "target": "migrations_20260604153300_create_users_down",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153400-create-role-permissions.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153400_create_role_permissions_js",
+      "target": "migrations_20260604153400_create_role_permissions_up",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153400-create-role-permissions.js",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153400_create_role_permissions_js",
+      "target": "migrations_20260604153400_create_role_permissions_down",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153500-create-user-roles.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153500_create_user_roles_js",
+      "target": "migrations_20260604153500_create_user_roles_up",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/migrations/20260604153500-create-user-roles.js",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "backend_migrations_20260604153500_create_user_roles_js",
+      "target": "migrations_20260604153500_create_user_roles_down",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/seeders/20260604154000-default-admin-seeder.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "backend_seeders_20260604154000_default_admin_seeder_js",
+      "target": "seeders_20260604154000_default_admin_seeder_up",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/seeders/20260604154000-default-admin-seeder.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "backend_seeders_20260604154000_default_admin_seeder_js",
+      "target": "seeders_20260604154000_default_admin_seeder_down",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/seeders/20260604154000-default-admin-seeder.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "seeders_20260604154000_default_admin_seeder_up",
+      "target": "seeders_defaultadminseeder_seeddefaultaccesscontrol"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/server.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "backend_src_server_js",
+      "target": "src_server_startserver",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_src_config_jwt_js",
+      "target": "config_jwt_signaccesstoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "backend_src_config_jwt_js",
+      "target": "config_jwt_signrefreshtoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "backend_src_config_jwt_js",
+      "target": "config_jwt_signresettoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "backend_src_config_jwt_js",
+      "target": "config_jwt_verifyaccesstoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "backend_src_config_jwt_js",
+      "target": "config_jwt_verifyrefreshtoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/config/jwt.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "backend_src_config_jwt_js",
+      "target": "config_jwt_verifyresettoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "services_authservice_createtokenset",
+      "target": "config_jwt_signaccesstoken"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "services_authservice_createtokenset",
+      "target": "config_jwt_signrefreshtoken"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L149",
+      "weight": 1.0,
+      "source": "services_authservice_forgotpassword",
+      "target": "config_jwt_signresettoken"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/src/middleware/authMiddleware.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "middleware_authmiddleware_authmiddleware",
+      "target": "config_jwt_verifyaccesstoken"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L107",
+      "weight": 1.0,
+      "source": "services_authservice_refresh",
+      "target": "config_jwt_verifyrefreshtoken"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L164",
+      "weight": 1.0,
+      "source": "services_authservice_resetpassword",
+      "target": "config_jwt_verifyresettoken"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/config/sequelizeOptions.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "backend_src_config_sequelizeoptions_js",
+      "target": "config_sequelizeoptions_buildsequelizeoptions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_src_controllers_authcontroller_js",
+      "target": "controllers_authcontroller_login",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "backend_src_controllers_authcontroller_js",
+      "target": "controllers_authcontroller_refresh",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "backend_src_controllers_authcontroller_js",
+      "target": "controllers_authcontroller_logout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "backend_src_controllers_authcontroller_js",
+      "target": "controllers_authcontroller_forgotpassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/authController.js",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "backend_src_controllers_authcontroller_js",
+      "target": "controllers_authcontroller_resetpassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "backend_src_controllers_usercontroller_js",
+      "target": "controllers_usercontroller_listusers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "backend_src_controllers_usercontroller_js",
+      "target": "controllers_usercontroller_createuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "backend_src_controllers_usercontroller_js",
+      "target": "controllers_usercontroller_updateuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "backend_src_controllers_usercontroller_js",
+      "target": "controllers_usercontroller_deleteuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "backend_src_controllers_usercontroller_js",
+      "target": "controllers_usercontroller_getprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "backend_src_controllers_usercontroller_js",
+      "target": "controllers_usercontroller_updateprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/controllers/userController.js",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "backend_src_controllers_usercontroller_js",
+      "target": "controllers_usercontroller_changepassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/middleware/authMiddleware.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "backend_src_middleware_authmiddleware_js",
+      "target": "middleware_authmiddleware_authmiddleware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/middleware/errorHandler.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_src_middleware_errorhandler_js",
+      "target": "middleware_errorhandler_errorhandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/middleware/permissionMiddleware.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_src_middleware_permissionmiddleware_js",
+      "target": "middleware_permissionmiddleware_permissionmiddleware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/middleware/rateLimiter.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "backend_src_middleware_ratelimiter_js",
+      "target": "middleware_ratelimiter_authlimiter",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/middleware/validationMiddleware.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "backend_src_middleware_validationmiddleware_js",
+      "target": "middleware_validationmiddleware_validationmiddleware",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/seeders/defaultAdminSeeder.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "backend_src_seeders_defaultadminseeder_js",
+      "target": "seeders_defaultadminseeder_seeddefaultaccesscontrol",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "backend_src_services_authservice_js",
+      "target": "services_authservice_buildauthpayload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "backend_src_services_authservice_js",
+      "target": "services_authservice_createtokenset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "backend_src_services_authservice_js",
+      "target": "services_authservice_login",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "backend_src_services_authservice_js",
+      "target": "services_authservice_refresh",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L130",
+      "weight": 1.0,
+      "source": "backend_src_services_authservice_js",
+      "target": "services_authservice_logout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L140",
+      "weight": 1.0,
+      "source": "backend_src_services_authservice_js",
+      "target": "services_authservice_forgotpassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L160",
+      "weight": 1.0,
+      "source": "backend_src_services_authservice_js",
+      "target": "services_authservice_resetpassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "services_authservice_createtokenset",
+      "target": "services_authservice_buildauthpayload",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "services_authservice_login",
+      "target": "services_authservice_createtokenset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/authService.js",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "services_authservice_refresh",
+      "target": "services_authservice_createtokenset",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "backend_src_services_userservice_js",
+      "target": "services_userservice_getuserwithroles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "backend_src_services_userservice_js",
+      "target": "services_userservice_listusers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "backend_src_services_userservice_js",
+      "target": "services_userservice_createuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "backend_src_services_userservice_js",
+      "target": "services_userservice_updateuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "backend_src_services_userservice_js",
+      "target": "services_userservice_deleteuser",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "backend_src_services_userservice_js",
+      "target": "services_userservice_getprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L105",
+      "weight": 1.0,
+      "source": "backend_src_services_userservice_js",
+      "target": "services_userservice_updateprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "backend_src_services_userservice_js",
+      "target": "services_userservice_changepassword",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "services_userservice_createuser",
+      "target": "services_userservice_getuserwithroles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "services_userservice_updateuser",
+      "target": "services_userservice_getuserwithroles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L96",
+      "weight": 1.0,
+      "source": "services_userservice_getprofile",
+      "target": "services_userservice_getuserwithroles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/services/userService.js",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "services_userservice_updateprofile",
+      "target": "services_userservice_getuserwithroles",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/utils/ApiResponse.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "backend_src_utils_apiresponse_js",
+      "target": "utils_apiresponse_apiresponse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/utils/ApiResponse.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_apiresponse_apiresponse",
+      "target": "utils_apiresponse_apiresponse_success",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/utils/ApiResponse.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "utils_apiresponse_apiresponse",
+      "target": "utils_apiresponse_apiresponse_error",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/utils/AppError.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "backend_src_utils_apperror_js",
+      "target": "utils_apperror_apperror",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/utils/AppError.js",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "utils_apperror_apperror",
+      "target": "utils_apperror_apperror_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/utils/asyncHandler.js",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "backend_src_utils_asynchandler_js",
+      "target": "utils_asynchandler_asynchandler",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "backend/src/validators/userValidator.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "backend_src_validators_uservalidator_js",
+      "target": "validators_uservalidator_namerule",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "frontend_src_app_jsx",
+      "target": "context_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "frontend_src_app_jsx",
+      "target": "src_app_publicroute",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "frontend_src_app_jsx",
+      "target": "src_app_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "frontend/src/App.jsx",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_app_publicroute",
+      "target": "context_authcontext_useauth"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/main.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "frontend_src_main_jsx",
+      "target": "context_authcontext_authprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/api/axiosInstance.js",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "frontend_src_api_axiosinstance_js",
+      "target": "api_axiosinstance_flushqueue",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/api/axiosInstance.js",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "frontend_src_api_axiosinstance_js",
+      "target": "api_axiosinstance_bindauthstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/context/AuthContext.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "frontend_src_context_authcontext_jsx",
+      "target": "api_axiosinstance_bindauthstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Button/Button.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_components_button_button_jsx",
+      "target": "button_button_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Header/Header.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_components_header_header_jsx",
+      "target": "context_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Header/Header.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_src_components_header_header_jsx",
+      "target": "header_header_header",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "frontend/src/components/Header/Header.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "header_header_header",
+      "target": "context_authcontext_useauth"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Input/Input.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_components_input_input_jsx",
+      "target": "input_input_input",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Loader/Loader.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_components_loader_loader_jsx",
+      "target": "loader_loader_loader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/components/Sidebar/Sidebar.jsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "frontend_src_components_sidebar_sidebar_jsx",
+      "target": "sidebar_sidebar_sidebar",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/context/AuthContext.jsx",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "frontend_src_context_authcontext_jsx",
+      "target": "context_authcontext_getstoredsession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/context/AuthContext.jsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "frontend_src_context_authcontext_jsx",
+      "target": "context_authcontext_authprovider",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/context/AuthContext.jsx",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "frontend_src_context_authcontext_jsx",
+      "target": "context_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/auth/Login.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_pages_auth_login_jsx",
+      "target": "context_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/dashboard/Dashboard.jsx",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "frontend_src_pages_dashboard_dashboard_jsx",
+      "target": "context_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/profile/Profile.jsx",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "frontend_src_pages_profile_profile_jsx",
+      "target": "context_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/routes/ProtectedRoute.jsx",
+      "source_location": "L2",
+      "weight": 1.0,
+      "source": "frontend_src_routes_protectedroute_jsx",
+      "target": "context_authcontext_useauth",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "frontend/src/pages/auth/Login.jsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "auth_login_login",
+      "target": "context_authcontext_useauth"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "frontend/src/pages/dashboard/Dashboard.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "dashboard_dashboard_dashboard",
+      "target": "context_authcontext_useauth"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "frontend/src/pages/profile/Profile.jsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "profile_profile_profile",
+      "target": "context_authcontext_useauth"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "frontend/src/routes/ProtectedRoute.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "routes_protectedroute_protectedroute",
+      "target": "context_authcontext_useauth"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/layouts/AdminLayout.jsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "frontend_src_layouts_adminlayout_jsx",
+      "target": "layouts_adminlayout_getbreadcrumb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/layouts/AdminLayout.jsx",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "frontend_src_layouts_adminlayout_jsx",
+      "target": "layouts_adminlayout_adminlayout",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/layouts/AdminLayout.jsx",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "layouts_adminlayout_adminlayout",
+      "target": "layouts_adminlayout_getbreadcrumb",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/auth/Login.jsx",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "frontend_src_pages_auth_login_jsx",
+      "target": "auth_login_login",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/dashboard/Dashboard.jsx",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "frontend_src_pages_dashboard_dashboard_jsx",
+      "target": "dashboard_dashboard_dashboard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/pages/profile/Profile.jsx",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "frontend_src_pages_profile_profile_jsx",
+      "target": "profile_profile_profile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "frontend/src/routes/ProtectedRoute.jsx",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "frontend_src_routes_protectedroute_jsx",
+      "target": "routes_protectedroute_protectedroute",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": [],
+  "built_at_commit": "ab8c0c1fb1b6566ab53ce7b28e6eca146b38c166"
+}
