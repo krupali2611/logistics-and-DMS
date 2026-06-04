@@ -1,0 +1,109 @@
+.authShell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  background: linear-gradient(135deg, #f7fbff 0%, #e6eff7 100%);
+}
+
+.heroPanel {
+  padding: 72px;
+  background:
+    radial-gradient(circle at top left, rgba(79, 178, 224, 0.28), transparent 34%),
+    linear-gradient(180deg, #10304c 0%, #17456d 100%);
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.heroPanel span {
+  color: #ffd083;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heroPanel h1 {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1.08;
+  margin: 18px 0;
+  max-width: 620px;
+}
+
+.heroPanel p {
+  max-width: 560px;
+  color: rgba(255, 255, 255, 0.86);
+  line-height: 1.7;
+}
+
+.formPanel,
+.centeredShell {
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+
+.centeredShell {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f4f8fc 0%, #e8f0f6 100%);
+}
+
+.formCard {
+  width: min(100%, 460px);
+  display: grid;
+  gap: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 32px;
+  border-radius: 28px;
+  box-shadow: 0 24px 60px rgba(18, 56, 89, 0.12);
+}
+
+.formCard h2 {
+  margin: 0;
+  color: #17324a;
+}
+
+.formCard p {
+  margin: 8px 0 0;
+  color: #5f7388;
+}
+
+.links a {
+  color: #2568a7;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.errorBox,
+.successBox,
+.tokenBox {
+  border-radius: 14px;
+  padding: 14px;
+  font-size: 0.95rem;
+}
+
+.errorBox {
+  background: #fff1f1;
+  color: #b14141;
+}
+
+.successBox {
+  background: #eefaf1;
+  color: #28714d;
+}
+
+.tokenBox {
+  background: #eef5fb;
+  color: #17324a;
+  word-break: break-word;
+}
+
+@media (max-width: 960px) {
+  .authShell {
+    grid-template-columns: 1fr;
+  }
+
+  .heroPanel {
+    padding: 44px 28px;
+  }
+}

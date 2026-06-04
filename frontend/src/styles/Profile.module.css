@@ -1,0 +1,47 @@
+.profileGrid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 20px;
+}
+
+.card {
+  display: grid;
+  gap: 16px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 26px;
+  box-shadow: 0 18px 40px rgba(17, 51, 82, 0.08);
+}
+
+.card h2 {
+  margin: 0 0 4px;
+  color: #163558;
+}
+
+.card p {
+  margin: 0;
+  color: #4a6278;
+  line-height: 1.6;
+}
+
+.success,
+.error {
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.success {
+  background: #eefaf1;
+  color: #256740;
+}
+
+.error {
+  background: #fff1f1;
+  color: #b14141;
+}
+
+@media (max-width: 900px) {
+  .profileGrid {
+    grid-template-columns: 1fr;
+  }
+}

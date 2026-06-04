@@ -1,0 +1,28 @@
+.field {
+  display: grid;
+  gap: 8px;
+}
+
+.field span {
+  color: #22405d;
+  font-weight: 600;
+}
+
+.field input {
+  border: 1px solid #d3dee8;
+  border-radius: 14px;
+  padding: 14px 15px;
+  font-size: 1rem;
+  color: #163558;
+  background: #ffffff;
+}
+
+.field input:focus {
+  outline: none;
+  border-color: #2e79bf;
+  box-shadow: 0 0 0 4px rgba(46, 121, 191, 0.12);
+}
+
+.field small {
+  color: #cc4e4e;
+}

@@ -1,0 +1,44 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.heroCard,
+.card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 26px;
+  box-shadow: 0 18px 40px rgba(17, 51, 82, 0.08);
+}
+
+.heroCard {
+  grid-column: 1 / -1;
+  background:
+    radial-gradient(circle at top right, rgba(85, 188, 223, 0.2), transparent 28%),
+    linear-gradient(135deg, #183b5f 0%, #1d5b92 100%);
+  color: #ffffff;
+}
+
+.heroCard span {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #ffcf80;
+}
+
+.heroCard h2,
+.card h3 {
+  margin: 10px 0;
+}
+
+.card p,
+.heroCard p {
+  margin: 0;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,84 @@
+.sidebar {
+  width: 280px;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #0f2540 0%, #163558 100%);
+  color: #f5f7fb;
+  padding: 28px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand h2 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.brand p {
+  margin: 4px 0 0;
+  color: rgba(245, 247, 251, 0.72);
+  font-size: 0.92rem;
+}
+
+.brandMark {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #66d3fa, #f7b955);
+  color: #102236;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.nav {
+  display: grid;
+  gap: 10px;
+}
+
+.link {
+  color: rgba(245, 247, 251, 0.9);
+  text-decoration: none;
+  padding: 13px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.link:hover,
+.active {
+  background: rgba(255, 255, 255, 0.14);
+  transform: translateX(2px);
+}
+
+.footerCard {
+  margin-top: auto;
+  padding: 18px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.footerCard span {
+  font-weight: 700;
+}
+
+.footerCard p {
+  margin: 8px 0 0;
+  color: rgba(245, 247, 251, 0.8);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 960px) {
+  .sidebar {
+    width: 100%;
+    min-height: auto;
+  }
+}
