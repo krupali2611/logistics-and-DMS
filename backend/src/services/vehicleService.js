@@ -712,6 +712,43 @@ const listAssignments = async (query) => {
   };
 };
 
+const getAssignmentOptions = async () => {
+  const [drivers, vehicles] = await Promise.all([
+    db.Driver.findAll({
+      where: {
+        status: 'ACTIVE',
+        verification_status: 'VERIFIED',
+        availability_status: {
+          [Op.in]: ['ONLINE', 'OFFLINE']
+        }
+      },
+      attributes: ['id', 'driver_code', 'first_name', 'last_name', 'phone', 'availability_status'],
+      order: [['created_at', 'DESC']]
+    }),
+    db.Vehicle.findAll({
+      where: {
+        status: 'ACTIVE',
+        verification_status: 'VERIFIED',
+        availability_status: 'AVAILABLE'
+      },
+      attributes: ['id', 'vehicle_number', 'brand', 'model', 'availability_status'],
+      include: [
+        {
+          model: db.VehicleType,
+          as: 'vehicleType',
+          attributes: ['id', 'type_name']
+        }
+      ],
+      order: [['created_at', 'DESC']]
+    })
+  ]);
+
+  return {
+    drivers,
+    vehicles
+  };
+};
+
 const getVehicleDashboardStats = async () => {
   const [totalVehicles, activeVehicles, verifiedVehicles, availableVehicles, assignedVehicles] =
     await Promise.all([
@@ -757,5 +794,6 @@ module.exports = {
   assignVehicle,
   removeAssignment,
   listAssignments,
+  getAssignmentOptions,
   getVehicleDashboardStats
 };

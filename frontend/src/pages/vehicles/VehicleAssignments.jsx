@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import Button from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
-import { getDrivers } from '../../api/driverApi';
 import {
   assignVehicle,
+  getVehicleAssignmentOptions,
   getVehicleAssignments,
-  getVehicles,
   removeVehicleAssignment
 } from '../../api/vehicleApi';
 import styles from '../../styles/Vehicle.module.css';
@@ -32,22 +31,9 @@ const VehicleAssignments = () => {
   const [error, setError] = useState('');
 
   const loadAssignmentOptions = async () => {
-    const [driverResponse, vehicleResponse] = await Promise.all([
-      getDrivers({
-        verification_status: 'VERIFIED',
-        page: 1,
-        limit: 100
-      }),
-      getVehicles({
-        verification_status: 'VERIFIED',
-        availability_status: 'AVAILABLE',
-        page: 1,
-        limit: 100
-      })
-    ]);
-
-    setDrivers(driverResponse.records);
-    setVehicles(vehicleResponse.records);
+    const response = await getVehicleAssignmentOptions();
+    setDrivers(response.drivers);
+    setVehicles(response.vehicles);
   };
 
   const loadAssignments = async (currentFilters = filters) => {

@@ -15,6 +15,12 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.get(
+  '/options',
+  permissionMiddleware('vehicle_assign'),
+  asyncHandler(vehicleController.getAssignmentOptions)
+);
+
+router.get(
   '/',
   permissionMiddleware('vehicle_assign'),
   listAssignmentsValidator,

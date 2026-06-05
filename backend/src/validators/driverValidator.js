@@ -109,13 +109,16 @@ const updateDriverValidator = [
 const listDriversValidator = [
   query('page').optional().isInt({ min: 1 }).withMessage('Page must be a positive integer.'),
   query('limit').optional().isInt({ min: 1, max: 100 }).withMessage('Limit must be between 1 and 100.'),
-  query('status').optional().isIn(DRIVER_STATUS).withMessage(`Status must be one of: ${DRIVER_STATUS.join(', ')}.`),
+  query('status')
+    .optional({ values: 'falsy' })
+    .isIn(DRIVER_STATUS)
+    .withMessage(`Status must be one of: ${DRIVER_STATUS.join(', ')}.`),
   query('availability_status')
-    .optional()
+    .optional({ values: 'falsy' })
     .isIn(DRIVER_AVAILABILITY_STATUS)
     .withMessage(`Availability status must be one of: ${DRIVER_AVAILABILITY_STATUS.join(', ')}.`),
   query('verification_status')
-    .optional()
+    .optional({ values: 'falsy' })
     .isIn(DRIVER_VERIFICATION_STATUS)
     .withMessage(`Verification status must be one of: ${DRIVER_VERIFICATION_STATUS.join(', ')}.`)
 ];

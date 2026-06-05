@@ -69,8 +69,49 @@ export const AuthProvider = ({ children }) => {
       updateSession,
       clearSession
     });
-    setIsLoading(false);
   }, [session]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const hydrateProfile = async () => {
+      if (!session?.accessToken) {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      try {
+        const response = await axiosInstance.get('/users/profile');
+        const data = response.data.data;
+        const currentSession = getStoredSession() || {};
+
+        if (isMounted) {
+          persistSession({
+            ...currentSession,
+            user: data.user,
+            roles: data.roles,
+            permissions: data.permissions
+          });
+        }
+      } catch (error) {
+        if (isMounted) {
+          clearSession();
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    hydrateProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [session?.accessToken]);
 
   return (
     <AuthContext.Provider

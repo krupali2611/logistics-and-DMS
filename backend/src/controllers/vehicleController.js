@@ -104,6 +104,11 @@ const listAssignments = async (req, res) => {
   return ApiResponse.success(res, 'Vehicle assignments fetched successfully.', data);
 };
 
+const getAssignmentOptions = async (req, res) => {
+  const data = await vehicleService.getAssignmentOptions();
+  return ApiResponse.success(res, 'Vehicle assignment options fetched successfully.', data);
+};
+
 const getVehicleDashboardStats = async (req, res) => {
   const stats = await vehicleService.getVehicleDashboardStats();
   return ApiResponse.success(res, 'Vehicle dashboard stats fetched successfully.', { stats });
@@ -130,5 +135,6 @@ module.exports = {
   assignVehicle,
   removeAssignment,
   listAssignments,
+  getAssignmentOptions,
   getVehicleDashboardStats
 };

@@ -1,7 +1,10 @@
 import axiosInstance from './axiosInstance';
 
 export const getDrivers = async (params) => {
-  const response = await axiosInstance.get('/drivers', { params });
+  const sanitizedParams = Object.fromEntries(
+    Object.entries(params || {}).filter(([, value]) => value !== '' && value !== null && value !== undefined)
+  );
+  const response = await axiosInstance.get('/drivers', { params: sanitizedParams });
   return response.data.data;
 };
 

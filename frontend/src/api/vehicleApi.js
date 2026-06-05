@@ -100,6 +100,11 @@ export const getVehicleAssignments = async (params) => {
   return response.data.data;
 };
 
+export const getVehicleAssignmentOptions = async () => {
+  const response = await axiosInstance.get('/vehicle-assignments/options');
+  return response.data.data;
+};
+
 export const assignVehicle = async (payload) => {
   const response = await axiosInstance.post('/vehicle-assignments', payload);
   return response.data.data.assignment;
