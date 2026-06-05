@@ -7,7 +7,6 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
 import Dashboard from './pages/dashboard/Dashboard';
 import Profile from './pages/profile/Profile';
-import ChangePassword from './pages/profile/ChangePassword';
 import DriverList from './pages/drivers/DriverList';
 import DriverForm from './pages/drivers/DriverForm';
 import DriverDetails from './pages/drivers/DriverDetails';
@@ -81,7 +80,7 @@ const App = () => {
           <Route path="/customers/:id/documents" element={<CustomerDocuments />} />
           <Route path="/customers/:id/notes" element={<CustomerNotes />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/change-password" element={<Navigate to="/profile" replace />} />
         </Route>
       </Route>
 

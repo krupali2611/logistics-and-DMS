@@ -1,13 +1,14 @@
 .button {
   border: none;
-  border-radius: 14px;
-  padding: 14px 18px;
+  border-radius: 12px;
+  padding: 11px 15px;
   background: linear-gradient(135deg, #1f6fb6 0%, #184f82 100%);
   color: #ffffff;
   font-weight: 700;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: 0 18px 30px rgba(24, 79, 130, 0.2);
+  box-shadow: 0 14px 24px rgba(24, 79, 130, 0.18);
 }
 
 .button:hover {

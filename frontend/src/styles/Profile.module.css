@@ -1,33 +1,38 @@
 .profileGrid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 20px;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 16px;
 }
 
 .card {
   display: grid;
-  gap: 16px;
+  gap: 14px;
   background: #ffffff;
-  border-radius: 24px;
-  padding: 26px;
-  box-shadow: 0 18px 40px rgba(17, 51, 82, 0.08);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 14px 32px rgba(17, 51, 82, 0.08);
 }
 
 .card h2 {
-  margin: 0 0 4px;
+  margin: 0 0 2px;
   color: #163558;
+  font-size: 1.2rem;
 }
 
 .card p {
   margin: 0;
   color: #4a6278;
-  line-height: 1.6;
+  line-height: 1.55;
+}
+
+.spanFull {
+  grid-column: 1 / -1;
 }
 
 .success,
 .error {
-  border-radius: 14px;
-  padding: 12px 14px;
+  border-radius: 12px;
+  padding: 11px 12px;
 }
 
 .success {

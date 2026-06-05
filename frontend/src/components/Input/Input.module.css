@@ -1,6 +1,6 @@
 .field {
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .field span {
@@ -10,9 +10,9 @@
 
 .field input {
   border: 1px solid #d3dee8;
-  border-radius: 14px;
-  padding: 14px 15px;
-  font-size: 1rem;
+  border-radius: 12px;
+  padding: 11px 13px;
+  font-size: 0.96rem;
   color: #163558;
   background: #ffffff;
 }
@@ -20,7 +20,7 @@
 .field input:focus {
   outline: none;
   border-color: #2e79bf;
-  box-shadow: 0 0 0 4px rgba(46, 121, 191, 0.12);
+  box-shadow: 0 0 0 3px rgba(46, 121, 191, 0.12);
 }
 
 .field small {

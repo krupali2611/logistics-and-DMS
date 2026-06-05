@@ -3,6 +3,7 @@ import axiosInstance from '../../api/axiosInstance';
 import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
+import ChangePassword from './ChangePassword';
 import Loader from '../../components/Loader/Loader';
 import styles from '../../styles/Profile.module.css';
 
@@ -65,6 +66,10 @@ const Profile = () => {
         <p><strong>Role:</strong> {roles[0] || 'Unassigned'}</p>
         <p><strong>Status:</strong> {user.status ? 'Active' : 'Inactive'}</p>
         <p><strong>Last Login:</strong> {user.last_login ? new Date(user.last_login).toLocaleString() : 'Never'}</p>
+      </div>
+
+      <div className={styles.spanFull}>
+        <ChangePassword />
       </div>
     </div>
   );
