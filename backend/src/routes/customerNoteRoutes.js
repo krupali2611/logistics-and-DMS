@@ -12,7 +12,7 @@ router.use(authMiddleware);
 
 router.delete(
   '/:id',
-  permissionMiddleware('customer_delete'),
+  permissionMiddleware('customer_update'),
   customerNoteIdParamValidator,
   validationMiddleware,
   asyncHandler(customerController.deleteCustomerNote)

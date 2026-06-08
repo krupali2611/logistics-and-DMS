@@ -27,7 +27,8 @@ const mapCustomerSummary = (customer) =>
         company_name: customer.company_name,
         contact_person: customer.contact_person,
         phone: customer.phone,
-        email: customer.email
+        email: customer.email,
+        status: customer.status
       }
     : null;
 
@@ -180,6 +181,9 @@ const mapShipmentBase = (shipment) => ({
   estimated_delivery_date: shipment.estimated_delivery_date,
   special_instructions: shipment.special_instructions,
   status: shipment.status,
+  cancelled_at: shipment.cancelled_at,
+  cancelled_by: shipment.cancelled_by,
+  cancellation_reason: shipment.cancellation_reason,
   current_driver_latitude: shipment.current_driver_latitude,
   current_driver_longitude: shipment.current_driver_longitude,
   current_eta: shipment.current_eta,
@@ -202,6 +206,7 @@ const toShipmentDetailDto = (shipment) => ({
   ...toShipmentListDto(shipment),
   fare_estimation: mapFareEstimation(shipment.fareEstimation),
   created_by_user: mapUserSummary(shipment.createdBy),
+  cancelled_by_user: mapUserSummary(shipment.cancelledBy),
   created_by_customer_user: mapCustomerUserSummary(shipment.createdByCustomerUser),
   packages: Array.isArray(shipment.packages) ? shipment.packages.map(mapPackage) : [],
   status_history: Array.isArray(shipment.statusHistory)

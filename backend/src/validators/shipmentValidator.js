@@ -274,7 +274,12 @@ const cancelShipmentValidator = [
     .optional()
     .trim()
     .isLength({ max: 2000 })
-    .withMessage('Remarks must be at most 2000 characters.')
+    .withMessage('Remarks must be at most 2000 characters.'),
+  body('cancellation_reason')
+    .optional()
+    .trim()
+    .isLength({ max: 2000 })
+    .withMessage('Cancellation reason must be at most 2000 characters.')
 ];
 
 const createShipmentPackagesValidator = [

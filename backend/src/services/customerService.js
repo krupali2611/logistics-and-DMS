@@ -260,31 +260,10 @@ const updateCustomer = async (id, payload) => {
     alternate_phone: payload.alternate_phone ?? customer.alternate_phone,
     gst_number: payload.gst_number ?? customer.gst_number,
     pan_number: payload.pan_number ?? customer.pan_number,
-    status: payload.status ?? customer.status,
     verification_status: payload.verification_status ?? customer.verification_status
   });
 
   return getCustomerById(id);
-};
-
-const deleteCustomer = async (id) => {
-  const customer = await getCustomerById(id);
-  const transaction = await db.sequelize.transaction();
-
-  try {
-    await db.CustomerAddress.destroy({ where: { customer_id: id }, transaction });
-    await db.CustomerDocument.destroy({ where: { customer_id: id }, transaction });
-    await db.CustomerNote.destroy({ where: { customer_id: id }, transaction });
-    await db.Customer.destroy({ where: { id }, transaction });
-    await transaction.commit();
-
-    await Promise.all(
-      customer.documents.map((document) => storageService.deleteFile(document.document_file))
-    );
-  } catch (error) {
-    await transaction.rollback();
-    throw error;
-  }
 };
 
 const updateCustomerStatus = async (id, status) => {
@@ -606,7 +585,6 @@ module.exports = {
   getCustomerById,
   createCustomer,
   updateCustomer,
-  deleteCustomer,
   updateCustomerStatus,
   verifyCustomer,
   createCustomerAddress,

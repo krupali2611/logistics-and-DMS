@@ -27,12 +27,8 @@ export const updateShipment = async (id, payload) => {
   return response.data.data.shipment;
 };
 
-export const deleteShipment = async (id) => {
-  await axiosInstance.delete(`/shipments/${id}`);
-};
-
-export const cancelShipment = async (id, remarks) => {
-  const response = await axiosInstance.patch(`/shipments/${id}/cancel`, { remarks });
+export const cancelShipment = async (id, cancellation_reason) => {
+  const response = await axiosInstance.patch(`/shipments/${id}/cancel`, { cancellation_reason });
   return response.data.data.shipment;
 };
 

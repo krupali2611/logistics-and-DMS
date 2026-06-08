@@ -6,7 +6,6 @@ const SHIPMENT_PERMISSIONS = [
   'shipment_view',
   'shipment_create',
   'shipment_update',
-  'shipment_delete',
   'shipment_cancel',
   'shipment_status_update'
 ];
@@ -86,7 +85,6 @@ module.exports = {
           'shipment_view',
           'shipment_create',
           'shipment_update',
-          'shipment_delete',
           'shipment_cancel',
           'shipment_status_update'
         )

@@ -14,6 +14,8 @@ import { getFileUrl, toBase64Payload } from '../../utils/fileHelpers';
 import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 import styles from '../../styles/Shipment.module.css';
 
+const EDITABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT'];
+
 const initialForm = {
   file: null,
   fileName: ''
@@ -30,7 +32,7 @@ const ShipmentAttachments = () => {
   const [error, setError] = useState('');
 
   const canUpdate = permissions.includes('shipment_update');
-  const canDelete = permissions.includes('shipment_delete');
+  const isEditableShipment = EDITABLE_SHIPMENT_STATUSES.includes(shipment?.status);
 
   const loadData = async () => {
     setLoading(true);
@@ -140,7 +142,7 @@ const ShipmentAttachments = () => {
       {error ? <div className={styles.errorBox}>{error}</div> : null}
 
       <div className={styles.detailGridSingle}>
-        {canUpdate && shipment.status !== 'DELIVERED' ? (
+        {canUpdate && isEditableShipment ? (
           <form className={styles.formCard} onSubmit={handleSubmit} {...getFormValidationProps()}>
             <div className={styles.cardHeader}>
               <h3>Upload Attachment</h3>
@@ -199,7 +201,7 @@ const ShipmentAttachments = () => {
                     >
                       <ActionIcon name="open" />
                     </a>
-                    {canDelete && shipment.status !== 'DELIVERED' ? (
+                    {canUpdate && isEditableShipment ? (
                       <button
                         type="button"
                         className={styles.actionIconDanger}

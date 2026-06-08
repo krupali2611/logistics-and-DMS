@@ -53,13 +53,6 @@ router.put(
   validationMiddleware,
   asyncHandler(customerController.updateCustomer)
 );
-router.delete(
-  '/:id',
-  permissionMiddleware('customer_delete'),
-  customerIdParamValidator,
-  validationMiddleware,
-  asyncHandler(customerController.deleteCustomer)
-);
 router.patch(
   '/:id/status',
   permissionMiddleware('customer_update'),

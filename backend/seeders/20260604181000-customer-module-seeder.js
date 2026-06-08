@@ -6,7 +6,6 @@ const CUSTOMER_PERMISSIONS = [
   'customer_view',
   'customer_create',
   'customer_update',
-  'customer_delete',
   'customer_verify'
 ];
 
@@ -85,7 +84,6 @@ module.exports = {
           'customer_view',
           'customer_create',
           'customer_update',
-          'customer_delete',
           'customer_verify'
         )
       )

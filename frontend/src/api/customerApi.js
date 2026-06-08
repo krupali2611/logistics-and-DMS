@@ -27,10 +27,6 @@ export const updateCustomer = async (id, payload) => {
   return response.data.data.customer;
 };
 
-export const deleteCustomer = async (id) => {
-  await axiosInstance.delete(`/customers/${id}`);
-};
-
 export const updateCustomerStatus = async (id, status) => {
   const response = await axiosInstance.patch(`/customers/${id}/status`, { status });
   return response.data.data.customer;

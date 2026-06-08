@@ -332,6 +332,16 @@ db.Shipment.belongsTo(db.User, {
   as: 'createdBy'
 });
 
+db.User.hasMany(db.Shipment, {
+  foreignKey: 'cancelled_by',
+  as: 'cancelledShipments'
+});
+
+db.Shipment.belongsTo(db.User, {
+  foreignKey: 'cancelled_by',
+  as: 'cancelledBy'
+});
+
 db.CustomerUser.hasMany(db.Shipment, {
   foreignKey: 'created_by_customer_user_id',
   as: 'createdShipments'

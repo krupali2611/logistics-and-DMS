@@ -9,6 +9,8 @@ import { estimateShipmentFare } from '../../api/pricingApi';
 import styles from '../../styles/Shipment.module.css';
 import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
+const EDITABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT'];
+
 const emptyPackage = () => ({
   id: '',
   package_name: '',
@@ -106,6 +108,13 @@ const ShipmentForm = ({ mode }) => {
 
         if (isEditMode && id) {
           const shipmentResponse = await getShipmentById(id);
+
+          if (!EDITABLE_SHIPMENT_STATUSES.includes(shipmentResponse.status)) {
+            throw new Error(
+              `Shipment can only be edited in statuses: ${EDITABLE_SHIPMENT_STATUSES.join(', ')}.`
+            );
+          }
+
           setShipment(shipmentResponse);
           setForm({
             customer_id: shipmentResponse.customer_id,
@@ -142,7 +151,11 @@ const ShipmentForm = ({ mode }) => {
           }
         }
       } catch (requestError) {
-        setError(requestError.response?.data?.message || 'Unable to load shipment form data.');
+        setError(
+          requestError.response?.data?.message ||
+            requestError.message ||
+            'Unable to load shipment form data.'
+        );
       } finally {
         setLoading(false);
       }

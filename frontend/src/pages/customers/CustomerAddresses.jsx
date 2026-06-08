@@ -39,7 +39,6 @@ const CustomerAddresses = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const canUpdate = permissions.includes('customer_update');
-  const canDelete = permissions.includes('customer_delete');
 
   const loadData = async () => {
     setLoading(true);
@@ -289,7 +288,7 @@ const CustomerAddresses = () => {
                         <ActionIcon name="edit" />
                       </button>
                     ) : null}
-                    {canDelete ? (
+                    {canUpdate ? (
                       <button
                         type="button"
                         className={styles.actionIconDanger}

@@ -44,7 +44,6 @@ const CustomerDocuments = () => {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const canUpdate = permissions.includes('customer_update');
-  const canDelete = permissions.includes('customer_delete');
 
   const getDefaultDocumentType = (existingDocuments = documents) =>
     getAvailableDocumentTypes({
@@ -371,7 +370,7 @@ const CustomerDocuments = () => {
                         <ActionIcon name="edit" />
                       </button>
                     ) : null}
-                    {canDelete ? (
+                    {canUpdate ? (
                       <button
                         type="button"
                         className={styles.actionIconDanger}

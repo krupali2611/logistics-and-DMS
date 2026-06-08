@@ -21,14 +21,9 @@ const updateCustomer = async (req, res) => {
   return ApiResponse.success(res, 'Customer updated successfully.', { customer });
 };
 
-const deleteCustomer = async (req, res) => {
-  await customerService.deleteCustomer(req.params.id);
-  return ApiResponse.success(res, 'Customer deleted successfully.');
-};
-
 const updateCustomerStatus = async (req, res) => {
   const customer = await customerService.updateCustomerStatus(req.params.id, req.body.status);
-  return ApiResponse.success(res, 'Customer status updated successfully.', { customer });
+  return ApiResponse.success(res, `Customer ${req.body.status.toLowerCase()} successfully.`, { customer });
 };
 
 const verifyCustomer = async (req, res) => {
@@ -104,7 +99,6 @@ module.exports = {
   getCustomerById,
   createCustomer,
   updateCustomer,
-  deleteCustomer,
   updateCustomerStatus,
   verifyCustomer,
   createCustomerAddress,

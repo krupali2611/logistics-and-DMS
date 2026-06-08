@@ -10,6 +10,9 @@ const {
   SHIPMENT_STATUSES
 } = require('../constants/shipmentConstants');
 
+const EDITABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT'];
+const CANCELLABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT', 'ASSIGNED'];
+
 const ATTACHMENT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
 
 const buildPagination = ({ page, limit, totalRecords }) => ({
@@ -66,7 +69,7 @@ const getShipmentIncludes = ({ includeTracking = true, includeAssignments = true
     {
       model: db.Customer,
       as: 'customer',
-      attributes: ['id', 'customer_code', 'company_name', 'contact_person', 'phone', 'email']
+      attributes: ['id', 'customer_code', 'company_name', 'contact_person', 'phone', 'email', 'status']
     },
     {
       model: db.CustomerAddress,
@@ -141,6 +144,11 @@ const getShipmentIncludes = ({ includeTracking = true, includeAssignments = true
     {
       model: db.User,
       as: 'createdBy',
+      attributes: ['id', 'first_name', 'last_name', 'email']
+    },
+    {
+      model: db.User,
+      as: 'cancelledBy',
       attributes: ['id', 'first_name', 'last_name', 'email']
     },
     {
@@ -264,8 +272,11 @@ const normalizePackage = (pkg) => ({
 });
 
 const ensureEditableShipment = (shipment) => {
-  if (shipment.status === 'DELIVERED') {
-    throw new AppError('Delivered shipments cannot be modified.', 409);
+  if (!EDITABLE_SHIPMENT_STATUSES.includes(shipment.status)) {
+    throw new AppError(
+      `Shipment can only be edited in statuses: ${EDITABLE_SHIPMENT_STATUSES.join(', ')}.`,
+      409
+    );
   }
 };
 
@@ -335,6 +346,10 @@ const validateShipmentRelations = async ({
 
   if (!customer) {
     throw new AppError('Customer not found.', 404);
+  }
+
+  if (customer.status === 'BLOCKED') {
+    throw new AppError('Blocked customers cannot create or update shipments.', 403);
   }
 
   const pickupAddress = await getCustomerAddressOrFail(customer_id, pickup_address_id, 'Pickup address');
@@ -567,7 +582,7 @@ const listShipments = async (query, user) => {
       {
         model: db.Customer,
         as: 'customer',
-        attributes: ['id', 'customer_code', 'company_name', 'contact_person', 'phone', 'email']
+        attributes: ['id', 'customer_code', 'company_name', 'contact_person', 'phone', 'email', 'status']
       },
       {
         model: db.CustomerAddress,
@@ -642,6 +657,9 @@ const createShipment = async (payload, user) => {
         estimated_delivery_date: toNullable(payload.estimated_delivery_date),
         special_instructions: toNullable(normalizeText(payload.special_instructions)),
         status: payload.status || 'DRAFT',
+        cancelled_at: null,
+        cancelled_by: null,
+        cancellation_reason: null,
         created_by: accessContext.userId,
         created_by_customer_user_id: accessContext.customerUserId,
         ...buildShipmentPersistenceData({
@@ -832,6 +850,9 @@ const updateShipment = async (id, payload, user) => {
           payload.special_instructions === undefined
             ? shipment.special_instructions
             : toNullable(normalizeText(payload.special_instructions)),
+        cancelled_at: shipment.cancelled_at,
+        cancelled_by: shipment.cancelled_by,
+        cancellation_reason: shipment.cancellation_reason,
         ...nextShipmentPersistenceData,
         ...metrics
       },
@@ -866,25 +887,6 @@ const updateShipment = async (id, payload, user) => {
   }
 };
 
-const deleteShipment = async (id, user) => {
-  const shipment = await getShipmentById(id, user);
-  ensureEditableShipment(shipment);
-
-  const transaction = await db.sequelize.transaction();
-
-  try {
-    await db.Shipment.destroy({ where: { id }, transaction });
-    await transaction.commit();
-
-    await Promise.all(
-      shipment.attachments.map((attachment) => storageService.deleteFile(attachment.file_path))
-    );
-  } catch (error) {
-    await transaction.rollback();
-    throw error;
-  }
-};
-
 const updateShipmentStatus = async (id, status, remarks, user) => {
   const accessContext = resolveAccessContext(user);
   const shipment = await db.Shipment.findByPk(id);
@@ -895,12 +897,16 @@ const updateShipmentStatus = async (id, status, remarks, user) => {
 
   ensureShipmentAccess(shipment, accessContext);
 
-  if (shipment.status === 'DELIVERED') {
-    throw new AppError('Delivered shipments cannot be updated.', 409);
+  if (status === 'CANCELLED') {
+    throw new AppError('Use the cancel shipment endpoint to cancel shipments.', 409);
   }
 
   if (shipment.status === 'CANCELLED' && status !== 'CANCELLED') {
     throw new AppError('Cancelled shipments cannot be reassigned or reactivated.', 409);
+  }
+
+  if (shipment.status === 'DELIVERED') {
+    throw new AppError('Delivered shipments cannot be updated.', 409);
   }
 
   if (shipment.status === status) {
@@ -940,15 +946,47 @@ const cancelShipment = async (id, remarks, user) => {
 
   ensureShipmentAccess(shipment, accessContext);
 
-  if (shipment.status === 'DELIVERED') {
-    throw new AppError('Delivered shipments cannot be cancelled.', 409);
-  }
-
   if (shipment.status === 'CANCELLED') {
     return getShipmentById(id, user);
   }
 
-  return updateShipmentStatus(id, 'CANCELLED', remarks || 'Shipment cancelled.', user);
+  if (!CANCELLABLE_SHIPMENT_STATUSES.includes(shipment.status)) {
+    throw new AppError(
+      `Shipment can only be cancelled in statuses: ${CANCELLABLE_SHIPMENT_STATUSES.join(', ')}.`,
+      409
+    );
+  }
+
+  const transaction = await db.sequelize.transaction();
+
+  try {
+    const previousStatus = shipment.status;
+    await shipment.update(
+      {
+        status: 'CANCELLED',
+        cancelled_at: new Date(),
+        cancelled_by: accessContext.userId,
+        cancellation_reason: toNullable(normalizeText(remarks)) || 'Shipment cancelled.'
+      },
+      { transaction }
+    );
+
+    await appendStatusHistory({
+      shipment_id: id,
+      old_status: previousStatus,
+      new_status: 'CANCELLED',
+      remarks: toNullable(normalizeText(remarks)) || 'Shipment cancelled.',
+      updated_by: accessContext.userId,
+      updated_by_customer_user_id: accessContext.customerUserId,
+      transaction
+    });
+
+    await transaction.commit();
+    return getShipmentById(id, user);
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
 };
 
 const normalizePackagesPayload = (payload) => {
@@ -1227,6 +1265,8 @@ module.exports = {
   SHIPMENT_TYPES,
   SHIPMENT_PRIORITIES,
   SHIPMENT_STATUSES,
+  EDITABLE_SHIPMENT_STATUSES,
+  CANCELLABLE_SHIPMENT_STATUSES,
   listShipments,
   listMyShipments,
   getShipmentById,
@@ -1234,7 +1274,6 @@ module.exports = {
   trackShipment,
   createShipment,
   updateShipment,
-  deleteShipment,
   cancelShipment,
   updateShipmentStatus,
   createShipmentPackages,

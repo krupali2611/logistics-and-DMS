@@ -108,6 +108,18 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: 'DRAFT'
       },
+      cancelled_at: {
+        type: DataTypes.DATE,
+        allowNull: true
+      },
+      cancelled_by: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      cancellation_reason: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
       created_by_customer_user_id: {
         type: DataTypes.UUID,
         allowNull: true

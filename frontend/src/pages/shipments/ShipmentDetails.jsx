@@ -2,10 +2,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
 import ShipmentTimeline from '../../components/shipments/ShipmentTimeline';
-import { getShipmentById } from '../../api/shipmentApi';
+import { cancelShipment, getShipmentById } from '../../api/shipmentApi';
 import { getFileUrl } from '../../utils/fileHelpers';
 import { useAuth } from '../../context/AuthContext';
 import styles from '../../styles/Shipment.module.css';
+
+const EDITABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT'];
+const CANCELLABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT', 'ASSIGNED'];
 
 const formatAddress = (address) => {
   if (!address) {
@@ -38,21 +41,22 @@ const ShipmentDetails = () => {
   const [shipment, setShipment] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [actionState, setActionState] = useState('');
+
+  const loadShipment = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      setShipment(await getShipmentById(id));
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || 'Unable to load shipment details.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadShipment = async () => {
-      setLoading(true);
-      setError('');
-
-      try {
-        setShipment(await getShipmentById(id));
-      } catch (requestError) {
-        setError(requestError.response?.data?.message || 'Unable to load shipment details.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadShipment();
   }, [id]);
 
@@ -72,6 +76,33 @@ const ShipmentDetails = () => {
   const statusHistory = shipment?.status_history || shipment?.statusHistory || [];
   const attachments = shipment?.attachments || [];
   const packages = shipment?.packages || [];
+  const canEditShipment =
+    permissions.includes('shipment_update') && EDITABLE_SHIPMENT_STATUSES.includes(shipment?.status);
+  const canCancelShipment =
+    permissions.includes('shipment_cancel') && CANCELLABLE_SHIPMENT_STATUSES.includes(shipment?.status);
+
+  const handleCancelShipment = async () => {
+    const reason = window.prompt(
+      'Cancellation reason:',
+      shipment?.cancellation_reason || 'Shipment cancelled from shipment details.'
+    );
+
+    if (reason === null) {
+      return;
+    }
+
+    setActionState('Cancelling shipment...');
+    setError('');
+
+    try {
+      await cancelShipment(id, reason);
+      await loadShipment();
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || 'Unable to cancel shipment.');
+    } finally {
+      setActionState('');
+    }
+  };
 
   if (loading) {
     return <Loader label="Loading shipment details..." />;
@@ -92,10 +123,20 @@ const ShipmentDetails = () => {
           </p>
         </div>
         <div className={styles.linkGroup}>
-          {permissions.includes('shipment_update') && shipment.status !== 'DELIVERED' ? (
+          {canEditShipment ? (
             <Link to={`/shipments/${id}/edit`} className={styles.secondaryLink}>
               Edit Shipment
             </Link>
+          ) : null}
+          {canCancelShipment ? (
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={handleCancelShipment}
+              disabled={Boolean(actionState)}
+            >
+              Cancel Shipment
+            </button>
           ) : null}
           <Link to={`/shipments/${id}/timeline`} className={styles.secondaryLink}>
             Timeline
@@ -106,6 +147,7 @@ const ShipmentDetails = () => {
         </div>
       </div>
 
+      {actionState ? <div className={styles.statusText}>{actionState}</div> : null}
       <div className={styles.detailGrid}>
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>
@@ -119,6 +161,7 @@ const ShipmentDetails = () => {
             <div><strong>Shipment Type:</strong> {shipment.shipment_type}</div>
             <div><strong>Priority:</strong> {shipment.priority}</div>
             <div><strong>Status:</strong> {shipment.status}</div>
+            <div><strong>Cancellation Reason:</strong> {shipment.cancellation_reason || 'Not cancelled'}</div>
             <div>
               <strong>Estimated Delivery:</strong>{' '}
               {shipment.estimated_delivery_date
@@ -127,6 +170,10 @@ const ShipmentDetails = () => {
             </div>
             <div><strong>Estimated Distance:</strong> {shipment.estimated_distance || '0'} km</div>
             <div><strong>Created:</strong> {new Date(shipment.created_at).toLocaleString()}</div>
+            <div>
+              <strong>Cancelled At:</strong>{' '}
+              {shipment.cancelled_at ? new Date(shipment.cancelled_at).toLocaleString() : 'Not cancelled'}
+            </div>
           </div>
         </section>
 

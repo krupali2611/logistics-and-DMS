@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
-import { getCustomerById } from '../../api/customerApi';
+import { getCustomerById, updateCustomerStatus } from '../../api/customerApi';
 import { useAuth } from '../../context/AuthContext';
 import styles from '../../styles/Customer.module.css';
 
@@ -11,23 +11,38 @@ const CustomerDetails = () => {
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [actionState, setActionState] = useState('');
+
+  const loadCustomer = async () => {
+    setLoading(true);
+    setError('');
+
+    try {
+      setCustomer(await getCustomerById(id));
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || 'Unable to load customer details.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const loadCustomer = async () => {
-      setLoading(true);
-      setError('');
-
-      try {
-        setCustomer(await getCustomerById(id));
-      } catch (requestError) {
-        setError(requestError.response?.data?.message || 'Unable to load customer details.');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadCustomer();
   }, [id]);
+
+  const runStatusAction = async (status, label) => {
+    setActionState(label);
+    setError('');
+
+    try {
+      await updateCustomerStatus(id, status);
+      await loadCustomer();
+    } catch (requestError) {
+      setError(requestError.response?.data?.message || 'Unable to update customer status.');
+    } finally {
+      setActionState('');
+    }
+  };
 
   if (loading) {
     return <Loader label="Loading customer details..." />;
@@ -55,6 +70,31 @@ const CustomerDetails = () => {
               Edit Customer
             </Link>
           ) : null}
+          {permissions.includes('customer_update') ? (
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() =>
+                runStatusAction(
+                  customer.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE',
+                  customer.status === 'ACTIVE' ? 'Deactivating customer...' : 'Activating customer...'
+                )
+              }
+              disabled={Boolean(actionState)}
+            >
+              {customer.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
+            </button>
+          ) : null}
+          {permissions.includes('customer_update') && customer.status !== 'BLOCKED' ? (
+            <button
+              type="button"
+              className={styles.secondaryButton}
+              onClick={() => runStatusAction('BLOCKED', 'Blocking customer...')}
+              disabled={Boolean(actionState)}
+            >
+              Block
+            </button>
+          ) : null}
           <Link to={`/customers/${id}/addresses`} className={styles.secondaryLink}>
             Manage Addresses
           </Link>
@@ -64,6 +104,7 @@ const CustomerDetails = () => {
         </div>
       </div>
 
+      {actionState ? <div className={styles.statusText}>{actionState}</div> : null}
       <div className={styles.detailGrid}>
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>

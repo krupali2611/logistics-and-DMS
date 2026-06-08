@@ -81,10 +81,6 @@ const createCustomerValidator = [
     .trim()
     .isLength({ max: 20 })
     .withMessage('PAN number must be at most 20 characters.'),
-  body('status')
-    .optional()
-    .isIn(CUSTOMER_STATUS)
-    .withMessage(`Status must be one of: ${CUSTOMER_STATUS.join(', ')}.`),
   body('verification_status')
     .optional()
     .isIn(CUSTOMER_VERIFICATION_STATUS)

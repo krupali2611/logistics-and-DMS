@@ -22,7 +22,7 @@ router.put(
 );
 router.delete(
   '/:id',
-  permissionMiddleware('customer_delete'),
+  permissionMiddleware('customer_update'),
   customerAddressIdParamValidator,
   validationMiddleware,
   asyncHandler(customerController.deleteCustomerAddress)

@@ -36,8 +36,12 @@ const customerAuthMiddleware = async (req, res, next) => {
       return ApiResponse.error(res, 'Customer account not found or inactive.', [], 401);
     }
 
-    if (!customerUser.customer || customerUser.customer.status !== 'ACTIVE') {
+    if (!customerUser.customer) {
       return ApiResponse.error(res, 'Customer account is not available.', [], 403);
+    }
+
+    if (customerUser.customer.status === 'BLOCKED') {
+      return ApiResponse.error(res, 'Customer account is blocked.', [], 403);
     }
 
     req.customerUser = customerUser;

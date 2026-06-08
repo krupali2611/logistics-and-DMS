@@ -20,12 +20,12 @@ const DEFAULT_PERMISSIONS = [
   'customer_view',
   'customer_create',
   'customer_update',
-  'customer_delete',
   'customer_verify',
   'shipment_view',
   'shipment_create',
   'shipment_update',
-  'shipment_delete',
+  'shipment_cancel',
+  'shipment_status_update',
   'dashboard_view'
 ];
 

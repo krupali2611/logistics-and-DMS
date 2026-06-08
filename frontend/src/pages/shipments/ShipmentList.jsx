@@ -5,10 +5,12 @@ import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../../context/AuthContext';
 import {
   cancelShipment,
-  deleteShipment,
   getShipments
 } from '../../api/shipmentApi';
 import styles from '../../styles/Shipment.module.css';
+
+const CANCELLABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT', 'ASSIGNED'];
+const EDITABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT'];
 
 const initialFilters = {
   search: '',
@@ -32,7 +34,6 @@ const ShipmentList = () => {
 
   const canCreate = permissions.includes('shipment_create');
   const canUpdate = permissions.includes('shipment_update');
-  const canDelete = permissions.includes('shipment_delete');
   const canCancel = permissions.includes('shipment_cancel');
 
   const fetchShipments = async (currentFilters = filters) => {
@@ -101,16 +102,8 @@ const ShipmentList = () => {
     }
   };
 
-  const handleDelete = async (shipmentId) => {
-    if (!window.confirm('Delete this shipment and all linked packages, history, and attachments?')) {
-      return;
-    }
-
-    await runAction(() => deleteShipment(shipmentId), 'Deleting shipment...');
-  };
-
   const handleCancel = async (shipmentId) => {
-    const remarks = window.prompt('Optional cancellation remarks:', 'Shipment cancelled from shipment list.');
+    const remarks = window.prompt('Cancellation reason:', 'Shipment cancelled from shipment list.');
 
     if (remarks === null) {
       return;
@@ -273,7 +266,7 @@ const ShipmentList = () => {
                         >
                           <ActionIcon name="view" />
                         </Link>
-                        {canUpdate ? (
+                        {canUpdate && EDITABLE_SHIPMENT_STATUSES.includes(shipment.status) ? (
                           <Link
                             to={`/shipments/${shipment.id}/edit`}
                             className={styles.actionIconLink}
@@ -299,7 +292,7 @@ const ShipmentList = () => {
                         >
                           <ActionIcon name="document" />
                         </Link>
-                        {canCancel && shipment.status !== 'CANCELLED' && shipment.status !== 'DELIVERED' ? (
+                        {canCancel && CANCELLABLE_SHIPMENT_STATUSES.includes(shipment.status) ? (
                           <button
                             type="button"
                             className={styles.actionIconButton}
@@ -308,17 +301,6 @@ const ShipmentList = () => {
                             onClick={() => handleCancel(shipment.id)}
                           >
                             <ActionIcon name="deactivate" />
-                          </button>
-                        ) : null}
-                        {canDelete ? (
-                          <button
-                            type="button"
-                            className={styles.actionIconDanger}
-                            title="Delete shipment"
-                            aria-label="Delete shipment"
-                            onClick={() => handleDelete(shipment.id)}
-                          >
-                            <ActionIcon name="delete" />
                           </button>
                         ) : null}
                       </div>

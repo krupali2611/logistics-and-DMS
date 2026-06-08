@@ -73,13 +73,6 @@ router.put(
   validationMiddleware,
   asyncHandler(shipmentController.updateShipment)
 );
-router.delete(
-  '/:id',
-  permissionMiddleware('shipment_delete'),
-  shipmentIdParamValidator,
-  validationMiddleware,
-  asyncHandler(shipmentController.deleteShipment)
-);
 router.patch(
   '/:id/cancel',
   permissionMiddleware('shipment_cancel'),

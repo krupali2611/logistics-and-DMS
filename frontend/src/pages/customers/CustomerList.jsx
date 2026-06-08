@@ -4,7 +4,6 @@ import ActionIcon from '../../components/ActionIcon/ActionIcon';
 import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../../context/AuthContext';
 import {
-  deleteCustomer,
   getCustomers,
   updateCustomerStatus,
   verifyCustomer
@@ -31,7 +30,6 @@ const CustomerList = () => {
 
   const canCreate = permissions.includes('customer_create');
   const canUpdate = permissions.includes('customer_update');
-  const canDelete = permissions.includes('customer_delete');
   const canVerify = permissions.includes('customer_verify');
 
   const fetchCustomers = async (currentFilters = filters) => {
@@ -87,14 +85,6 @@ const CustomerList = () => {
     } finally {
       setActionState('');
     }
-  };
-
-  const handleDelete = async (customerId) => {
-    if (!window.confirm('Delete this customer and all linked addresses, documents, and notes?')) {
-      return;
-    }
-
-    await runAction(() => deleteCustomer(customerId), 'Deleting customer...');
   };
 
   if (loading && !data.pagination) {
@@ -299,15 +289,20 @@ const CustomerList = () => {
                             />
                           </button>
                         ) : null}
-                        {canDelete ? (
+                        {canUpdate && customer.status !== 'BLOCKED' ? (
                           <button
                             type="button"
                             className={styles.actionIconDanger}
-                            title="Delete customer"
-                            aria-label="Delete customer"
-                            onClick={() => handleDelete(customer.id)}
+                            title="Block customer"
+                            aria-label="Block customer"
+                            onClick={() =>
+                              runAction(
+                                () => updateCustomerStatus(customer.id, 'BLOCKED'),
+                                'Blocking customer...'
+                              )
+                            }
                           >
-                            <ActionIcon name="delete" />
+                            <ActionIcon name="deactivate" />
                           </button>
                         ) : null}
                       </div>

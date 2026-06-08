@@ -57,13 +57,12 @@ const updateShipment = async (req, res) => {
   });
 };
 
-const deleteShipment = async (req, res) => {
-  await shipmentService.deleteShipment(req.params.id, req.user);
-  return ApiResponse.success(res, 'Shipment deleted successfully.');
-};
-
 const cancelShipment = async (req, res) => {
-  const shipment = await shipmentService.cancelShipment(req.params.id, req.body.remarks, req.user);
+  const shipment = await shipmentService.cancelShipment(
+    req.params.id,
+    req.body.cancellation_reason ?? req.body.remarks,
+    req.user
+  );
   return ApiResponse.success(res, 'Shipment cancelled successfully.', {
     shipment: toShipmentDetailDto(shipment)
   });
@@ -131,7 +130,6 @@ module.exports = {
   trackShipment,
   createShipment,
   updateShipment,
-  deleteShipment,
   cancelShipment,
   updateShipmentStatus,
   createShipmentPackages,
