@@ -22,6 +22,8 @@ const ShipmentModel = require('./Shipment');
 const ShipmentPackageModel = require('./ShipmentPackage');
 const ShipmentStatusHistoryModel = require('./ShipmentStatusHistory');
 const ShipmentAttachmentModel = require('./ShipmentAttachment');
+const ShipmentAssignmentModel = require('./ShipmentAssignment');
+const ShipmentTrackingEventModel = require('./ShipmentTrackingEvent');
 
 const db = {};
 
@@ -49,6 +51,8 @@ db.Shipment = ShipmentModel(sequelize);
 db.ShipmentPackage = ShipmentPackageModel(sequelize);
 db.ShipmentStatusHistory = ShipmentStatusHistoryModel(sequelize);
 db.ShipmentAttachment = ShipmentAttachmentModel(sequelize);
+db.ShipmentAssignment = ShipmentAssignmentModel(sequelize);
+db.ShipmentTrackingEvent = ShipmentTrackingEventModel(sequelize);
 
 db.User.belongsToMany(db.Role, {
   through: db.UserRole,
@@ -336,6 +340,76 @@ db.User.hasMany(db.ShipmentAttachment, {
 db.ShipmentAttachment.belongsTo(db.User, {
   foreignKey: 'uploaded_by',
   as: 'uploadedBy'
+});
+
+db.Shipment.hasMany(db.ShipmentAssignment, {
+  foreignKey: 'shipment_id',
+  as: 'assignments'
+});
+
+db.ShipmentAssignment.belongsTo(db.Shipment, {
+  foreignKey: 'shipment_id',
+  as: 'shipment'
+});
+
+db.Driver.hasMany(db.ShipmentAssignment, {
+  foreignKey: 'driver_id',
+  as: 'shipmentAssignments'
+});
+
+db.ShipmentAssignment.belongsTo(db.Driver, {
+  foreignKey: 'driver_id',
+  as: 'driver'
+});
+
+db.Vehicle.hasMany(db.ShipmentAssignment, {
+  foreignKey: 'vehicle_id',
+  as: 'shipmentAssignments'
+});
+
+db.ShipmentAssignment.belongsTo(db.Vehicle, {
+  foreignKey: 'vehicle_id',
+  as: 'vehicle'
+});
+
+db.User.hasMany(db.ShipmentAssignment, {
+  foreignKey: 'assigned_by',
+  as: 'shipmentAssignmentsCreated'
+});
+
+db.ShipmentAssignment.belongsTo(db.User, {
+  foreignKey: 'assigned_by',
+  as: 'assignedBy'
+});
+
+db.Shipment.hasMany(db.ShipmentTrackingEvent, {
+  foreignKey: 'shipment_id',
+  as: 'trackingEvents'
+});
+
+db.ShipmentTrackingEvent.belongsTo(db.Shipment, {
+  foreignKey: 'shipment_id',
+  as: 'shipment'
+});
+
+db.ShipmentAssignment.hasMany(db.ShipmentTrackingEvent, {
+  foreignKey: 'shipment_assignment_id',
+  as: 'trackingEvents'
+});
+
+db.ShipmentTrackingEvent.belongsTo(db.ShipmentAssignment, {
+  foreignKey: 'shipment_assignment_id',
+  as: 'assignment'
+});
+
+db.User.hasMany(db.ShipmentTrackingEvent, {
+  foreignKey: 'recorded_by',
+  as: 'shipmentTrackingEvents'
+});
+
+db.ShipmentTrackingEvent.belongsTo(db.User, {
+  foreignKey: 'recorded_by',
+  as: 'recordedBy'
 });
 
 module.exports = db;

@@ -27,9 +27,41 @@ module.exports = (sequelize) => {
         type: DataTypes.UUID,
         allowNull: false
       },
+      pickup_address_snapshot: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
       delivery_address_id: {
         type: DataTypes.UUID,
         allowNull: false
+      },
+      delivery_address_snapshot: {
+        type: DataTypes.TEXT,
+        allowNull: false
+      },
+      pickup_latitude: {
+        type: DataTypes.DECIMAL(10, 7),
+        allowNull: true
+      },
+      pickup_longitude: {
+        type: DataTypes.DECIMAL(10, 7),
+        allowNull: true
+      },
+      delivery_latitude: {
+        type: DataTypes.DECIMAL(10, 7),
+        allowNull: true
+      },
+      delivery_longitude: {
+        type: DataTypes.DECIMAL(10, 7),
+        allowNull: true
+      },
+      pickup_place_id: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+      },
+      delivery_place_id: {
+        type: DataTypes.STRING(255),
+        allowNull: true
       },
       vehicle_type_id: {
         type: DataTypes.UUID,
@@ -75,6 +107,22 @@ module.exports = (sequelize) => {
         type: DataTypes.ENUM(...SHIPMENT_STATUSES),
         allowNull: false,
         defaultValue: 'DRAFT'
+      },
+      current_driver_latitude: {
+        type: DataTypes.DECIMAL(10, 7),
+        allowNull: true
+      },
+      current_driver_longitude: {
+        type: DataTypes.DECIMAL(10, 7),
+        allowNull: true
+      },
+      current_eta: {
+        type: DataTypes.DATE,
+        allowNull: true
+      },
+      current_location_updated_at: {
+        type: DataTypes.DATE,
+        allowNull: true
       },
       created_by: {
         type: DataTypes.UUID,

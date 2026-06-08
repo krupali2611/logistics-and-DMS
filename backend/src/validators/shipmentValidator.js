@@ -95,9 +95,40 @@ const packageRule = (path) => [
 const shipmentIdParamValidator = [uuidParam('id', 'Shipment ID')];
 const shipmentPackageIdParamValidator = [uuidParam('id', 'Shipment package ID')];
 const shipmentAttachmentIdParamValidator = [uuidParam('id', 'Shipment attachment ID')];
+const coordinateRules = [
+  body('pickup_latitude')
+    .optional({ values: 'falsy' })
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Pickup latitude must be between -90 and 90.'),
+  body('pickup_longitude')
+    .optional({ values: 'falsy' })
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Pickup longitude must be between -180 and 180.'),
+  body('delivery_latitude')
+    .optional({ values: 'falsy' })
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Delivery latitude must be between -90 and 90.'),
+  body('delivery_longitude')
+    .optional({ values: 'falsy' })
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Delivery longitude must be between -180 and 180.'),
+  body('pickup_place_id')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Pickup place ID must be at most 255 characters.'),
+  body('delivery_place_id')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('Delivery place ID must be at most 255 characters.')
+];
 
 const baseShipmentValidators = [
-  body('customer_id').notEmpty().withMessage('Customer is required.').isUUID(),
+  body('customer_id')
+    .optional()
+    .isUUID()
+    .withMessage('Customer must be a valid UUID.'),
   body('pickup_address_id').notEmpty().withMessage('Pickup address is required.').isUUID(),
   body('delivery_address_id').notEmpty().withMessage('Delivery address is required.').isUUID(),
   body('vehicle_type_id').notEmpty().withMessage('Vehicle type is required.').isUUID(),
@@ -132,7 +163,11 @@ const baseShipmentValidators = [
     .withMessage('At least one package is required.')
 ];
 
-const createShipmentValidator = [...baseShipmentValidators, ...packageRule('packages.*')];
+const createShipmentValidator = [
+  ...baseShipmentValidators,
+  ...coordinateRules,
+  ...packageRule('packages.*')
+];
 
 const updateShipmentValidator = [
   ...shipmentIdParamValidator,
@@ -172,6 +207,7 @@ const updateShipmentValidator = [
     .optional()
     .isUUID()
     .withMessage('Package ID must be a valid UUID.'),
+  ...coordinateRules,
   ...packageRule('packages.*')
 ];
 
@@ -193,6 +229,10 @@ const listShipmentsValidator = [
     .optional()
     .isIn(SHIPMENT_TYPES)
     .withMessage(`Shipment type must be one of: ${SHIPMENT_TYPES.join(', ')}.`),
+  query('customer_id')
+    .optional()
+    .isUUID()
+    .withMessage('customer_id must be a valid UUID.'),
   query('created_from')
     .optional()
     .isISO8601()

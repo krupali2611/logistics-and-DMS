@@ -31,12 +31,33 @@ router.get(
   validationMiddleware,
   asyncHandler(shipmentController.listShipments)
 );
+router.get(
+  '/my',
+  permissionMiddleware('shipment_view'),
+  listShipmentsValidator,
+  validationMiddleware,
+  asyncHandler(shipmentController.listMyShipments)
+);
 router.post(
   '/',
   permissionMiddleware('shipment_create'),
   createShipmentValidator,
   validationMiddleware,
   asyncHandler(shipmentController.createShipment)
+);
+router.get(
+  '/my/:id',
+  permissionMiddleware('shipment_view'),
+  shipmentIdParamValidator,
+  validationMiddleware,
+  asyncHandler(shipmentController.getMyShipmentById)
+);
+router.get(
+  '/:id/track',
+  permissionMiddleware('shipment_view'),
+  shipmentIdParamValidator,
+  validationMiddleware,
+  asyncHandler(shipmentController.trackShipment)
 );
 router.get(
   '/:id',
