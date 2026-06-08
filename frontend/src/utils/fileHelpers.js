@@ -21,12 +21,15 @@ export const getFileUrl = (filePath) => {
     return '';
   }
 
-  if (/^https?:\/\//i.test(filePath)) {
+  if (/^(?:https?:)?\/\//i.test(filePath) || /^(?:data|blob):/i.test(filePath)) {
     return filePath;
   }
 
-  const origin = API_BASE_URL.replace(/\/api\/?$/, '');
-  return `${origin}${filePath}`;
+  const normalizedPath = `${filePath}`.replace(/\\/g, '/');
+  const apiUrl = new URL(API_BASE_URL, window.location.origin);
+  const baseOrigin = apiUrl.origin;
+
+  return `${baseOrigin}${normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`}`;
 };
 
 export const isImageFile = (filePath) => IMAGE_FILE_PATTERN.test(filePath || '');

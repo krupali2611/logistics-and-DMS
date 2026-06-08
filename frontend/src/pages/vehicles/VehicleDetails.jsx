@@ -36,7 +36,10 @@ const VehicleDetails = () => {
     return <div className={styles.errorBox}>{error}</div>;
   }
 
-  const currentAssignment = vehicle.assignments.find((assignment) => assignment.status === 'ACTIVE');
+  const documents = vehicle.documents || [];
+  const assignmentHistory = vehicle.assignmentHistory || [];
+  const currentAssignment =
+    assignmentHistory.find((assignment) => assignment.status === 'ASSIGNED') || null;
 
   return (
     <div className={styles.page}>
@@ -49,6 +52,9 @@ const VehicleDetails = () => {
           </p>
         </div>
         <div className={styles.linkGroup}>
+          <Link to="/vehicles" className={styles.secondaryLink}>
+            Back
+          </Link>
           <Link to={`/vehicles/${id}/edit`} className={styles.secondaryLink}>
             Edit Vehicle
           </Link>
@@ -63,17 +69,47 @@ const VehicleDetails = () => {
           <div className={styles.cardHeader}>
             <h3>Vehicle Overview</h3>
           </div>
-          <div className={styles.infoGrid}>
-            <div><strong>Type:</strong> {vehicle.vehicleType?.type_name || 'Unknown'}</div>
-            <div><strong>Brand:</strong> {vehicle.brand}</div>
-            <div><strong>Model:</strong> {vehicle.model}</div>
-            <div><strong>Year:</strong> {vehicle.manufacturing_year}</div>
-            <div><strong>Fuel:</strong> {vehicle.fuel_type}</div>
-            <div><strong>Capacity:</strong> {vehicle.capacity}</div>
-            <div><strong>Status:</strong> {vehicle.status}</div>
-            <div><strong>Availability:</strong> {vehicle.availability_status}</div>
-            <div><strong>Verification:</strong> {vehicle.verification_status}</div>
-            <div><strong>Created:</strong> {new Date(vehicle.created_at).toLocaleString()}</div>
+          <div className={styles.detailInfoGrid}>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Type</span>
+              <strong>{vehicle.vehicleType?.type_name || 'Unknown'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Brand</span>
+              <strong>{vehicle.brand || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Model</span>
+              <strong>{vehicle.model || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Year</span>
+              <strong>{vehicle.manufacturing_year || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Fuel</span>
+              <strong>{vehicle.fuel_type || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Capacity</span>
+              <strong>{vehicle.capacity || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Status</span>
+              <strong>{vehicle.status || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Availability</span>
+              <strong>{vehicle.availability_status || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Verification</span>
+              <strong>{vehicle.verification_status || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Created</span>
+              <strong>{new Date(vehicle.created_at).toLocaleString()}</strong>
+            </div>
           </div>
         </section>
 
@@ -81,11 +117,23 @@ const VehicleDetails = () => {
           <div className={styles.cardHeader}>
             <h3>Compliance & Registration</h3>
           </div>
-          <div className={styles.infoGrid}>
-            <div><strong>Insurance No:</strong> {vehicle.insurance_number || 'Not set'}</div>
-            <div><strong>Insurance Expiry:</strong> {vehicle.insurance_expiry || 'Not set'}</div>
-            <div><strong>Registration No:</strong> {vehicle.registration_number}</div>
-            <div><strong>Registration Expiry:</strong> {vehicle.registration_expiry || 'Not set'}</div>
+          <div className={styles.detailInfoGrid}>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Insurance No</span>
+              <strong>{vehicle.insurance_number || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Insurance Expiry</span>
+              <strong>{vehicle.insurance_expiry || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Registration No</span>
+              <strong>{vehicle.registration_number || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Registration Expiry</span>
+              <strong>{vehicle.registration_expiry || 'Not set'}</strong>
+            </div>
           </div>
         </section>
 
@@ -110,13 +158,13 @@ const VehicleDetails = () => {
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>
             <h3>Documents</h3>
-            <p>{vehicle.documents.length} records linked</p>
+            <p>{documents.length} records linked</p>
           </div>
           <div className={styles.documentSummary}>
-            {vehicle.documents.length === 0 ? (
+            {documents.length === 0 ? (
               <p className={styles.pageCopy}>No documents uploaded yet.</p>
             ) : (
-              vehicle.documents.map((document) => (
+              documents.map((document) => (
                 <div key={document.id} className={styles.summaryCard}>
                   <strong>{document.document_type}</strong>
                   <span>{document.document_number}</span>

@@ -96,14 +96,40 @@
 .infoGrid,
 .metricGrid {
   display: grid;
-  grid-template-columns: minmax(240px, 1.5fr) repeat(3, minmax(150px, 0.9fr)) auto;
   gap: 12px;
+}
+
+.filterGrid {
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   align-items: end;
+}
+
+.formGrid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: start;
+}
+
+.infoGrid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: stretch;
+}
+
+.metricGrid {
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  align-items: stretch;
 }
 
 .documentFormGrid {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   align-items: start;
+}
+
+.addressFormGrid {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.addressTypeField {
+  max-width: 220px;
 }
 
 .field {
@@ -402,6 +428,10 @@
   gap: 8px;
 }
 
+.summaryCard a {
+  width: fit-content;
+}
+
 .summaryCard strong,
 .summaryCard span {
   overflow-wrap: anywhere;
@@ -453,6 +483,10 @@
   .pagination {
     grid-template-columns: 1fr;
     display: grid;
+  }
+
+  .addressTypeField {
+    max-width: none;
   }
 
   .filterActions {

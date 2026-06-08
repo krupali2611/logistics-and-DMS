@@ -34,7 +34,6 @@ import CustomerLogin from './pages/customer/CustomerLogin';
 import CustomerRegister from './pages/customer/CustomerRegister';
 import CustomerForgotPassword from './pages/customer/CustomerForgotPassword';
 import CustomerResetPassword from './pages/customer/CustomerResetPassword';
-import CustomerOtpVerification from './pages/customer/CustomerOtpVerification';
 import CustomerProfile from './pages/customer/CustomerProfile';
 import { useCustomerAuth } from './context/CustomerAuthContext';
 
@@ -93,7 +92,7 @@ const App = () => {
         path="/customer/verify-otp"
         element={
           <CustomerPublicRoute>
-            <CustomerOtpVerification />
+            <Navigate to="/customer/login" replace />
           </CustomerPublicRoute>
         }
       />

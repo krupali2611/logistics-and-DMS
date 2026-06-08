@@ -123,8 +123,8 @@ const CustomerProfile = () => {
         </div>
         <div className={styles.summaryMeta}>
           <span>{user?.status}</span>
-          <span>{user?.is_email_verified ? 'Email Verified' : 'Email Pending'}</span>
-          <span>{user?.is_phone_verified ? 'Phone Verified' : 'Phone Pending'}</span>
+          <span>{user?.email}</span>
+          <span>{user?.phone}</span>
         </div>
       </section>
 

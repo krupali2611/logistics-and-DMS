@@ -88,6 +88,10 @@
   color: #ffffff;
 }
 
+.toolbar > * {
+  min-width: 0;
+}
+
 .secondaryLink,
 .secondaryButton {
   background: #edf8f7;
@@ -423,6 +427,35 @@
   overflow-wrap: anywhere;
 }
 
+.detailInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.infoItem {
+  min-width: 0;
+  padding: 14px 16px;
+  border: 1px solid #e4edf6;
+  border-radius: 16px;
+  background: #fbfdff;
+  display: grid;
+  gap: 6px;
+}
+
+.infoLabel {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #67829d;
+}
+
+.infoItem strong {
+  color: #183654;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
 .modalOverlay {
   position: fixed;
   inset: 0;
@@ -530,6 +563,10 @@
 
   .resetButton {
     width: 100%;
+  }
+
+  .linkGroup > * {
+    flex: 1 1 100%;
   }
 
   .table {

@@ -154,11 +154,11 @@ const CustomerAddresses = () => {
           </p>
         </div>
         <div className={styles.linkGroup}>
+          <Link to="/customers" className={styles.secondaryLink}>
+            Back
+          </Link>
           <Link to={`/customers/${id}`} className={styles.secondaryLink}>
             Customer Details
-          </Link>
-          <Link to="/customers" className={styles.secondaryLink}>
-            Customer List
           </Link>
         </div>
       </div>
@@ -173,8 +173,8 @@ const CustomerAddresses = () => {
               <p>Only one billing address can stay marked as default at a time.</p>
             </div>
 
-            <div className={styles.formGrid}>
-              <label className={styles.field}>
+            <div className={`${styles.formGrid} ${styles.addressFormGrid}`}>
+              <label className={`${styles.field} ${styles.addressTypeField}`}>
                 <span>Address Type</span>
                 <select name="address_type" value={form.address_type} onChange={handleChange}>
                   <option value="PICKUP">PICKUP</option>
@@ -183,7 +183,7 @@ const CustomerAddresses = () => {
                   <option value="OTHER">OTHER</option>
                 </select>
               </label>
-              <label className={styles.field}>
+              <label className={`${styles.field} ${styles.fullWidth}`}>
                 <span>Address Line 1</span>
                 <input
                   name="address_line_1"
@@ -192,7 +192,7 @@ const CustomerAddresses = () => {
                   required
                 />
               </label>
-              <label className={styles.field}>
+              <label className={`${styles.field} ${styles.fullWidth}`}>
                 <span>Address Line 2</span>
                 <input
                   name="address_line_2"
@@ -228,7 +228,7 @@ const CustomerAddresses = () => {
                 <span>Longitude</span>
                 <input name="longitude" value={form.longitude} onChange={handleChange} />
               </label>
-              <label className={`${styles.field} ${styles.checkboxField}`}>
+              <label className={`${styles.field} ${styles.checkboxField} ${styles.fullWidth}`}>
                 <input
                   type="checkbox"
                   name="is_default"

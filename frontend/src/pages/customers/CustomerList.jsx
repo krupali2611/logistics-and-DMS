@@ -5,8 +5,7 @@ import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../../context/AuthContext';
 import {
   getCustomers,
-  updateCustomerStatus,
-  verifyCustomer
+  updateCustomerStatus
 } from '../../api/customerApi';
 import styles from '../../styles/Customer.module.css';
 
@@ -30,7 +29,6 @@ const CustomerList = () => {
 
   const canCreate = permissions.includes('customer_create');
   const canUpdate = permissions.includes('customer_update');
-  const canVerify = permissions.includes('customer_verify');
 
   const fetchCustomers = async (currentFilters = filters) => {
     setLoading(true);
@@ -251,22 +249,6 @@ const CustomerList = () => {
                         >
                           <ActionIcon name="notes" />
                         </Link>
-                        {canVerify && customer.verification_status !== 'VERIFIED' ? (
-                          <button
-                            type="button"
-                            className={styles.actionIconButton}
-                            title="Verify customer"
-                            aria-label="Verify customer"
-                            onClick={() =>
-                              runAction(
-                                () => verifyCustomer(customer.id, 'VERIFIED'),
-                                'Verifying customer...'
-                              )
-                            }
-                          >
-                            <ActionIcon name="verify" />
-                          </button>
-                        ) : null}
                         {canUpdate ? (
                           <button
                             type="button"

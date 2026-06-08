@@ -32,13 +32,6 @@ export const updateCustomerStatus = async (id, status) => {
   return response.data.data.customer;
 };
 
-export const verifyCustomer = async (id, verification_status) => {
-  const response = await axiosInstance.patch(`/customers/${id}/verify`, {
-    verification_status
-  });
-  return response.data.data.customer;
-};
-
 export const getCustomerAddresses = async (customerId) => {
   const response = await axiosInstance.get(`/customers/${customerId}/addresses`);
   return response.data.data.addresses;

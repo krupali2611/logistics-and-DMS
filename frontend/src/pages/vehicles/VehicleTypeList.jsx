@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import ActionIcon from '../../components/ActionIcon/ActionIcon';
 import Button from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../../context/AuthContext';
 import {
   createVehicleType,
-  deleteVehicleType,
   getVehicleTypes,
   updateVehicleType
 } from '../../api/vehicleApi';
@@ -31,7 +31,6 @@ const VehicleTypeList = () => {
 
   const canCreate = permissions.includes('vehicle_create');
   const canUpdate = permissions.includes('vehicle_update');
-  const canDelete = permissions.includes('vehicle_delete');
 
   const loadVehicleTypes = async () => {
     setLoading(true);
@@ -102,18 +101,17 @@ const VehicleTypeList = () => {
     });
   };
 
-  const handleDelete = async (id) => {
-    const confirmed = window.confirm('Delete this vehicle type?');
-    if (!confirmed) {
-      return;
-    }
-
+  const handleToggleStatus = async (vehicleType) => {
     setSaving(true);
+    setError('');
+
     try {
-      await deleteVehicleType(id);
+      await updateVehicleType(vehicleType.id, {
+        status: vehicleType.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'
+      });
       await loadVehicleTypes();
     } catch (requestError) {
-      setError(requestError.response?.data?.message || 'Unable to delete vehicle type.');
+      setError(requestError.response?.data?.message || 'Unable to update vehicle type status.');
     } finally {
       setSaving(false);
     }
@@ -132,6 +130,11 @@ const VehicleTypeList = () => {
           <p className={styles.pageCopy}>
             Maintain the master capacity buckets used by booking, assignment, and automation flows.
           </p>
+        </div>
+        <div className={styles.linkGroup}>
+          <Link to="/vehicles" className={styles.secondaryLink}>
+            Back
+          </Link>
         </div>
       </div>
 
@@ -244,15 +247,25 @@ const VehicleTypeList = () => {
                             <ActionIcon name="edit" />
                           </button>
                         ) : null}
-                        {canDelete ? (
+                        {canUpdate ? (
                           <button
                             type="button"
-                            className={styles.actionIconDanger}
-                            title="Delete vehicle type"
-                            aria-label="Delete vehicle type"
-                            onClick={() => handleDelete(vehicleType.id)}
+                            className={styles.actionIconButton}
+                            title={
+                              vehicleType.status === 'ACTIVE'
+                                ? 'Mark vehicle type inactive'
+                                : 'Mark vehicle type active'
+                            }
+                            aria-label={
+                              vehicleType.status === 'ACTIVE'
+                                ? 'Mark vehicle type inactive'
+                                : 'Mark vehicle type active'
+                            }
+                            onClick={() => handleToggleStatus(vehicleType)}
                           >
-                            <ActionIcon name="delete" />
+                            <ActionIcon
+                              name={vehicleType.status === 'ACTIVE' ? 'deactivate' : 'activate'}
+                            />
                           </button>
                         ) : null}
                       </div>

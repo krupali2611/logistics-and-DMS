@@ -362,6 +362,14 @@ const VehicleList = () => {
             <ActionIcon name="edit" />
           </Link>
         ) : null}
+        <Link
+          to={`/vehicles/${vehicle.id}/documents`}
+          className={styles.actionIconLink}
+          title="Manage vehicle documents"
+          aria-label="Manage vehicle documents"
+        >
+          <ActionIcon name="document" />
+        </Link>
         {canAssign && isVerified && isAvailable ? (
           <button
             type="button"

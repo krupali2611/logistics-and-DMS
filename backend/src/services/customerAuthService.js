@@ -192,11 +192,7 @@ const createOtpRecord = async ({ customerUserId, type, transaction }) => {
 };
 
 const activateCustomerUserIfEligible = async (customerUser) => {
-  const shouldActivate =
-    customerUser.status !== 'BLOCKED' &&
-    (customerUser.is_email_verified || customerUser.is_phone_verified);
-
-  if (shouldActivate && customerUser.status !== 'ACTIVE') {
+  if (customerUser.status !== 'BLOCKED' && customerUser.status !== 'ACTIVE') {
     await customerUser.update({ status: 'ACTIVE' });
   }
 };
@@ -328,26 +324,19 @@ const register = async (payload) => {
         email: normalizeEmail(payload.email),
         phone: normalizePhone(payload.phone),
         password: await hashPassword(payload.password),
-        status: 'INACTIVE'
+        status: 'ACTIVE',
+        is_email_verified: true,
+        is_phone_verified: true
       },
       { transaction }
     );
 
-    const { otpCode, expiresAt } = await createOtpRecord({
-      customerUserId: customerUser.id,
-      type: 'EMAIL_VERIFICATION',
-      transaction
-    });
-
     await transaction.commit();
 
     return {
-      message: 'Registration successful. Verify the OTP to activate your account.',
+      message: 'Registration successful. You can now log in.',
       customer_user_id: customerUser.id,
-      customer_id: customer.id,
-      next_step: 'OTP_VERIFICATION',
-      otp_type: 'EMAIL_VERIFICATION',
-      ...buildOtpResponse({ otpCode, expiresAt })
+      customer_id: customer.id
     };
   } catch (error) {
     await transaction.rollback();
@@ -376,10 +365,6 @@ const login = async ({ identifier, password }) => {
   }
 
   assertCustomerUserAvailability(customerUser);
-
-  if (customerUser.status !== 'ACTIVE') {
-    throw new AppError('Account is not active. Please verify your OTP first.', 403);
-  }
 
   const isPasswordValid = await comparePassword(password, customerUser.password);
 

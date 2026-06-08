@@ -85,6 +85,7 @@ const DriverForm = ({ mode }) => {
     () => (isEditMode ? 'Edit Driver Profile' : 'Register New Driver'),
     [isEditMode]
   );
+  const showDocumentSection = !isEditMode;
 
   useEffect(() => {
     if (!isEditMode || !id) {
@@ -368,129 +369,131 @@ const DriverForm = ({ mode }) => {
           ) : null}
         </section>
 
-        <section className={styles.formCard}>
-          <div className={styles.cardHeader}>
-            <h3>Document Section</h3>
-            <p>Attach initial compliance documents now. Full document lifecycle stays available after save.</p>
-          </div>
+        {showDocumentSection ? (
+          <section className={styles.formCard}>
+            <div className={styles.cardHeader}>
+              <h3>Document Section</h3>
+              <p>Attach initial compliance documents now. Full document lifecycle stays available after save.</p>
+            </div>
 
-          <div className={styles.documentList}>
-            {documents.map((document, index) => (
-              <div key={`${document.document_type}-${index}`} className={styles.documentRow}>
-                <div className={styles.formGrid}>
-                  <label className={styles.field}>
-                      <span>Document Type</span>
-                      <select
-                        value={document.document_type}
-                        onChange={(event) =>
-                          handleDocumentChange(index, 'document_type', event.target.value)
-                        }
-                      >
-                        {getAvailableDocumentTypes({
-                          allTypes: driverDocumentTypes,
-                          currentType: document.document_type,
-                          rows: documents,
-                          currentIndex: index
-                        }).map((type) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                      ))}
-                      </select>
-                    </label>
-                    {document.document_type === OTHER_DOCUMENT_VALUE ? (
-                      <label className={styles.field}>
-                        <span>Document Name</span>
-                        <input
-                          list={`driver-form-other-document-names-${index}`}
-                          value={document.document_name}
-                          onChange={(event) =>
-                            handleDocumentChange(index, 'document_name', event.target.value)
-                          }
-                          required
-                        />
-                        <datalist id={`driver-form-other-document-names-${index}`}>
-                          {driverOtherDocumentNames.map((name) => (
-                            <option key={name} value={name} />
-                          ))}
-                        </datalist>
-                      </label>
-                    ) : null}
+            <div className={styles.documentList}>
+              {documents.map((document, index) => (
+                <div key={`${document.document_type}-${index}`} className={styles.documentRow}>
+                  <div className={styles.formGrid}>
                     <label className={styles.field}>
-                      <span>Document Number</span>
-                      <input
-                      value={document.document_number}
-                      onChange={(event) =>
-                        handleDocumentChange(index, 'document_number', event.target.value)
-                      }
-                    />
-                  </label>
-                  <label className={styles.field}>
-                    <span>Expiry Date</span>
-                      <input
-                        type="date"
-                        value={document.expiry_date}
+                        <span>Document Type</span>
+                        <select
+                          value={document.document_type}
+                          onChange={(event) =>
+                            handleDocumentChange(index, 'document_type', event.target.value)
+                          }
+                        >
+                          {getAvailableDocumentTypes({
+                            allTypes: driverDocumentTypes,
+                            currentType: document.document_type,
+                            rows: documents,
+                            currentIndex: index
+                          }).map((type) => (
+                            <option key={type} value={type}>
+                              {type}
+                            </option>
+                        ))}
+                        </select>
+                      </label>
+                      {document.document_type === OTHER_DOCUMENT_VALUE ? (
+                        <label className={styles.field}>
+                          <span>Document Name</span>
+                          <input
+                            list={`driver-form-other-document-names-${index}`}
+                            value={document.document_name}
+                            onChange={(event) =>
+                              handleDocumentChange(index, 'document_name', event.target.value)
+                            }
+                            required
+                          />
+                          <datalist id={`driver-form-other-document-names-${index}`}>
+                            {driverOtherDocumentNames.map((name) => (
+                              <option key={name} value={name} />
+                            ))}
+                          </datalist>
+                        </label>
+                      ) : null}
+                      <label className={styles.field}>
+                        <span>Document Number</span>
+                        <input
+                        value={document.document_number}
                         onChange={(event) =>
-                          handleDocumentChange(index, 'expiry_date', event.target.value)
+                          handleDocumentChange(index, 'document_number', event.target.value)
                         }
-                        min={minExpiryDate}
                       />
                     </label>
-                  <label className={styles.field}>
-                    <span>Document File</span>
-                    <input
-                      type="file"
-                      accept="image/*,application/pdf"
-                      onChange={(event) =>
-                        handleDocumentFileChange(index, event.target.files?.[0])
-                      }
-                    />
-                  </label>
-                  <label className={`${styles.field} ${styles.fullWidth}`}>
-                    <span>Remarks</span>
-                    <textarea
-                      rows="3"
-                      value={document.remarks}
-                      onChange={(event) =>
-                        handleDocumentChange(index, 'remarks', event.target.value)
-                      }
-                    />
-                  </label>
-                </div>
-
-                {document.preview ? (
-                  <div className={styles.inlinePreview}>
-                    {isImageMimeType(document.file?.type) ? (
-                      <img
-                        src={document.preview}
-                        alt={`${document.document_type} preview`}
-                        className={styles.documentPreview}
+                    <label className={styles.field}>
+                      <span>Expiry Date</span>
+                        <input
+                          type="date"
+                          value={document.expiry_date}
+                          onChange={(event) =>
+                            handleDocumentChange(index, 'expiry_date', event.target.value)
+                          }
+                          min={minExpiryDate}
+                        />
+                      </label>
+                    <label className={styles.field}>
+                      <span>Document File</span>
+                      <input
+                        type="file"
+                        accept="image/*,application/pdf"
+                        onChange={(event) =>
+                          handleDocumentFileChange(index, event.target.files?.[0])
+                        }
                       />
-                    ) : (
-                      <a href={document.preview} target="_blank" rel="noreferrer" className={styles.textLink}>
-                        Preview selected file
-                      </a>
-                    )}
+                    </label>
+                    <label className={`${styles.field} ${styles.fullWidth}`}>
+                      <span>Remarks</span>
+                      <textarea
+                        rows="3"
+                        value={document.remarks}
+                        onChange={(event) =>
+                          handleDocumentChange(index, 'remarks', event.target.value)
+                        }
+                      />
+                    </label>
                   </div>
-                ) : null}
 
-                {documents.length > 1 ? (
-                  <button
-                    type="button"
-                    className={styles.deleteButton}
-                    onClick={() => removeDocumentRow(index)}
-                  >
-                    Remove Document
-                  </button>
-                ) : null}
-              </div>
-            ))}
-          </div>
+                  {document.preview ? (
+                    <div className={styles.inlinePreview}>
+                      {isImageMimeType(document.file?.type) ? (
+                        <img
+                          src={document.preview}
+                          alt={`${document.document_type} preview`}
+                          className={styles.documentPreview}
+                        />
+                      ) : (
+                        <a href={document.preview} target="_blank" rel="noreferrer" className={styles.textLink}>
+                          Preview selected file
+                        </a>
+                      )}
+                    </div>
+                  ) : null}
 
-          <button type="button" className={styles.secondaryButton} onClick={addDocumentRow}>
-            Add Another Document
-          </button>
-        </section>
+                  {documents.length > 1 ? (
+                    <button
+                      type="button"
+                      className={styles.deleteButton}
+                      onClick={() => removeDocumentRow(index)}
+                    >
+                      Remove Document
+                    </button>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+
+            <button type="button" className={styles.secondaryButton} onClick={addDocumentRow}>
+              Add Another Document
+            </button>
+          </section>
+        ) : null}
 
         {error ? <div className={styles.errorBox}>{error}</div> : null}
 

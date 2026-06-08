@@ -16,6 +16,7 @@ const CustomerLogin = () => {
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const successMessage = location.state?.registrationSuccess || '';
 
   if (isAuthenticated) {
     return <Navigate to="/customer/profile" replace />;
@@ -83,6 +84,7 @@ const CustomerLogin = () => {
           />
 
           {error ? <div className={styles.errorBox}>{error}</div> : null}
+          {successMessage ? <div className={styles.successBox}>{successMessage}</div> : null}
 
           <Button type="submit" disabled={loading}>
             {loading ? 'Signing In...' : 'Sign In'}

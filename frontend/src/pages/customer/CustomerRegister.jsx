@@ -37,15 +37,11 @@ const CustomerRegister = () => {
     setError('');
 
     try {
-      const data = await registerCustomer(form);
-      navigate('/customer/verify-otp', {
+      await registerCustomer(form);
+      navigate('/customer/login', {
         replace: true,
         state: {
-          customer_user_id: data.customer_user_id,
-          email: form.email,
-          phone: form.phone,
-          type: data.otp_type,
-          otpPreview: data.otp || null
+          registrationSuccess: 'Account created successfully. Please sign in.'
         }
       });
     } catch (requestError) {
@@ -61,8 +57,8 @@ const CustomerRegister = () => {
         <span>New Customer Access</span>
         <h1>Open your logistics account and move from signup to shipment readiness in minutes.</h1>
         <p>
-          Registration creates your secure customer identity, enables OTP verification, and
-          prepares your account for booking, tracking, and future mobile access.
+          Registration creates your secure customer identity and prepares your account for
+          booking, tracking, and future mobile access.
         </p>
       </section>
 

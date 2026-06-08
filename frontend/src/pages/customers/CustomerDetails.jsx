@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
 import { getCustomerById, updateCustomerStatus } from '../../api/customerApi';
 import { useAuth } from '../../context/AuthContext';
+import { getFileUrl } from '../../utils/fileHelpers';
+import { getDocumentDisplayName } from '../../utils/documentOptions';
 import styles from '../../styles/Customer.module.css';
 
 const CustomerDetails = () => {
@@ -52,7 +54,11 @@ const CustomerDetails = () => {
     return <div className={styles.errorBox}>{error}</div>;
   }
 
-  const defaultBillingAddress = customer.addresses.find(
+  const addresses = customer.addresses || [];
+  const documents = customer.documents || [];
+  const notes = customer.notes || [];
+
+  const defaultBillingAddress = addresses.find(
     (address) => address.address_type === 'BILLING' && address.is_default
   );
 
@@ -65,6 +71,9 @@ const CustomerDetails = () => {
           <p className={styles.pageCopy}>Customer code: {customer.customer_code}</p>
         </div>
         <div className={styles.linkGroup}>
+          <Link to="/customers" className={styles.secondaryLink}>
+            Back
+          </Link>
           {permissions.includes('customer_update') ? (
             <Link to={`/customers/${id}/edit`} className={styles.secondaryLink}>
               Edit Customer
@@ -152,15 +161,15 @@ const CustomerDetails = () => {
           </div>
           <div className={styles.metricGrid}>
             <div className={styles.metricCard}>
-              <strong>{customer.addresses.length}</strong>
+              <strong>{addresses.length}</strong>
               <span>Addresses</span>
             </div>
             <div className={styles.metricCard}>
-              <strong>{customer.documents.length}</strong>
+              <strong>{documents.length}</strong>
               <span>Documents</span>
             </div>
             <div className={styles.metricCard}>
-              <strong>{customer.notes.length}</strong>
+              <strong>{notes.length}</strong>
               <span>Notes</span>
             </div>
           </div>
@@ -168,14 +177,42 @@ const CustomerDetails = () => {
 
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>
-            <h3>Recent Notes</h3>
-            <p>{customer.notes.length} records linked</p>
+            <h3>Recent Documents</h3>
+            <p>{documents.length} records linked</p>
           </div>
           <div className={styles.documentSummary}>
-            {customer.notes.length === 0 ? (
+            {documents.length === 0 ? (
+              <p className={styles.pageCopy}>No documents uploaded yet.</p>
+            ) : (
+              documents.slice(0, 4).map((document) => (
+                <div key={document.id} className={styles.summaryCard}>
+                  <strong>{getDocumentDisplayName(document)}</strong>
+                  <span>{document.document_number}</span>
+                  <span>{document.verification_status}</span>
+                  <a
+                    href={getFileUrl(document.document_file)}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={styles.textLink}
+                  >
+                    Open document
+                  </a>
+                </div>
+              ))
+            )}
+          </div>
+        </section>
+
+        <section className={styles.formCard}>
+          <div className={styles.cardHeader}>
+            <h3>Recent Notes</h3>
+            <p>{notes.length} records linked</p>
+          </div>
+          <div className={styles.documentSummary}>
+            {notes.length === 0 ? (
               <p className={styles.pageCopy}>No notes added yet.</p>
             ) : (
-              customer.notes.slice(0, 3).map((note) => (
+              notes.slice(0, 3).map((note) => (
                 <div key={note.id} className={styles.noteCard}>
                   <p>{note.note}</p>
                   <span className={styles.noteMeta}>
