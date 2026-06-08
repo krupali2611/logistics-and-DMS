@@ -13,7 +13,8 @@ const Sidebar = () => {
     ...(permissions.includes('driver_view') ? [{ to: '/drivers', label: 'Drivers' }] : []),
     ...(permissions.includes('vehicle_view') ? [{ to: '/vehicles', label: 'Vehicles' }] : []),
     ...(permissions.includes('customer_view') ? [{ to: '/customers', label: 'Customers' }] : []),
-    ...(permissions.includes('shipment_view') ? [{ to: '/shipments', label: 'Shipments' }] : [])
+    ...(permissions.includes('shipment_view') ? [{ to: '/shipments', label: 'Shipments' }] : []),
+    ...(permissions.includes('pricing_view') ? [{ to: '/pricing', label: 'Pricing' }] : [])
   ];
 
   const getShortLabel = (label) => {
@@ -22,7 +23,8 @@ const Sidebar = () => {
       Drivers: 'Drvs',
       Vehicles: 'Veh',
       Customers: 'Cust',
-      Shipments: 'Ship'
+      Shipments: 'Ship',
+      Pricing: 'Price'
     };
 
     return abbreviations[label] || label;

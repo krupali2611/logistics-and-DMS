@@ -28,6 +28,7 @@ import ShipmentForm from './pages/shipments/ShipmentForm';
 import ShipmentDetails from './pages/shipments/ShipmentDetails';
 import ShipmentTimelinePage from './pages/shipments/ShipmentTimelinePage';
 import ShipmentAttachments from './pages/shipments/ShipmentAttachments';
+import PricingRules from './pages/pricing/PricingRules';
 import CustomerPortalLayout from './layouts/CustomerPortalLayout';
 import CustomerLogin from './pages/customer/CustomerLogin';
 import CustomerRegister from './pages/customer/CustomerRegister';
@@ -149,6 +150,7 @@ const App = () => {
           <Route path="/shipments/:id/edit" element={<ShipmentForm mode="edit" />} />
           <Route path="/shipments/:id/timeline" element={<ShipmentTimelinePage />} />
           <Route path="/shipments/:id/attachments" element={<ShipmentAttachments />} />
+          <Route path="/pricing" element={<PricingRules />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/change-password" element={<Navigate to="/profile" replace />} />
         </Route>

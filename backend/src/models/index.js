@@ -27,6 +27,8 @@ const ShipmentStatusHistoryModel = require('./ShipmentStatusHistory');
 const ShipmentAttachmentModel = require('./ShipmentAttachment');
 const ShipmentAssignmentModel = require('./ShipmentAssignment');
 const ShipmentTrackingEventModel = require('./ShipmentTrackingEvent');
+const PricingRuleModel = require('./PricingRule');
+const FareEstimationModel = require('./FareEstimation');
 
 const db = {};
 
@@ -59,6 +61,8 @@ db.ShipmentStatusHistory = ShipmentStatusHistoryModel(sequelize);
 db.ShipmentAttachment = ShipmentAttachmentModel(sequelize);
 db.ShipmentAssignment = ShipmentAssignmentModel(sequelize);
 db.ShipmentTrackingEvent = ShipmentTrackingEventModel(sequelize);
+db.PricingRule = PricingRuleModel(sequelize);
+db.FareEstimation = FareEstimationModel(sequelize);
 
 db.User.belongsToMany(db.Role, {
   through: db.UserRole,
@@ -466,6 +470,36 @@ db.User.hasMany(db.ShipmentTrackingEvent, {
 db.ShipmentTrackingEvent.belongsTo(db.User, {
   foreignKey: 'recorded_by',
   as: 'recordedBy'
+});
+
+db.VehicleType.hasOne(db.PricingRule, {
+  foreignKey: 'vehicle_type_id',
+  as: 'pricingRule'
+});
+
+db.PricingRule.belongsTo(db.VehicleType, {
+  foreignKey: 'vehicle_type_id',
+  as: 'vehicleType'
+});
+
+db.VehicleType.hasMany(db.FareEstimation, {
+  foreignKey: 'vehicle_type_id',
+  as: 'fareEstimations'
+});
+
+db.FareEstimation.belongsTo(db.VehicleType, {
+  foreignKey: 'vehicle_type_id',
+  as: 'vehicleType'
+});
+
+db.Shipment.hasOne(db.FareEstimation, {
+  foreignKey: 'shipment_id',
+  as: 'fareEstimation'
+});
+
+db.FareEstimation.belongsTo(db.Shipment, {
+  foreignKey: 'shipment_id',
+  as: 'shipment'
 });
 
 module.exports = db;

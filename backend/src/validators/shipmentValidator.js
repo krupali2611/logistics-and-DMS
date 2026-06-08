@@ -96,6 +96,20 @@ const shipmentIdParamValidator = [uuidParam('id', 'Shipment ID')];
 const shipmentPackageIdParamValidator = [uuidParam('id', 'Shipment package ID')];
 const shipmentAttachmentIdParamValidator = [uuidParam('id', 'Shipment attachment ID')];
 const coordinateRules = [
+  body('pickup_address_snapshot')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Pickup address snapshot cannot be empty.')
+    .isLength({ max: 5000 })
+    .withMessage('Pickup address snapshot must be at most 5000 characters.'),
+  body('delivery_address_snapshot')
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage('Delivery address snapshot cannot be empty.')
+    .isLength({ max: 5000 })
+    .withMessage('Delivery address snapshot must be at most 5000 characters.'),
   body('pickup_latitude')
     .optional({ values: 'falsy' })
     .isFloat({ min: -90, max: 90 })

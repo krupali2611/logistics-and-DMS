@@ -8,6 +8,14 @@ const {
 
 module.exports = {
   async up(queryInterface, Sequelize) {
+    const shipmentsTable = await queryInterface.describeTable('shipments');
+
+    const ensureShipmentColumn = async (columnName, definition) => {
+      if (!shipmentsTable[columnName]) {
+        await queryInterface.addColumn('shipments', columnName, definition);
+      }
+    };
+
     await queryInterface.sequelize.query(`
       DO $$
       BEGIN
@@ -56,35 +64,35 @@ module.exports = {
       END $$;
     `);
 
-    await queryInterface.addColumn('shipments', 'pickup_address_snapshot', {
+    await ensureShipmentColumn('pickup_address_snapshot', {
       type: Sequelize.TEXT,
       allowNull: true
     });
-    await queryInterface.addColumn('shipments', 'delivery_address_snapshot', {
+    await ensureShipmentColumn('delivery_address_snapshot', {
       type: Sequelize.TEXT,
       allowNull: true
     });
-    await queryInterface.addColumn('shipments', 'pickup_latitude', {
+    await ensureShipmentColumn('pickup_latitude', {
       type: Sequelize.DECIMAL(10, 7),
       allowNull: true
     });
-    await queryInterface.addColumn('shipments', 'pickup_longitude', {
+    await ensureShipmentColumn('pickup_longitude', {
       type: Sequelize.DECIMAL(10, 7),
       allowNull: true
     });
-    await queryInterface.addColumn('shipments', 'delivery_latitude', {
+    await ensureShipmentColumn('delivery_latitude', {
       type: Sequelize.DECIMAL(10, 7),
       allowNull: true
     });
-    await queryInterface.addColumn('shipments', 'delivery_longitude', {
+    await ensureShipmentColumn('delivery_longitude', {
       type: Sequelize.DECIMAL(10, 7),
       allowNull: true
     });
-    await queryInterface.addColumn('shipments', 'pickup_place_id', {
+    await ensureShipmentColumn('pickup_place_id', {
       type: Sequelize.STRING(255),
       allowNull: true
     });
-    await queryInterface.addColumn('shipments', 'delivery_place_id', {
+    await ensureShipmentColumn('delivery_place_id', {
       type: Sequelize.STRING(255),
       allowNull: true
     });

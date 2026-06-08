@@ -5,6 +5,7 @@ import Loader from '../../components/Loader/Loader';
 import { getCustomers, getCustomerById } from '../../api/customerApi';
 import { getVehicleTypes } from '../../api/vehicleApi';
 import { createShipment, getShipmentById, updateShipment } from '../../api/shipmentApi';
+import { estimateShipmentFare } from '../../api/pricingApi';
 import styles from '../../styles/Shipment.module.css';
 import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
@@ -45,6 +46,13 @@ const formatAddressLabel = (address) =>
     .filter(Boolean)
     .join(' - ');
 
+const formatCurrency = (value) =>
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 2
+  }).format(Number(value || 0));
+
 const ShipmentForm = ({ mode }) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -56,11 +64,30 @@ const ShipmentForm = ({ mode }) => {
   const [addresses, setAddresses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [estimateLoading, setEstimateLoading] = useState(false);
+  const [fareEstimate, setFareEstimate] = useState(null);
   const [error, setError] = useState('');
 
   const selectedCustomer = useMemo(
     () => customers.find((customer) => customer.id === form.customer_id) || null,
     [customers, form.customer_id]
+  );
+  const selectedPickupAddress = useMemo(
+    () => addresses.find((address) => address.id === form.pickup_address_id) || null,
+    [addresses, form.pickup_address_id]
+  );
+  const selectedDeliveryAddress = useMemo(
+    () => addresses.find((address) => address.id === form.delivery_address_id) || null,
+    [addresses, form.delivery_address_id]
+  );
+  const totalWeight = useMemo(
+    () =>
+      form.packages.reduce((sum, pkg) => {
+        const weight = Number(pkg.weight || 0);
+        const quantity = Number(pkg.quantity || 0);
+        return sum + (Number.isFinite(weight) ? weight : 0) * (Number.isFinite(quantity) ? quantity : 0);
+      }, 0),
+    [form.packages]
   );
 
   useEffect(() => {
@@ -106,9 +133,10 @@ const ShipmentForm = ({ mode }) => {
                   }))
                 : [emptyPackage()]
           });
+          setFareEstimate(shipmentResponse.fare_estimation || null);
           setAddresses(shipmentResponse.customer?.addresses || []);
 
-          if (!shipmentResponse.customer?.addresses?.length) {
+          if (!(shipmentResponse.customer?.addresses || []).length) {
             const customerDetails = await getCustomerById(shipmentResponse.customer_id);
             setAddresses(customerDetails.addresses || []);
           }
@@ -145,6 +173,91 @@ const ShipmentForm = ({ mode }) => {
 
     loadAddresses();
   }, [form.customer_id]);
+
+  useEffect(() => {
+    const canEstimate =
+      Boolean(form.vehicle_type_id) &&
+      Boolean(selectedPickupAddress) &&
+      Boolean(selectedDeliveryAddress) &&
+      totalWeight > 0;
+
+    if (!canEstimate) {
+      setEstimateLoading(false);
+      setFareEstimate(null);
+      return;
+    }
+
+    const pickupLatitude = Number(selectedPickupAddress.latitude);
+    const pickupLongitude = Number(selectedPickupAddress.longitude);
+    const deliveryLatitude = Number(selectedDeliveryAddress.latitude);
+    const deliveryLongitude = Number(selectedDeliveryAddress.longitude);
+
+    if (
+      [pickupLatitude, pickupLongitude, deliveryLatitude, deliveryLongitude].some(
+        (value) => !Number.isFinite(value)
+      )
+    ) {
+      setEstimateLoading(false);
+      setFareEstimate(null);
+      return;
+    }
+
+    let isActive = true;
+
+    const loadEstimate = async () => {
+      setEstimateLoading(true);
+
+      try {
+        const estimation = await estimateShipmentFare({
+          vehicle_type_id: form.vehicle_type_id,
+          weight: totalWeight,
+          pickup_coordinates: {
+            latitude: pickupLatitude,
+            longitude: pickupLongitude
+          },
+          delivery_coordinates: {
+            latitude: deliveryLatitude,
+            longitude: deliveryLongitude
+          }
+        });
+
+        if (!isActive) {
+          return;
+        }
+
+        setError('');
+        setFareEstimate(estimation);
+        setForm((current) => ({
+          ...current,
+          estimated_distance: estimation.distance_km || estimation.distance?.km || ''
+        }));
+      } catch (requestError) {
+        if (!isActive) {
+          return;
+        }
+
+        setFareEstimate(null);
+        setError(
+          requestError.response?.data?.message || 'Unable to estimate shipment fare right now.'
+        );
+      } finally {
+        if (isActive) {
+          setEstimateLoading(false);
+        }
+      }
+    };
+
+    loadEstimate();
+
+    return () => {
+      isActive = false;
+    };
+  }, [
+    form.vehicle_type_id,
+    selectedPickupAddress,
+    selectedDeliveryAddress,
+    totalWeight
+  ]);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -373,6 +486,7 @@ const ShipmentForm = ({ mode }) => {
                 value={form.estimated_distance}
                 onChange={handleChange}
                 min="0"
+                readOnly
               />
             </label>
             <label className={styles.field}>
@@ -396,6 +510,47 @@ const ShipmentForm = ({ mode }) => {
                 }
               />
             </label>
+          </div>
+        </section>
+
+        <section className={styles.formCard}>
+          <div className={styles.cardHeader}>
+            <h3>Fare Estimation</h3>
+            <p>Pricing is calculated automatically from coordinates, vehicle type, and total weight.</p>
+          </div>
+
+          <div className={styles.metricGrid}>
+            <div className={styles.metricCard}>
+              <strong>{totalWeight.toFixed(2)}</strong>
+              <span>Total Weight (kg)</span>
+            </div>
+            <div className={styles.metricCard}>
+              <strong>
+                {estimateLoading
+                  ? 'Estimating...'
+                  : Number(fareEstimate?.distance_km || fareEstimate?.distance?.km || 0).toFixed(2)}
+              </strong>
+              <span>Distance (km)</span>
+            </div>
+            <div className={styles.metricCard}>
+              <strong>
+                {estimateLoading ? 'Estimating...' : formatCurrency(fareEstimate?.final_amount || 0)}
+              </strong>
+              <span>Estimated Fare</span>
+            </div>
+          </div>
+
+          <div className={styles.documentSummary}>
+            <div className={styles.summaryCard}>
+              <strong>Fare Breakdown</strong>
+              <span>Base Fare: {formatCurrency(fareEstimate?.fare_breakdown?.base_fare || fareEstimate?.base_fare || 0)}</span>
+              <span>Distance Charge: {formatCurrency(fareEstimate?.fare_breakdown?.distance_charge || fareEstimate?.distance_charge || 0)}</span>
+              <span>Weight Charge: {formatCurrency(fareEstimate?.fare_breakdown?.weight_charge || fareEstimate?.weight_charge || 0)}</span>
+              <span>Minimum Fare: {formatCurrency(fareEstimate?.fare_breakdown?.minimum_fare || 0)}</span>
+              <span>
+                Provider: {fareEstimate?.distance?.provider || 'Awaiting estimate'}
+              </span>
+            </div>
           </div>
         </section>
 
@@ -525,8 +680,14 @@ const ShipmentForm = ({ mode }) => {
         {error ? <div className={styles.errorBox}>{error}</div> : null}
 
         <div className={styles.submitRow}>
-          <Button type="submit" disabled={saving}>
-            {saving ? 'Saving Shipment...' : isEditMode ? 'Update Shipment' : 'Create Shipment'}
+          <Button type="submit" disabled={saving || estimateLoading}>
+            {saving
+              ? 'Saving Shipment...'
+              : estimateLoading
+                ? 'Waiting for Fare Estimate...'
+                : isEditMode
+                  ? 'Update Shipment'
+                  : 'Create Shipment'}
           </Button>
         </div>
       </form>

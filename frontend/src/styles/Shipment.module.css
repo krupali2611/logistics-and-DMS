@@ -268,6 +268,16 @@
   color: #177245;
 }
 
+.active {
+  background: #daf4e6;
+  color: #177245;
+}
+
+.inactive {
+  background: #edf2f7;
+  color: #587089;
+}
+
 .cancelled,
 .failed,
 .priority_urgent {

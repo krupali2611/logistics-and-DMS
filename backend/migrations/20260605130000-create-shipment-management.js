@@ -40,6 +40,10 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT'
       },
+      pickup_address_snapshot: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
       delivery_address_id: {
         type: Sequelize.UUID,
         allowNull: false,
@@ -49,6 +53,34 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'RESTRICT'
+      },
+      delivery_address_snapshot: {
+        type: Sequelize.TEXT,
+        allowNull: false
+      },
+      pickup_latitude: {
+        type: Sequelize.DECIMAL(10, 7),
+        allowNull: true
+      },
+      pickup_longitude: {
+        type: Sequelize.DECIMAL(10, 7),
+        allowNull: true
+      },
+      delivery_latitude: {
+        type: Sequelize.DECIMAL(10, 7),
+        allowNull: true
+      },
+      delivery_longitude: {
+        type: Sequelize.DECIMAL(10, 7),
+        allowNull: true
+      },
+      pickup_place_id: {
+        type: Sequelize.STRING(255),
+        allowNull: true
+      },
+      delivery_place_id: {
+        type: Sequelize.STRING(255),
+        allowNull: true
       },
       vehicle_type_id: {
         type: Sequelize.UUID,
@@ -283,12 +315,20 @@ module.exports = {
     await queryInterface.addIndex('shipments', ['priority']);
     await queryInterface.addIndex('shipments', ['shipment_type']);
     await queryInterface.addIndex('shipments', ['created_at']);
+    await queryInterface.addIndex('shipments', ['pickup_place_id'], {
+      name: 'shipments_pickup_place_id_idx'
+    });
+    await queryInterface.addIndex('shipments', ['delivery_place_id'], {
+      name: 'shipments_delivery_place_id_idx'
+    });
     await queryInterface.addIndex('shipment_packages', ['shipment_id']);
     await queryInterface.addIndex('shipment_status_history', ['shipment_id']);
     await queryInterface.addIndex('shipment_attachments', ['shipment_id']);
   },
 
   async down(queryInterface) {
+    await queryInterface.removeIndex('shipments', 'shipments_delivery_place_id_idx');
+    await queryInterface.removeIndex('shipments', 'shipments_pickup_place_id_idx');
     await queryInterface.dropTable('shipment_attachments');
     await queryInterface.dropTable('shipment_status_history');
     await queryInterface.dropTable('shipment_packages');

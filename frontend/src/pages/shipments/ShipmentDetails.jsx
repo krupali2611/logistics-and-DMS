@@ -25,6 +25,13 @@ const formatAddress = (address) => {
     .join(', ');
 };
 
+const formatCurrency = (value) =>
+  new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 2
+  }).format(Number(value || 0));
+
 const ShipmentDetails = () => {
   const { id } = useParams();
   const { permissions } = useAuth();
@@ -57,6 +64,14 @@ const ShipmentDetails = () => {
       ),
     [shipment]
   );
+  const fareEstimation = shipment?.fare_estimation || shipment?.fareEstimation || null;
+  const vehicleType = shipment?.vehicle_type || shipment?.vehicleType || null;
+  const customer = shipment?.customer || null;
+  const pickupAddress = shipment?.pickup_address || shipment?.pickupAddress || null;
+  const deliveryAddress = shipment?.delivery_address || shipment?.deliveryAddress || null;
+  const statusHistory = shipment?.status_history || shipment?.statusHistory || [];
+  const attachments = shipment?.attachments || [];
+  const packages = shipment?.packages || [];
 
   if (loading) {
     return <Loader label="Loading shipment details..." />;
@@ -73,7 +88,7 @@ const ShipmentDetails = () => {
           <span className={styles.eyebrow}>Shipment Details</span>
           <h2 className={styles.pageTitle}>{shipment.shipment_number}</h2>
           <p className={styles.pageCopy}>
-            {shipment.customer?.company_name || 'Unknown customer'} - {shipment.status}
+            {customer?.company_name || 'Unknown customer'} - {shipment.status}
           </p>
         </div>
         <div className={styles.linkGroup}>
@@ -97,10 +112,10 @@ const ShipmentDetails = () => {
             <h3>Shipment Overview</h3>
           </div>
           <div className={styles.infoGridCompact}>
-            <div><strong>Customer:</strong> {shipment.customer?.company_name || 'N/A'}</div>
-            <div><strong>Contact:</strong> {shipment.customer?.contact_person || 'N/A'}</div>
-            <div><strong>Phone:</strong> {shipment.customer?.phone || 'N/A'}</div>
-            <div><strong>Vehicle Type:</strong> {shipment.vehicleType?.type_name || 'N/A'}</div>
+            <div><strong>Customer:</strong> {customer?.company_name || 'N/A'}</div>
+            <div><strong>Contact:</strong> {customer?.contact_person || 'N/A'}</div>
+            <div><strong>Phone:</strong> {customer?.phone || 'N/A'}</div>
+            <div><strong>Vehicle Type:</strong> {vehicleType?.type_name || 'N/A'}</div>
             <div><strong>Shipment Type:</strong> {shipment.shipment_type}</div>
             <div><strong>Priority:</strong> {shipment.priority}</div>
             <div><strong>Status:</strong> {shipment.status}</div>
@@ -122,11 +137,11 @@ const ShipmentDetails = () => {
           <div className={styles.addressPair}>
             <div className={styles.summaryCard}>
               <strong>Pickup</strong>
-              <span>{formatAddress(shipment.pickupAddress)}</span>
+              <span>{formatAddress(pickupAddress)}</span>
             </div>
             <div className={styles.summaryCard}>
               <strong>Delivery</strong>
-              <span>{formatAddress(shipment.deliveryAddress)}</span>
+              <span>{formatAddress(deliveryAddress)}</span>
             </div>
           </div>
         </section>
@@ -157,6 +172,34 @@ const ShipmentDetails = () => {
 
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>
+            <h3>Fare Summary</h3>
+          </div>
+          <div className={styles.metricGrid}>
+            <div className={styles.metricCard}>
+              <strong>{Number(fareEstimation?.distance_km || shipment.estimated_distance || 0).toFixed(2)}</strong>
+              <span>Distance (km)</span>
+            </div>
+            <div className={styles.metricCard}>
+              <strong>{formatCurrency(fareEstimation?.base_fare || 0)}</strong>
+              <span>Base Fare</span>
+            </div>
+            <div className={styles.metricCard}>
+              <strong>{formatCurrency(fareEstimation?.distance_charge || 0)}</strong>
+              <span>Distance Charge</span>
+            </div>
+            <div className={styles.metricCard}>
+              <strong>{formatCurrency(fareEstimation?.weight_charge || 0)}</strong>
+              <span>Weight Charge</span>
+            </div>
+            <div className={styles.metricCard}>
+              <strong>{formatCurrency(fareEstimation?.final_amount || 0)}</strong>
+              <span>Final Amount</span>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.formCard}>
+          <div className={styles.cardHeader}>
             <h3>Special Instructions</h3>
           </div>
           <p className={styles.pageCopyAlt}>
@@ -167,10 +210,10 @@ const ShipmentDetails = () => {
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>
             <h3>Packages</h3>
-            <p>{shipment.packages.length} records linked</p>
+            <p>{packages.length} records linked</p>
           </div>
           <div className={styles.documentSummary}>
-            {shipment.packages.map((pkg) => (
+            {packages.map((pkg) => (
               <div key={pkg.id} className={styles.summaryCard}>
                 <strong>{pkg.package_name}</strong>
                 <span>{pkg.package_type}</span>
@@ -186,21 +229,21 @@ const ShipmentDetails = () => {
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>
             <h3>Recent Timeline</h3>
-            <p>{shipment.statusHistory.length} status records</p>
+            <p>{statusHistory.length} status records</p>
           </div>
-          <ShipmentTimeline items={shipment.statusHistory.slice(-5)} />
+          <ShipmentTimeline items={statusHistory.slice(-5)} />
         </section>
 
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>
             <h3>Attachments</h3>
-            <p>{shipment.attachments.length} files linked</p>
+            <p>{attachments.length} files linked</p>
           </div>
           <div className={styles.documentSummary}>
-            {shipment.attachments.length === 0 ? (
+            {attachments.length === 0 ? (
               <p className={styles.pageCopy}>No attachments uploaded yet.</p>
             ) : (
-              shipment.attachments.map((attachment) => (
+              attachments.map((attachment) => (
                 <div key={attachment.id} className={styles.summaryCard}>
                   <strong>{attachment.file_name}</strong>
                   <span>{attachment.file_type}</span>

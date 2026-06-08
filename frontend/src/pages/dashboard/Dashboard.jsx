@@ -28,7 +28,9 @@ const Dashboard = () => {
     assigned: 0,
     inTransit: 0,
     delivered: 0,
-    cancelled: 0
+    cancelled: 0,
+    averageShipmentValue: 0,
+    estimatedRevenue: 0
   });
 
   useEffect(() => {
@@ -68,7 +70,9 @@ const Dashboard = () => {
                 assigned: 0,
                 inTransit: 0,
                 delivered: 0,
-                cancelled: 0
+                cancelled: 0,
+                averageShipmentValue: 0,
+                estimatedRevenue: 0
               })
         ]);
         setStats({
@@ -97,7 +101,9 @@ const Dashboard = () => {
           assigned: 0,
           inTransit: 0,
           delivered: 0,
-          cancelled: 0
+          cancelled: 0,
+          averageShipmentValue: 0,
+          estimatedRevenue: 0
         });
       }
     };
@@ -211,6 +217,16 @@ const Dashboard = () => {
       <section className={styles.card}>
         <h3>Cancelled</h3>
         <p>{stats.cancelled}</p>
+      </section>
+
+      <section className={styles.card}>
+        <h3>Average Shipment Value</h3>
+        <p>{Number(stats.averageShipmentValue || 0).toFixed(2)}</p>
+      </section>
+
+      <section className={styles.card}>
+        <h3>Estimated Revenue</h3>
+        <p>{Number(stats.estimatedRevenue || 0).toFixed(2)}</p>
       </section>
     </div>
   );

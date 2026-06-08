@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const db = require('../models');
 const AppError = require('../utils/AppError');
 const storageService = require('./storage/storageService');
+const pricingService = require('./pricingService');
 const { generateShipmentNumber } = require('../utils/shipmentNumberGenerator');
 const {
   SHIPMENT_TYPES,
@@ -24,6 +25,10 @@ const toNumber = (value, fallback = 0) => {
   const numericValue = Number(value);
   return Number.isFinite(numericValue) ? numericValue : fallback;
 };
+const resolveCoordinateValue = (value) => {
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue : null;
+};
 
 const resolveAccessContext = (user = {}) => ({
   userId: user?.id || null,
@@ -43,6 +48,18 @@ const formatAddressSnapshot = (address) =>
   ]
     .filter((part) => part && part.toString().trim())
     .join(', ');
+
+const resolveAddressSnapshot = ({ payloadSnapshot, address, existingSnapshot, addressChanged }) => {
+  if (payloadSnapshot !== undefined) {
+    return normalizeText(payloadSnapshot);
+  }
+
+  if (!existingSnapshot || addressChanged) {
+    return formatAddressSnapshot(address);
+  }
+
+  return existingSnapshot;
+};
 
 const getShipmentIncludes = ({ includeTracking = true, includeAssignments = true } = {}) => {
   const includes = [
@@ -85,6 +102,10 @@ const getShipmentIncludes = ({ includeTracking = true, includeAssignments = true
       model: db.VehicleType,
       as: 'vehicleType',
       attributes: ['id', 'type_name', 'description', 'min_capacity', 'max_capacity', 'status']
+    },
+    {
+      model: db.FareEstimation,
+      as: 'fareEstimation'
     },
     {
       model: db.ShipmentPackage,
@@ -388,9 +409,19 @@ const buildShipmentPersistenceData = ({
   return {
     customer_id: customerId,
     pickup_address_id: pickupAddress.id,
-    pickup_address_snapshot: formatAddressSnapshot(pickupAddress),
+    pickup_address_snapshot: resolveAddressSnapshot({
+      payloadSnapshot: payload.pickup_address_snapshot,
+      address: pickupAddress,
+      existingSnapshot: existingShipment?.pickup_address_snapshot,
+      addressChanged: pickupAddressChanged
+    }),
     delivery_address_id: deliveryAddress.id,
-    delivery_address_snapshot: formatAddressSnapshot(deliveryAddress),
+    delivery_address_snapshot: resolveAddressSnapshot({
+      payloadSnapshot: payload.delivery_address_snapshot,
+      address: deliveryAddress,
+      existingSnapshot: existingShipment?.delivery_address_snapshot,
+      addressChanged: deliveryAddressChanged
+    }),
     pickup_latitude:
       payload.pickup_latitude !== undefined
         ? toNullable(payload.pickup_latitude)
@@ -428,6 +459,76 @@ const buildShipmentPersistenceData = ({
           ? null
           : existingShipment?.delivery_place_id ?? null
   };
+};
+
+const buildShipmentCoordinatePair = ({ shipmentData, pickupAddress, deliveryAddress }) => {
+  const pickupLatitude = resolveCoordinateValue(shipmentData.pickup_latitude ?? pickupAddress?.latitude);
+  const pickupLongitude = resolveCoordinateValue(
+    shipmentData.pickup_longitude ?? pickupAddress?.longitude
+  );
+  const deliveryLatitude = resolveCoordinateValue(
+    shipmentData.delivery_latitude ?? deliveryAddress?.latitude
+  );
+  const deliveryLongitude = resolveCoordinateValue(
+    shipmentData.delivery_longitude ?? deliveryAddress?.longitude
+  );
+
+  if (
+    pickupLatitude === null ||
+    pickupLongitude === null ||
+    deliveryLatitude === null ||
+    deliveryLongitude === null
+  ) {
+    throw new AppError(
+      'Pickup and delivery coordinates are required to estimate shipment fare.',
+      422
+    );
+  }
+
+  return {
+    pickup_coordinates: {
+      latitude: pickupLatitude,
+      longitude: pickupLongitude
+    },
+    delivery_coordinates: {
+      latitude: deliveryLatitude,
+      longitude: deliveryLongitude
+    }
+  };
+};
+
+const syncShipmentFareEstimation = async ({
+  shipmentId,
+  vehicleTypeId,
+  shipmentData,
+  pickupAddress,
+  deliveryAddress,
+  weightKg,
+  transaction
+}) => {
+  await db.FareEstimation.destroy({
+    where: { shipment_id: shipmentId },
+    transaction
+  });
+
+  const coordinates = buildShipmentCoordinatePair({
+    shipmentData,
+    pickupAddress,
+    deliveryAddress
+  });
+
+  const estimation = await pricingService.createShipmentFareEstimation(
+    {
+      shipmentId,
+      vehicleTypeId,
+      pickupCoordinates: coordinates.pickup_coordinates,
+      deliveryCoordinates: coordinates.delivery_coordinates,
+      weightKg
+    },
+    transaction
+  );
+
+  return estimation.estimation;
 };
 
 const getShipmentById = async (id, user) => {
@@ -537,7 +638,7 @@ const createShipment = async (payload, user) => {
         vehicle_type_id: payload.vehicle_type_id,
         shipment_type: payload.shipment_type,
         priority: payload.priority || 'NORMAL',
-        estimated_distance: toNullable(payload.estimated_distance),
+        estimated_distance: null,
         estimated_delivery_date: toNullable(payload.estimated_delivery_date),
         special_instructions: toNullable(normalizeText(payload.special_instructions)),
         status: payload.status || 'DRAFT',
@@ -550,6 +651,23 @@ const createShipment = async (payload, user) => {
           deliveryAddress: relations.deliveryAddress
         }),
         ...metrics
+      },
+      { transaction }
+    );
+
+    const fareEstimation = await syncShipmentFareEstimation({
+      shipmentId: shipment.id,
+      vehicleTypeId: payload.vehicle_type_id,
+      shipmentData: shipment,
+      pickupAddress: relations.pickupAddress,
+      deliveryAddress: relations.deliveryAddress,
+      weightKg: metrics.total_weight,
+      transaction
+    });
+
+    await shipment.update(
+      {
+        estimated_distance: fareEstimation.distance_km
       },
       { transaction }
     );
@@ -688,15 +806,24 @@ const updateShipment = async (id, payload, user) => {
       metrics = await syncShipmentPackages(id, payload.packages, transaction);
     }
 
+    const nextShipmentPersistenceData = buildShipmentPersistenceData({
+      payload: {
+        ...payload,
+        pickup_address_id: nextPayload.pickup_address_id,
+        delivery_address_id: nextPayload.delivery_address_id
+      },
+      existingShipment: shipment,
+      customerId,
+      pickupAddress: relations.pickupAddress,
+      deliveryAddress: relations.deliveryAddress
+    });
+
     await shipment.update(
       {
         vehicle_type_id: nextPayload.vehicle_type_id,
         shipment_type: payload.shipment_type ?? shipment.shipment_type,
         priority: payload.priority ?? shipment.priority,
-        estimated_distance:
-          payload.estimated_distance === undefined
-            ? shipment.estimated_distance
-            : toNullable(payload.estimated_distance),
+        estimated_distance: shipment.estimated_distance,
         estimated_delivery_date:
           payload.estimated_delivery_date === undefined
             ? shipment.estimated_delivery_date
@@ -705,18 +832,28 @@ const updateShipment = async (id, payload, user) => {
           payload.special_instructions === undefined
             ? shipment.special_instructions
             : toNullable(normalizeText(payload.special_instructions)),
-        ...buildShipmentPersistenceData({
-          payload: {
-            ...payload,
-            pickup_address_id: nextPayload.pickup_address_id,
-            delivery_address_id: nextPayload.delivery_address_id
-          },
-          existingShipment: shipment,
-          customerId,
-          pickupAddress: relations.pickupAddress,
-          deliveryAddress: relations.deliveryAddress
-        }),
+        ...nextShipmentPersistenceData,
         ...metrics
+      },
+      { transaction }
+    );
+
+    const fareEstimation = await syncShipmentFareEstimation({
+      shipmentId: shipment.id,
+      vehicleTypeId: nextPayload.vehicle_type_id,
+      shipmentData: {
+        ...nextShipmentPersistenceData,
+        ...metrics
+      },
+      pickupAddress: relations.pickupAddress,
+      deliveryAddress: relations.deliveryAddress,
+      weightKg: metrics.total_weight,
+      transaction
+    });
+
+    await shipment.update(
+      {
+        estimated_distance: fareEstimation.distance_km
       },
       { transaction }
     );
@@ -1035,7 +1172,8 @@ const getShipmentDashboardStats = async (user = {}) => {
     assigned,
     inTransit,
     delivered,
-    cancelled
+    cancelled,
+    pricingMetrics
   ] = await Promise.all([
     db.Shipment.count({ where: whereClause }),
     db.Shipment.count({
@@ -1069,7 +1207,8 @@ const getShipmentDashboardStats = async (user = {}) => {
         ...whereClause,
         status: 'CANCELLED'
       }
-    })
+    }),
+    pricingService.getDashboardMetrics(user)
   ]);
 
   return {
@@ -1078,7 +1217,9 @@ const getShipmentDashboardStats = async (user = {}) => {
     assigned,
     inTransit,
     delivered,
-    cancelled
+    cancelled,
+    averageShipmentValue: pricingMetrics.averageShipmentValue,
+    estimatedRevenue: pricingMetrics.estimatedRevenue
   };
 };
 

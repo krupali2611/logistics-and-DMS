@@ -139,6 +139,23 @@ const mapTrackingEvent = (event) => ({
   assignment_id: event.shipment_assignment_id
 });
 
+const mapFareEstimation = (estimation) =>
+  estimation
+    ? {
+        id: estimation.id,
+        shipment_id: estimation.shipment_id,
+        vehicle_type_id: estimation.vehicle_type_id,
+        distance_km: estimation.distance_km,
+        weight_kg: estimation.weight_kg,
+        base_fare: estimation.base_fare,
+        distance_charge: estimation.distance_charge,
+        weight_charge: estimation.weight_charge,
+        final_amount: estimation.final_amount,
+        created_at: estimation.created_at,
+        updated_at: estimation.updated_at
+      }
+    : null;
+
 const mapShipmentBase = (shipment) => ({
   id: shipment.id,
   shipment_number: shipment.shipment_number,
@@ -183,6 +200,7 @@ const toShipmentListDto = (shipment) => ({
 
 const toShipmentDetailDto = (shipment) => ({
   ...toShipmentListDto(shipment),
+  fare_estimation: mapFareEstimation(shipment.fareEstimation),
   created_by_user: mapUserSummary(shipment.createdBy),
   created_by_customer_user: mapCustomerUserSummary(shipment.createdByCustomerUser),
   packages: Array.isArray(shipment.packages) ? shipment.packages.map(mapPackage) : [],
