@@ -2,27 +2,33 @@
 
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await Promise.all([
-      queryInterface.addColumn('driver_documents', 'document_name', {
-        type: Sequelize.STRING(100),
-        allowNull: true
-      }),
-      queryInterface.addColumn('vehicle_documents', 'document_name', {
-        type: Sequelize.STRING(100),
-        allowNull: true
-      }),
-      queryInterface.addColumn('customer_documents', 'document_name', {
-        type: Sequelize.STRING(100),
-        allowNull: true
+    const tableNames = ['driver_documents', 'vehicle_documents', 'customer_documents'];
+
+    await Promise.all(
+      tableNames.map(async (tableName) => {
+        const tableDefinition = await queryInterface.describeTable(tableName);
+
+        if (!tableDefinition.document_name) {
+          await queryInterface.addColumn(tableName, 'document_name', {
+            type: Sequelize.STRING(100),
+            allowNull: true
+          });
+        }
       })
-    ]);
+    );
   },
 
   async down(queryInterface) {
-    await Promise.all([
-      queryInterface.removeColumn('driver_documents', 'document_name'),
-      queryInterface.removeColumn('vehicle_documents', 'document_name'),
-      queryInterface.removeColumn('customer_documents', 'document_name')
-    ]);
+    const tableNames = ['driver_documents', 'vehicle_documents', 'customer_documents'];
+
+    await Promise.all(
+      tableNames.map(async (tableName) => {
+        const tableDefinition = await queryInterface.describeTable(tableName);
+
+        if (tableDefinition.document_name) {
+          await queryInterface.removeColumn(tableName, 'document_name');
+        }
+      })
+    );
   }
 };
