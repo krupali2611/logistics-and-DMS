@@ -28,7 +28,11 @@ module.exports = (sequelize) => {
       },
       updated_by: {
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: true
+      },
+      updated_by_customer_user_id: {
+        type: DataTypes.UUID,
+        allowNull: true
       }
     },
     {

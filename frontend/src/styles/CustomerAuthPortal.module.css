@@ -1,0 +1,144 @@
+.authShell {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  background:
+    radial-gradient(circle at top left, rgba(245, 172, 76, 0.18), transparent 28%),
+    linear-gradient(135deg, #f7fafc 0%, #e5edf3 100%);
+}
+
+.heroPanel {
+  padding: 64px 56px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 212, 143, 0.18), transparent 24%),
+    linear-gradient(180deg, #09314a 0%, #0e5873 100%);
+  color: #f8fcff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.heroPanel span {
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffd08a;
+  font-weight: 700;
+}
+
+.heroPanel h1 {
+  margin: 18px 0 14px;
+  font-size: clamp(2.2rem, 4vw, 3.8rem);
+  line-height: 1.02;
+  max-width: 640px;
+}
+
+.heroPanel p {
+  max-width: 560px;
+  color: rgba(248, 252, 255, 0.84);
+  line-height: 1.72;
+}
+
+.formPanel,
+.centeredShell {
+  padding: 24px;
+  display: grid;
+  place-items: center;
+}
+
+.centeredShell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(14, 88, 115, 0.1), transparent 25%),
+    linear-gradient(180deg, #f5f9fc 0%, #e7eef4 100%);
+}
+
+.formCard {
+  width: min(100%, 500px);
+  display: grid;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.96);
+  border-radius: 26px;
+  padding: 28px;
+  box-shadow: 0 22px 54px rgba(12, 52, 76, 0.14);
+  border: 1px solid rgba(14, 88, 115, 0.08);
+}
+
+.formCard h2 {
+  margin: 0;
+  color: #14374d;
+}
+
+.formCard p {
+  margin: 8px 0 0;
+  color: #698095;
+}
+
+.gridTwo {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.linkRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.linkRow a {
+  color: #0e5c79;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.helperCard,
+.errorBox,
+.successBox,
+.tokenBox {
+  border-radius: 16px;
+  padding: 14px 16px;
+}
+
+.helperCard {
+  background: #eef6fb;
+  color: #2c556a;
+}
+
+.errorBox {
+  background: #fff1f1;
+  color: #b14141;
+}
+
+.successBox {
+  background: #effaf2;
+  color: #25704b;
+}
+
+.tokenBox {
+  background: #fff7e8;
+  color: #835615;
+  word-break: break-word;
+}
+
+@media (max-width: 960px) {
+  .authShell {
+    grid-template-columns: 1fr;
+  }
+
+  .heroPanel {
+    padding: 44px 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .gridTwo {
+    grid-template-columns: 1fr;
+  }
+
+  .formCard {
+    padding: 22px;
+    border-radius: 22px;
+  }
+}

@@ -27,7 +27,8 @@ const toNumber = (value, fallback = 0) => {
 
 const resolveAccessContext = (user = {}) => ({
   userId: user?.id || null,
-  customerId: user?.customer_id || null
+  customerId: user?.customer_id || null,
+  customerUserId: user?.customer_user_id || null
 });
 
 const formatAddressSnapshot = (address) =>
@@ -97,6 +98,11 @@ const getShipmentIncludes = ({ includeTracking = true, includeAssignments = true
           model: db.User,
           as: 'updatedBy',
           attributes: ['id', 'first_name', 'last_name', 'email']
+        },
+        {
+          model: db.CustomerUser,
+          as: 'updatedByCustomerUser',
+          attributes: ['id', 'first_name', 'last_name', 'email', 'phone']
         }
       ]
     },
@@ -115,6 +121,11 @@ const getShipmentIncludes = ({ includeTracking = true, includeAssignments = true
       model: db.User,
       as: 'createdBy',
       attributes: ['id', 'first_name', 'last_name', 'email']
+    },
+    {
+      model: db.CustomerUser,
+      as: 'createdByCustomerUser',
+      attributes: ['id', 'first_name', 'last_name', 'email', 'phone']
     }
   ];
 
@@ -335,6 +346,7 @@ const appendStatusHistory = async ({
   new_status,
   remarks,
   updated_by,
+  updated_by_customer_user_id,
   transaction
 }) =>
   db.ShipmentStatusHistory.create(
@@ -343,7 +355,8 @@ const appendStatusHistory = async ({
       old_status,
       new_status,
       remarks: remarks || null,
-      updated_by
+      updated_by,
+      updated_by_customer_user_id
     },
     { transaction }
   );
@@ -529,6 +542,7 @@ const createShipment = async (payload, user) => {
         special_instructions: toNullable(normalizeText(payload.special_instructions)),
         status: payload.status || 'DRAFT',
         created_by: accessContext.userId,
+        created_by_customer_user_id: accessContext.customerUserId,
         ...buildShipmentPersistenceData({
           payload,
           customerId,
@@ -561,6 +575,7 @@ const createShipment = async (payload, user) => {
       new_status: shipment.status,
       remarks: payload.status_remarks || 'Shipment created.',
       updated_by: accessContext.userId,
+      updated_by_customer_user_id: accessContext.customerUserId,
       transaction
     });
 
@@ -766,6 +781,7 @@ const updateShipmentStatus = async (id, status, remarks, user) => {
       new_status: status,
       remarks,
       updated_by: accessContext.userId,
+      updated_by_customer_user_id: accessContext.customerUserId,
       transaction
     });
 

@@ -8,6 +8,17 @@ const mapUserSummary = (user) =>
       }
     : null;
 
+const mapCustomerUserSummary = (user) =>
+  user
+    ? {
+        id: user.id,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        email: user.email,
+        phone: user.phone
+      }
+    : null;
+
 const mapCustomerSummary = (customer) =>
   customer
     ? {
@@ -67,7 +78,8 @@ const mapStatusHistory = (event) => ({
   new_status: event.new_status,
   remarks: event.remarks,
   created_at: event.created_at,
-  updated_by: mapUserSummary(event.updatedBy)
+  updated_by: mapUserSummary(event.updatedBy),
+  updated_by_customer_user: mapCustomerUserSummary(event.updatedByCustomerUser)
 });
 
 const mapAttachment = (attachment) => ({
@@ -156,6 +168,7 @@ const mapShipmentBase = (shipment) => ({
   current_eta: shipment.current_eta,
   current_location_updated_at: shipment.current_location_updated_at,
   created_by: shipment.created_by,
+  created_by_customer_user_id: shipment.created_by_customer_user_id,
   created_at: shipment.created_at,
   updated_at: shipment.updated_at
 });
@@ -171,6 +184,7 @@ const toShipmentListDto = (shipment) => ({
 const toShipmentDetailDto = (shipment) => ({
   ...toShipmentListDto(shipment),
   created_by_user: mapUserSummary(shipment.createdBy),
+  created_by_customer_user: mapCustomerUserSummary(shipment.createdByCustomerUser),
   packages: Array.isArray(shipment.packages) ? shipment.packages.map(mapPackage) : [],
   status_history: Array.isArray(shipment.statusHistory)
     ? shipment.statusHistory.map(mapStatusHistory)

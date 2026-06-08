@@ -108,6 +108,10 @@ module.exports = (sequelize) => {
         allowNull: false,
         defaultValue: 'DRAFT'
       },
+      created_by_customer_user_id: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
       current_driver_latitude: {
         type: DataTypes.DECIMAL(10, 7),
         allowNull: true
@@ -126,7 +130,7 @@ module.exports = (sequelize) => {
       },
       created_by: {
         type: DataTypes.UUID,
-        allowNull: false
+        allowNull: true
       }
     },
     {

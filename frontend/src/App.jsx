@@ -2,6 +2,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 import AdminLayout from './layouts/AdminLayout';
 import ProtectedRoute from './routes/ProtectedRoute';
+import CustomerProtectedRoute from './routes/CustomerProtectedRoute';
 import Login from './pages/auth/Login';
 import ForgotPassword from './pages/auth/ForgotPassword';
 import ResetPassword from './pages/auth/ResetPassword';
@@ -27,15 +28,75 @@ import ShipmentForm from './pages/shipments/ShipmentForm';
 import ShipmentDetails from './pages/shipments/ShipmentDetails';
 import ShipmentTimelinePage from './pages/shipments/ShipmentTimelinePage';
 import ShipmentAttachments from './pages/shipments/ShipmentAttachments';
+import CustomerPortalLayout from './layouts/CustomerPortalLayout';
+import CustomerLogin from './pages/customer/CustomerLogin';
+import CustomerRegister from './pages/customer/CustomerRegister';
+import CustomerForgotPassword from './pages/customer/CustomerForgotPassword';
+import CustomerResetPassword from './pages/customer/CustomerResetPassword';
+import CustomerOtpVerification from './pages/customer/CustomerOtpVerification';
+import CustomerProfile from './pages/customer/CustomerProfile';
+import { useCustomerAuth } from './context/CustomerAuthContext';
 
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
   return isAuthenticated ? <Navigate to="/" replace /> : children;
 };
 
+const CustomerPublicRoute = ({ children }) => {
+  const { isAuthenticated } = useCustomerAuth();
+  return isAuthenticated ? <Navigate to="/customer/profile" replace /> : children;
+};
+
+const CustomerEntryRoute = () => {
+  const { isAuthenticated } = useCustomerAuth();
+  return <Navigate to={isAuthenticated ? '/customer/profile' : '/customer/login'} replace />;
+};
+
 const App = () => {
   return (
     <Routes>
+      <Route path="/customer" element={<CustomerEntryRoute />} />
+      <Route
+        path="/customer/login"
+        element={
+          <CustomerPublicRoute>
+            <CustomerLogin />
+          </CustomerPublicRoute>
+        }
+      />
+      <Route
+        path="/customer/register"
+        element={
+          <CustomerPublicRoute>
+            <CustomerRegister />
+          </CustomerPublicRoute>
+        }
+      />
+      <Route
+        path="/customer/forgot-password"
+        element={
+          <CustomerPublicRoute>
+            <CustomerForgotPassword />
+          </CustomerPublicRoute>
+        }
+      />
+      <Route
+        path="/customer/reset-password"
+        element={
+          <CustomerPublicRoute>
+            <CustomerResetPassword />
+          </CustomerPublicRoute>
+        }
+      />
+      <Route
+        path="/customer/verify-otp"
+        element={
+          <CustomerPublicRoute>
+            <CustomerOtpVerification />
+          </CustomerPublicRoute>
+        }
+      />
+
       <Route
         path="/login"
         element={
@@ -90,6 +151,12 @@ const App = () => {
           <Route path="/shipments/:id/attachments" element={<ShipmentAttachments />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/change-password" element={<Navigate to="/profile" replace />} />
+        </Route>
+      </Route>
+
+      <Route element={<CustomerProtectedRoute />}>
+        <Route element={<CustomerPortalLayout />}>
+          <Route path="/customer/profile" element={<CustomerProfile />} />
         </Route>
       </Route>
 

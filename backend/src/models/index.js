@@ -14,6 +14,9 @@ const VehicleDocumentModel = require('./VehicleDocument');
 const DriverVehicleAssignmentModel = require('./DriverVehicleAssignment');
 const VehicleAssignmentModel = require('./VehicleAssignment');
 const CustomerModel = require('./Customer');
+const CustomerUserModel = require('./CustomerUser');
+const CustomerRefreshTokenModel = require('./CustomerRefreshToken');
+const CustomerOtpModel = require('./CustomerOtp');
 const CustomerAddressModel = require('./CustomerAddress');
 const CustomerDocumentModel = require('./CustomerDocument');
 const CustomerNoteModel = require('./CustomerNote');
@@ -43,6 +46,9 @@ db.VehicleDocument = VehicleDocumentModel(sequelize);
 db.DriverVehicleAssignment = DriverVehicleAssignmentModel(sequelize);
 db.VehicleAssignment = VehicleAssignmentModel(sequelize);
 db.Customer = CustomerModel(sequelize);
+db.CustomerUser = CustomerUserModel(sequelize);
+db.CustomerRefreshToken = CustomerRefreshTokenModel(sequelize);
+db.CustomerOtp = CustomerOtpModel(sequelize);
 db.CustomerAddress = CustomerAddressModel(sequelize);
 db.CustomerDocument = CustomerDocumentModel(sequelize);
 db.CustomerNote = CustomerNoteModel(sequelize);
@@ -207,6 +213,36 @@ db.Customer.hasMany(db.CustomerAddress, {
   as: 'addresses'
 });
 
+db.Customer.hasMany(db.CustomerUser, {
+  foreignKey: 'customer_id',
+  as: 'users'
+});
+
+db.CustomerUser.belongsTo(db.Customer, {
+  foreignKey: 'customer_id',
+  as: 'customer'
+});
+
+db.CustomerUser.hasMany(db.CustomerRefreshToken, {
+  foreignKey: 'customer_user_id',
+  as: 'refreshTokens'
+});
+
+db.CustomerRefreshToken.belongsTo(db.CustomerUser, {
+  foreignKey: 'customer_user_id',
+  as: 'customerUser'
+});
+
+db.CustomerUser.hasMany(db.CustomerOtp, {
+  foreignKey: 'customer_user_id',
+  as: 'otps'
+});
+
+db.CustomerOtp.belongsTo(db.CustomerUser, {
+  foreignKey: 'customer_user_id',
+  as: 'customerUser'
+});
+
 db.CustomerAddress.belongsTo(db.Customer, {
   foreignKey: 'customer_id',
   as: 'customer'
@@ -292,6 +328,16 @@ db.Shipment.belongsTo(db.User, {
   as: 'createdBy'
 });
 
+db.CustomerUser.hasMany(db.Shipment, {
+  foreignKey: 'created_by_customer_user_id',
+  as: 'createdShipments'
+});
+
+db.Shipment.belongsTo(db.CustomerUser, {
+  foreignKey: 'created_by_customer_user_id',
+  as: 'createdByCustomerUser'
+});
+
 db.Shipment.hasMany(db.ShipmentPackage, {
   foreignKey: 'shipment_id',
   as: 'packages'
@@ -320,6 +366,16 @@ db.User.hasMany(db.ShipmentStatusHistory, {
 db.ShipmentStatusHistory.belongsTo(db.User, {
   foreignKey: 'updated_by',
   as: 'updatedBy'
+});
+
+db.CustomerUser.hasMany(db.ShipmentStatusHistory, {
+  foreignKey: 'updated_by_customer_user_id',
+  as: 'shipmentStatusUpdates'
+});
+
+db.ShipmentStatusHistory.belongsTo(db.CustomerUser, {
+  foreignKey: 'updated_by_customer_user_id',
+  as: 'updatedByCustomerUser'
 });
 
 db.Shipment.hasMany(db.ShipmentAttachment, {
