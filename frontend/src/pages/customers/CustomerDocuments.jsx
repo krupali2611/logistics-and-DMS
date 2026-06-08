@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import ActionIcon from '../../components/ActionIcon/ActionIcon';
 import Button from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../../context/AuthContext';
@@ -10,11 +11,21 @@ import {
   getCustomerDocuments,
   updateCustomerDocument
 } from '../../api/customerApi';
-import { getFileUrl, isImageFile, toBase64Payload } from '../../utils/fileHelpers';
+import { getFileUrl, isImageFile, isImageMimeType, toBase64Payload } from '../../utils/fileHelpers';
+import {
+  customerDocumentTypes,
+  customerOtherDocumentNames,
+  getAvailableDocumentTypes,
+  getDocumentDisplayName,
+  hasDuplicateNonOtherDocument,
+  OTHER_DOCUMENT_VALUE
+} from '../../utils/documentOptions';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 import styles from '../../styles/Customer.module.css';
 
 const emptyDocumentForm = {
   document_type: 'GST_CERTIFICATE',
+  document_name: '',
   document_number: '',
   verification_status: 'PENDING',
   remarks: '',
@@ -35,6 +46,13 @@ const CustomerDocuments = () => {
   const canUpdate = permissions.includes('customer_update');
   const canDelete = permissions.includes('customer_delete');
 
+  const getDefaultDocumentType = (existingDocuments = documents) =>
+    getAvailableDocumentTypes({
+      allTypes: customerDocumentTypes,
+      currentType: emptyDocumentForm.document_type,
+      existingDocuments
+    })[0] || OTHER_DOCUMENT_VALUE;
+
   const loadData = async () => {
     setLoading(true);
     setError('');
@@ -46,6 +64,13 @@ const CustomerDocuments = () => {
       ]);
       setCustomer(customerResponse);
       setDocuments(documentResponse);
+      if (!editingId) {
+        setForm((current) => ({
+          ...emptyDocumentForm,
+          ...current,
+          document_type: getDefaultDocumentType(documentResponse)
+        }));
+      }
     } catch (requestError) {
       setError(requestError.response?.data?.message || 'Unable to load customer documents.');
     } finally {
@@ -59,6 +84,27 @@ const CustomerDocuments = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+
+    if (name === 'document_type') {
+      if (
+        hasDuplicateNonOtherDocument({
+          documentType: value,
+          existingDocuments: documents,
+          editingId
+        })
+      ) {
+        setError(`${value} document already exists.`);
+        return;
+      }
+    }
+
+    setError('');
+
+    if (name === 'document_type' && value !== OTHER_DOCUMENT_VALUE) {
+      setForm((current) => ({ ...current, [name]: value, document_name: '' }));
+      return;
+    }
+
     setForm((current) => ({ ...current, [name]: value }));
   };
 
@@ -76,7 +122,7 @@ const CustomerDocuments = () => {
   };
 
   const resetForm = () => {
-    setForm(emptyDocumentForm);
+    setForm({ ...emptyDocumentForm, document_type: getDefaultDocumentType() });
     setEditingId('');
   };
 
@@ -84,6 +130,7 @@ const CustomerDocuments = () => {
     setEditingId(document.id);
     setForm({
       document_type: document.document_type,
+      document_name: document.document_name || '',
       document_number: document.document_number,
       verification_status: document.verification_status,
       remarks: document.remarks || '',
@@ -94,12 +141,34 @@ const CustomerDocuments = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
+    if (
+      hasDuplicateNonOtherDocument({
+        documentType: form.document_type,
+        existingDocuments: documents,
+        editingId
+      })
+    ) {
+      setError(`${form.document_type} document already exists.`);
+      return;
+    }
+
+    if (form.document_type === OTHER_DOCUMENT_VALUE && !form.document_name.trim()) {
+      setError('Document name is required when document type is OTHER.');
+      return;
+    }
+
     setSaving(true);
     setError('');
 
     try {
       const payload = {
         document_type: form.document_type,
+        document_name:
+          form.document_type === OTHER_DOCUMENT_VALUE ? form.document_name.trim() : undefined,
         document_number: form.document_number,
         verification_status: form.verification_status,
         remarks: form.remarks || undefined
@@ -173,21 +242,43 @@ const CustomerDocuments = () => {
 
       <div className={styles.detailGrid}>
         {canUpdate ? (
-          <form className={styles.formCard} onSubmit={handleSubmit}>
+          <form className={styles.formCard} onSubmit={handleSubmit} {...getFormValidationProps()}>
             <div className={styles.cardHeader}>
               <h3>{editingId ? 'Update Document' : 'Upload Document'}</h3>
             </div>
-            <div className={styles.formGrid}>
+            <div className={`${styles.formGrid} ${styles.documentFormGrid}`}>
               <label className={styles.field}>
                 <span>Document Type</span>
                 <select name="document_type" value={form.document_type} onChange={handleChange}>
-                  <option value="GST_CERTIFICATE">GST_CERTIFICATE</option>
-                  <option value="PAN_CARD">PAN_CARD</option>
-                  <option value="AADHAR_CARD">AADHAR_CARD</option>
-                  <option value="BUSINESS_LICENSE">BUSINESS_LICENSE</option>
-                  <option value="OTHER">OTHER</option>
+                  {getAvailableDocumentTypes({
+                    allTypes: customerDocumentTypes,
+                    currentType: form.document_type,
+                    existingDocuments: documents,
+                    editingId
+                  }).map((type) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
                 </select>
               </label>
+              {form.document_type === OTHER_DOCUMENT_VALUE ? (
+                <label className={styles.field}>
+                  <span>Document Name</span>
+                  <input
+                    name="document_name"
+                    list="customer-other-document-names"
+                    value={form.document_name}
+                    onChange={handleChange}
+                    required
+                  />
+                  <datalist id="customer-other-document-names">
+                    {customerOtherDocumentNames.map((name) => (
+                      <option key={name} value={name} />
+                    ))}
+                  </datalist>
+                </label>
+              ) : null}
               <label className={styles.field}>
                 <span>Document Number</span>
                 <input
@@ -221,7 +312,7 @@ const CustomerDocuments = () => {
 
             {form.preview ? (
               <div className={styles.inlinePreview}>
-                {form.file?.type?.startsWith('image/') || isImageFile(form.preview) ? (
+                {isImageMimeType(form.file?.type) || isImageFile(form.preview) ? (
                   <img src={form.preview} alt="Document preview" className={styles.documentPreview} />
                 ) : (
                   <a href={form.preview} target="_blank" rel="noreferrer" className={styles.textLink}>
@@ -255,7 +346,7 @@ const CustomerDocuments = () => {
             ) : (
               documents.map((document) => (
                 <div key={document.id} className={styles.summaryCard}>
-                  <strong>{document.document_type}</strong>
+                  <strong>{getDocumentDisplayName(document)}</strong>
                   <span>{document.document_number}</span>
                   <span>{document.verification_status}</span>
                   <div className={styles.summaryActions}>
@@ -263,26 +354,32 @@ const CustomerDocuments = () => {
                       href={getFileUrl(document.document_file)}
                       target="_blank"
                       rel="noreferrer"
-                      className={styles.textLink}
+                      className={styles.actionIconLink}
+                      title="Open file"
+                      aria-label="Open file"
                     >
-                      Open File
+                      <ActionIcon name="open" />
                     </a>
                     {canUpdate ? (
                       <button
                         type="button"
-                        className={styles.textButton}
+                        className={styles.actionIconButton}
+                        title="Edit document"
+                        aria-label="Edit document"
                         onClick={() => handleEdit(document)}
                       >
-                        Edit
+                        <ActionIcon name="edit" />
                       </button>
                     ) : null}
                     {canDelete ? (
                       <button
                         type="button"
-                        className={styles.deleteButton}
+                        className={styles.actionIconDanger}
+                        title="Delete document"
+                        aria-label="Delete document"
                         onClick={() => handleDelete(document.id)}
                       >
-                        Delete
+                        <ActionIcon name="delete" />
                       </button>
                     ) : null}
                   </div>

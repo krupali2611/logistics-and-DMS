@@ -4,11 +4,10 @@ import Button from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
 import { createCustomer, getCustomerById, updateCustomer } from '../../api/customerApi';
 import styles from '../../styles/Customer.module.css';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
 const initialForm = {
-  customer_type: 'BUSINESS',
-  company_name: '',
-  contact_person: '',
+  customer_name: '',
   email: '',
   phone: '',
   alternate_phone: '',
@@ -46,9 +45,7 @@ const CustomerForm = ({ mode }) => {
       try {
         const customer = await getCustomerById(id);
         setForm({
-          customer_type: customer.customer_type || 'BUSINESS',
-          company_name: customer.company_name || '',
-          contact_person: customer.contact_person || '',
+          customer_name: customer.company_name || customer.contact_person || '',
           email: customer.email || '',
           phone: customer.phone || '',
           alternate_phone: customer.alternate_phone || '',
@@ -73,12 +70,20 @@ const CustomerForm = ({ mode }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setSaving(true);
     setError('');
 
     try {
       const payload = {
-        ...form,
+        customer_type: 'BUSINESS',
+        company_name: form.customer_name,
+        contact_person: form.customer_name,
+        email: form.email,
+        phone: form.phone,
         alternate_phone: form.alternate_phone || undefined,
         gst_number: form.gst_number || undefined,
         pan_number: form.pan_number || undefined
@@ -117,7 +122,7 @@ const CustomerForm = ({ mode }) => {
         </Link>
       </div>
 
-      <form className={styles.formShell} onSubmit={handleSubmit}>
+      <form className={styles.formShell} onSubmit={handleSubmit} {...getFormValidationProps()}>
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>
             <h3>Customer Details</h3>
@@ -130,32 +135,10 @@ const CustomerForm = ({ mode }) => {
 
           <div className={styles.formGrid}>
             <label className={styles.field}>
-              <span>Customer Type</span>
-              <select
-                name="customer_type"
-                value={form.customer_type}
-                onChange={handleChange}
-                required
-              >
-                <option value="INDIVIDUAL">INDIVIDUAL</option>
-                <option value="BUSINESS">BUSINESS</option>
-                <option value="CORPORATE">CORPORATE</option>
-              </select>
-            </label>
-            <label className={styles.field}>
-              <span>Company Name</span>
+              <span>Customer Name</span>
               <input
-                name="company_name"
-                value={form.company_name}
-                onChange={handleChange}
-                required
-              />
-            </label>
-            <label className={styles.field}>
-              <span>Contact Person</span>
-              <input
-                name="contact_person"
-                value={form.contact_person}
+                name="customer_name"
+                value={form.customer_name}
                 onChange={handleChange}
                 required
               />

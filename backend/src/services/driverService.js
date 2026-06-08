@@ -2,14 +2,29 @@ const { Op, fn, col, where } = require('sequelize');
 const db = require('../models');
 const AppError = require('../utils/AppError');
 const storageService = require('./storage/storageService');
+const vehicleService = require('./vehicleService');
+const {
+  assertDocumentNameRules,
+  assertFutureOrTodayDate,
+  assertUniqueDocumentType,
+  normalizeOptionalText
+} = require('../utils/documentValidation');
 const {
   DRIVER_STATUS,
   DRIVER_AVAILABILITY_STATUS,
   DRIVER_VERIFICATION_STATUS
 } = require('../constants/driverConstants');
 
-const PROFILE_IMAGE_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-const DOCUMENT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+const PROFILE_IMAGE_MIME_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/gif',
+  'image/avif',
+  'image/svg+xml',
+  'image/webp'
+];
+const DOCUMENT_MIME_TYPES = [...PROFILE_IMAGE_MIME_TYPES, 'application/pdf'];
 
 const buildPagination = ({ page, limit, totalRecords }) => ({
   page,
@@ -146,6 +161,18 @@ const listDrivers = async (query) => {
         model: db.DriverDocument,
         as: 'documents',
         attributes: ['id', 'document_type', 'verification_status']
+      },
+      {
+        model: db.Vehicle,
+        as: 'currentVehicle',
+        attributes: ['id', 'vehicle_number', 'brand', 'model', 'availability_status'],
+        include: [
+          {
+            model: db.VehicleType,
+            as: 'vehicleType',
+            attributes: ['id', 'type_name']
+          }
+        ]
       }
     ],
     order: [['created_at', 'DESC']],
@@ -265,6 +292,34 @@ const updateDriver = async (id, payload) => {
 
 const deleteDriver = async (id) => {
   const driver = await getDriverById(id);
+  const [activeAssignment, assignmentHistoryCount] = await Promise.all([
+    db.VehicleAssignment.findOne({
+      where: {
+        driver_id: id,
+        status: 'ASSIGNED'
+      }
+    }),
+    db.VehicleAssignment.count({
+      where: {
+        driver_id: id
+      }
+    })
+  ]);
+
+  if (activeAssignment || driver.vehicle_assigned) {
+    throw new AppError(
+      'Driver cannot be deleted until the assigned vehicle is returned first.',
+      409
+    );
+  }
+
+  if (assignmentHistoryCount > 0) {
+    throw new AppError(
+      'Driver cannot be deleted because assignment history must be preserved.',
+      409
+    );
+  }
+
   const transaction = await db.sequelize.transaction();
 
   try {
@@ -304,6 +359,13 @@ const updateDriverAvailability = async (id, availability_status) => {
     throw new AppError('Driver not found.', 404);
   }
 
+  if (driver.vehicle_assigned && availability_status !== 'BUSY') {
+    throw new AppError(
+      'Assigned drivers cannot be marked available until the vehicle is returned.',
+      409
+    );
+  }
+
   await driver.update({ availability_status });
   return driver;
 };
@@ -321,6 +383,21 @@ const verifyDriver = async (id, verification_status) => {
 
 const createDriverDocument = async (driverId, payload) => {
   await getDriverById(driverId);
+  assertFutureOrTodayDate(payload.expiry_date, 'Expiry date');
+
+  const existingDocuments = await db.DriverDocument.findAll({
+    where: { driver_id: driverId },
+    attributes: ['id', 'driver_id', 'document_type']
+  });
+
+  assertUniqueDocumentType({
+    documents: existingDocuments,
+    ownerKey: 'driver_id',
+    ownerId: driverId,
+    documentType: payload.document_type
+  });
+
+  const documentName = assertDocumentNameRules(payload.document_type, payload.document_name);
 
   const uploaded = await storageService.uploadFile({
     folder: `drivers/documents/${driverId}`,
@@ -333,10 +410,11 @@ const createDriverDocument = async (driverId, payload) => {
       driver_id: driverId,
       document_type: payload.document_type,
       document_number: payload.document_number,
+      document_name: documentName,
       document_file: uploaded.path,
       expiry_date: payload.expiry_date || null,
       verification_status: payload.verification_status || 'PENDING',
-      remarks: payload.remarks || null
+      remarks: normalizeOptionalText(payload.remarks)
     });
   } catch (error) {
     await storageService.deleteFile(uploaded.path);
@@ -360,6 +438,26 @@ const updateDriverDocument = async (id, payload) => {
     throw new AppError('Driver document not found.', 404);
   }
 
+  const nextDocumentType = payload.document_type ?? document.document_type;
+  const nextDocumentName = payload.document_name ?? document.document_name;
+
+  assertFutureOrTodayDate(payload.expiry_date ?? document.expiry_date, 'Expiry date');
+
+  const existingDocuments = await db.DriverDocument.findAll({
+    where: { driver_id: document.driver_id },
+    attributes: ['id', 'driver_id', 'document_type']
+  });
+
+  assertUniqueDocumentType({
+    documents: existingDocuments,
+    ownerKey: 'driver_id',
+    ownerId: document.driver_id,
+    documentType: nextDocumentType,
+    excludeId: id
+  });
+
+  const normalizedDocumentName = assertDocumentNameRules(nextDocumentType, nextDocumentName);
+
   const existingDocumentFilePath = document.document_file;
   let documentFilePath = document.document_file;
   let uploadedDocumentPath = null;
@@ -376,12 +474,14 @@ const updateDriverDocument = async (id, payload) => {
 
   try {
     await document.update({
-      document_type: payload.document_type ?? document.document_type,
+      document_type: nextDocumentType,
       document_number: payload.document_number ?? document.document_number,
+      document_name: normalizedDocumentName,
       document_file: documentFilePath,
       expiry_date: payload.expiry_date ?? document.expiry_date,
       verification_status: payload.verification_status ?? document.verification_status,
-      remarks: payload.remarks ?? document.remarks
+      remarks:
+        payload.remarks === undefined ? document.remarks : normalizeOptionalText(payload.remarks)
     });
   } catch (error) {
     if (uploadedDocumentPath) {
@@ -424,6 +524,73 @@ const getDriverDashboardStats = async () => {
   };
 };
 
+const getAvailableDriversForAssignment = async () =>
+  db.Driver.findAll({
+    where: {
+      status: 'ACTIVE',
+      verification_status: 'VERIFIED',
+      vehicle_assigned: false
+    },
+    attributes: [
+      'id',
+      'driver_code',
+      'first_name',
+      'last_name',
+      'phone',
+      'availability_status'
+    ],
+    order: [['driver_code', 'ASC']]
+  });
+
+const getAvailableVehiclesForAssignment = async () =>
+  vehicleService.getAvailableVehiclesForAssignment();
+
+const assignVehicleToDriver = async (driverId, vehicleId, currentUser) =>
+  vehicleService.assignVehicle(vehicleId, driverId, currentUser);
+
+const returnAssignedVehicle = async (driverId, currentUser) => {
+  const activeAssignment = await db.VehicleAssignment.findOne({
+    where: {
+      driver_id: driverId,
+      status: 'ASSIGNED'
+    }
+  });
+
+  if (!activeAssignment) {
+    throw new AppError('No active vehicle assignment found for this driver.', 404);
+  }
+
+  return vehicleService.returnVehicle(activeAssignment.vehicle_id, currentUser);
+};
+
+const getDriverVehicleAssignmentHistory = async (driverId) => {
+  await getDriverById(driverId);
+
+  return db.VehicleAssignment.findAll({
+    where: { driver_id: driverId },
+    include: [
+      {
+        model: db.Vehicle,
+        as: 'vehicle',
+        attributes: ['id', 'vehicle_number', 'brand', 'model'],
+        include: [
+          {
+            model: db.VehicleType,
+            as: 'vehicleType',
+            attributes: ['id', 'type_name']
+          }
+        ]
+      },
+      {
+        model: db.User,
+        as: 'assignedBy',
+        attributes: ['id', 'first_name', 'last_name', 'email']
+      }
+    ],
+    order: [['assigned_at', 'DESC']]
+  });
+};
+
 module.exports = {
   DRIVER_STATUS,
   DRIVER_AVAILABILITY_STATUS,
@@ -440,5 +607,10 @@ module.exports = {
   listDriverDocuments,
   updateDriverDocument,
   deleteDriverDocument,
-  getDriverDashboardStats
+  getDriverDashboardStats,
+  getAvailableDriversForAssignment,
+  getAvailableVehiclesForAssignment,
+  assignVehicleToDriver,
+  returnAssignedVehicle,
+  getDriverVehicleAssignmentHistory
 };

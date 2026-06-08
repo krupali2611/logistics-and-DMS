@@ -16,7 +16,8 @@
 }
 
 .collapsed {
-  width: 180px;
+  width: 96px;
+  padding-inline: 12px;
 }
 
 .topSection {
@@ -71,6 +72,11 @@
   border-radius: 10px;
   cursor: pointer;
   flex: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.toggleButton:hover {
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .nav {
@@ -163,20 +169,38 @@
   display: none;
 }
 
+.collapsed .topSection {
+  flex-direction: column;
+  align-items: center;
+}
+
+.collapsed .brand {
+  justify-content: center;
+}
+
 .collapsed .link {
-  padding-inline: 12px;
+  padding: 11px 8px;
+  text-align: center;
 }
 
 .collapsed .linkLabel {
-  font-size: 0.92rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  font-weight: 700;
 }
 
 .collapsed .userPanel {
-  padding: 12px;
+  padding: 12px 8px;
+  justify-items: center;
 }
 
-.collapsed .userText strong {
-  white-space: normal;
+.collapsed .userText,
+.collapsed .userActions {
+  display: none;
+}
+
+.collapsed .userMeta {
+  justify-content: center;
 }
 
 @media (max-width: 960px) {

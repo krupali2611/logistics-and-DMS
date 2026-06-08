@@ -12,10 +12,16 @@ const VehicleTypeModel = require('./VehicleType');
 const VehicleModel = require('./Vehicle');
 const VehicleDocumentModel = require('./VehicleDocument');
 const DriverVehicleAssignmentModel = require('./DriverVehicleAssignment');
+const VehicleAssignmentModel = require('./VehicleAssignment');
 const CustomerModel = require('./Customer');
 const CustomerAddressModel = require('./CustomerAddress');
 const CustomerDocumentModel = require('./CustomerDocument');
 const CustomerNoteModel = require('./CustomerNote');
+const AuditLogModel = require('./AuditLog');
+const ShipmentModel = require('./Shipment');
+const ShipmentPackageModel = require('./ShipmentPackage');
+const ShipmentStatusHistoryModel = require('./ShipmentStatusHistory');
+const ShipmentAttachmentModel = require('./ShipmentAttachment');
 
 const db = {};
 
@@ -33,10 +39,16 @@ db.VehicleType = VehicleTypeModel(sequelize);
 db.Vehicle = VehicleModel(sequelize);
 db.VehicleDocument = VehicleDocumentModel(sequelize);
 db.DriverVehicleAssignment = DriverVehicleAssignmentModel(sequelize);
+db.VehicleAssignment = VehicleAssignmentModel(sequelize);
 db.Customer = CustomerModel(sequelize);
 db.CustomerAddress = CustomerAddressModel(sequelize);
 db.CustomerDocument = CustomerDocumentModel(sequelize);
 db.CustomerNote = CustomerNoteModel(sequelize);
+db.AuditLog = AuditLogModel(sequelize);
+db.Shipment = ShipmentModel(sequelize);
+db.ShipmentPackage = ShipmentPackageModel(sequelize);
+db.ShipmentStatusHistory = ShipmentStatusHistoryModel(sequelize);
+db.ShipmentAttachment = ShipmentAttachmentModel(sequelize);
 
 db.User.belongsToMany(db.Role, {
   through: db.UserRole,
@@ -106,6 +118,16 @@ db.Vehicle.belongsTo(db.VehicleType, {
   as: 'vehicleType'
 });
 
+db.Vehicle.belongsTo(db.Driver, {
+  foreignKey: 'assigned_driver_id',
+  as: 'assignedDriver'
+});
+
+db.Driver.hasOne(db.Vehicle, {
+  foreignKey: 'assigned_driver_id',
+  as: 'currentVehicle'
+});
+
 db.Vehicle.hasMany(db.VehicleDocument, {
   foreignKey: 'vehicle_id',
   as: 'documents'
@@ -134,6 +156,46 @@ db.Vehicle.hasMany(db.DriverVehicleAssignment, {
 db.DriverVehicleAssignment.belongsTo(db.Vehicle, {
   foreignKey: 'vehicle_id',
   as: 'vehicle'
+});
+
+db.Driver.hasMany(db.VehicleAssignment, {
+  foreignKey: 'driver_id',
+  as: 'vehicleAssignmentHistory'
+});
+
+db.VehicleAssignment.belongsTo(db.Driver, {
+  foreignKey: 'driver_id',
+  as: 'driver'
+});
+
+db.Vehicle.hasMany(db.VehicleAssignment, {
+  foreignKey: 'vehicle_id',
+  as: 'assignmentHistory'
+});
+
+db.VehicleAssignment.belongsTo(db.Vehicle, {
+  foreignKey: 'vehicle_id',
+  as: 'vehicle'
+});
+
+db.User.hasMany(db.VehicleAssignment, {
+  foreignKey: 'assigned_by',
+  as: 'vehicleAssignmentsCreated'
+});
+
+db.VehicleAssignment.belongsTo(db.User, {
+  foreignKey: 'assigned_by',
+  as: 'assignedBy'
+});
+
+db.User.hasMany(db.AuditLog, {
+  foreignKey: 'performed_by',
+  as: 'auditLogs'
+});
+
+db.AuditLog.belongsTo(db.User, {
+  foreignKey: 'performed_by',
+  as: 'performedBy'
 });
 
 db.Customer.hasMany(db.CustomerAddress, {
@@ -174,6 +236,106 @@ db.User.hasMany(db.CustomerNote, {
 db.CustomerNote.belongsTo(db.User, {
   foreignKey: 'created_by',
   as: 'createdBy'
+});
+
+db.Customer.hasMany(db.Shipment, {
+  foreignKey: 'customer_id',
+  as: 'shipments'
+});
+
+db.Shipment.belongsTo(db.Customer, {
+  foreignKey: 'customer_id',
+  as: 'customer'
+});
+
+db.CustomerAddress.hasMany(db.Shipment, {
+  foreignKey: 'pickup_address_id',
+  as: 'pickupShipments'
+});
+
+db.Shipment.belongsTo(db.CustomerAddress, {
+  foreignKey: 'pickup_address_id',
+  as: 'pickupAddress'
+});
+
+db.CustomerAddress.hasMany(db.Shipment, {
+  foreignKey: 'delivery_address_id',
+  as: 'deliveryShipments'
+});
+
+db.Shipment.belongsTo(db.CustomerAddress, {
+  foreignKey: 'delivery_address_id',
+  as: 'deliveryAddress'
+});
+
+db.VehicleType.hasMany(db.Shipment, {
+  foreignKey: 'vehicle_type_id',
+  as: 'shipments'
+});
+
+db.Shipment.belongsTo(db.VehicleType, {
+  foreignKey: 'vehicle_type_id',
+  as: 'vehicleType'
+});
+
+db.User.hasMany(db.Shipment, {
+  foreignKey: 'created_by',
+  as: 'createdShipments'
+});
+
+db.Shipment.belongsTo(db.User, {
+  foreignKey: 'created_by',
+  as: 'createdBy'
+});
+
+db.Shipment.hasMany(db.ShipmentPackage, {
+  foreignKey: 'shipment_id',
+  as: 'packages'
+});
+
+db.ShipmentPackage.belongsTo(db.Shipment, {
+  foreignKey: 'shipment_id',
+  as: 'shipment'
+});
+
+db.Shipment.hasMany(db.ShipmentStatusHistory, {
+  foreignKey: 'shipment_id',
+  as: 'statusHistory'
+});
+
+db.ShipmentStatusHistory.belongsTo(db.Shipment, {
+  foreignKey: 'shipment_id',
+  as: 'shipment'
+});
+
+db.User.hasMany(db.ShipmentStatusHistory, {
+  foreignKey: 'updated_by',
+  as: 'shipmentStatusUpdates'
+});
+
+db.ShipmentStatusHistory.belongsTo(db.User, {
+  foreignKey: 'updated_by',
+  as: 'updatedBy'
+});
+
+db.Shipment.hasMany(db.ShipmentAttachment, {
+  foreignKey: 'shipment_id',
+  as: 'attachments'
+});
+
+db.ShipmentAttachment.belongsTo(db.Shipment, {
+  foreignKey: 'shipment_id',
+  as: 'shipment'
+});
+
+db.User.hasMany(db.ShipmentAttachment, {
+  foreignKey: 'uploaded_by',
+  as: 'shipmentAttachments'
+});
+
+db.ShipmentAttachment.belongsTo(db.User, {
+  foreignKey: 'uploaded_by',
+  as: 'uploadedBy'
 });
 
 module.exports = db;

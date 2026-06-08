@@ -2,15 +2,32 @@ const { Op, col, where } = require('sequelize');
 const db = require('../models');
 const AppError = require('../utils/AppError');
 const storageService = require('./storage/storageService');
+const auditLogService = require('./auditLogService');
+const {
+  assertDocumentNameRules,
+  assertFutureOrTodayDate,
+  assertUniqueDocumentType,
+  normalizeOptionalText
+} = require('../utils/documentValidation');
 const {
   VEHICLE_STATUS,
   VEHICLE_VERIFICATION_STATUS,
   VEHICLE_AVAILABILITY_STATUS,
   VEHICLE_DOCUMENT_TYPES,
-  DRIVER_VEHICLE_ASSIGNMENT_STATUS
+  DRIVER_VEHICLE_ASSIGNMENT_STATUS,
+  VEHICLE_ASSIGNMENT_STATUS
 } = require('../constants/vehicleConstants');
 
-const DOCUMENT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+const DOCUMENT_MIME_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/gif',
+  'image/avif',
+  'image/svg+xml',
+  'image/webp',
+  'application/pdf'
+];
 
 const buildPagination = ({ page, limit, totalRecords }) => ({
   page,
@@ -237,8 +254,13 @@ const getVehicleById = async (id) => {
         as: 'documents'
       },
       {
-        model: db.DriverVehicleAssignment,
-        as: 'assignments',
+        model: db.Driver,
+        as: 'assignedDriver',
+        attributes: ['id', 'driver_code', 'first_name', 'last_name', 'phone']
+      },
+      {
+        model: db.VehicleAssignment,
+        as: 'assignmentHistory',
         include: [
           {
             model: db.Driver,
@@ -252,13 +274,18 @@ const getVehicleById = async (id) => {
               'verification_status',
               'availability_status'
             ]
+          },
+          {
+            model: db.User,
+            as: 'assignedBy',
+            attributes: ['id', 'first_name', 'last_name', 'email']
           }
         ]
       }
     ],
     order: [
       [{ model: db.VehicleDocument, as: 'documents' }, 'created_at', 'DESC'],
-      [{ model: db.DriverVehicleAssignment, as: 'assignments' }, 'assigned_at', 'DESC']
+      [{ model: db.VehicleAssignment, as: 'assignmentHistory' }, 'assigned_at', 'DESC']
     ]
   });
 
@@ -289,6 +316,11 @@ const listVehicles = async (query) => {
         model: db.VehicleDocument,
         as: 'documents',
         attributes: ['id', 'document_type', 'verification_status']
+      },
+      {
+        model: db.Driver,
+        as: 'assignedDriver',
+        attributes: ['id', 'driver_code', 'first_name', 'last_name']
       }
     ],
     order: [['created_at', 'DESC']],
@@ -345,6 +377,21 @@ const updateVehicle = async (id, payload) => {
   const vehicleType = await ensureVehicleTypeExists(payload.vehicle_type_id || vehicle.vehicle_type_id);
   assertCapacityWithinTypeRange(vehicleType, payload.capacity ?? vehicle.capacity);
 
+  if (
+    payload.availability_status &&
+    payload.availability_status !== vehicle.availability_status
+  ) {
+    const activeAssignment = await getActiveAssignmentForVehicle(id);
+
+    if (activeAssignment && payload.availability_status !== 'ASSIGNED') {
+      throw new AppError('Assigned vehicles must be returned before their availability can change.', 409);
+    }
+
+    if (!activeAssignment && payload.availability_status === 'ASSIGNED') {
+      throw new AppError('Use the assign vehicle action to mark a vehicle as assigned.', 409);
+    }
+  }
+
   await vehicle.update({
     vehicle_number: payload.vehicle_number ? payload.vehicle_number.toUpperCase() : vehicle.vehicle_number,
     vehicle_type_id: payload.vehicle_type_id ?? vehicle.vehicle_type_id,
@@ -369,10 +416,19 @@ const updateVehicle = async (id, payload) => {
 
 const deleteVehicle = async (id) => {
   const vehicle = await getVehicleById(id);
-  const activeAssignment = vehicle.assignments.find((assignment) => assignment.status === 'ACTIVE');
+  const activeAssignment = vehicle.assignmentHistory.find(
+    (assignment) => assignment.status === 'ASSIGNED'
+  );
 
   if (activeAssignment) {
-    throw new AppError('Vehicle cannot be deleted while an active assignment exists.', 409);
+    throw new AppError(
+      'Vehicle cannot be deleted until its active assignment is returned first.',
+      409
+    );
+  }
+
+  if (vehicle.assignmentHistory.length > 0) {
+    throw new AppError('Vehicle cannot be deleted because assignment history must be preserved.', 409);
   }
 
   const transaction = await db.sequelize.transaction();
@@ -421,15 +477,19 @@ const updateVehicleAvailability = async (id, availability_status) => {
     throw new AppError('Vehicle not found.', 404);
   }
 
-  const activeAssignment = await db.DriverVehicleAssignment.findOne({
+  const activeAssignment = await db.VehicleAssignment.findOne({
     where: {
       vehicle_id: id,
-      status: 'ACTIVE'
+      status: 'ASSIGNED'
     }
   });
 
-  if (activeAssignment && availability_status === 'AVAILABLE') {
-    throw new AppError('Assigned vehicles cannot be marked as available until unassigned.', 409);
+  if (activeAssignment && availability_status !== 'ASSIGNED') {
+    throw new AppError('Assigned vehicles must be returned before their availability can change.', 409);
+  }
+
+  if (!activeAssignment && availability_status === 'ASSIGNED') {
+    throw new AppError('Use the assign vehicle action to mark a vehicle as assigned.', 409);
   }
 
   await vehicle.update({ availability_status });
@@ -438,6 +498,21 @@ const updateVehicleAvailability = async (id, availability_status) => {
 
 const createVehicleDocument = async (vehicleId, payload) => {
   await getVehicleById(vehicleId);
+  assertFutureOrTodayDate(payload.expiry_date, 'Expiry date');
+
+  const existingDocuments = await db.VehicleDocument.findAll({
+    where: { vehicle_id: vehicleId },
+    attributes: ['id', 'vehicle_id', 'document_type']
+  });
+
+  assertUniqueDocumentType({
+    documents: existingDocuments,
+    ownerKey: 'vehicle_id',
+    ownerId: vehicleId,
+    documentType: payload.document_type
+  });
+
+  const documentName = assertDocumentNameRules(payload.document_type, payload.document_name);
 
   const uploaded = await storageService.uploadFile({
     folder: `vehicles/documents/${vehicleId}`,
@@ -450,10 +525,11 @@ const createVehicleDocument = async (vehicleId, payload) => {
       vehicle_id: vehicleId,
       document_type: payload.document_type,
       document_number: payload.document_number,
+      document_name: documentName,
       document_file: uploaded.path,
       expiry_date: payload.expiry_date || null,
       verification_status: payload.verification_status || 'PENDING',
-      remarks: payload.remarks || null
+      remarks: normalizeOptionalText(payload.remarks)
     });
   } catch (error) {
     await storageService.deleteFile(uploaded.path);
@@ -477,6 +553,26 @@ const updateVehicleDocument = async (id, payload) => {
     throw new AppError('Vehicle document not found.', 404);
   }
 
+  const nextDocumentType = payload.document_type ?? document.document_type;
+  const nextDocumentName = payload.document_name ?? document.document_name;
+
+  assertFutureOrTodayDate(payload.expiry_date ?? document.expiry_date, 'Expiry date');
+
+  const existingDocuments = await db.VehicleDocument.findAll({
+    where: { vehicle_id: document.vehicle_id },
+    attributes: ['id', 'vehicle_id', 'document_type']
+  });
+
+  assertUniqueDocumentType({
+    documents: existingDocuments,
+    ownerKey: 'vehicle_id',
+    ownerId: document.vehicle_id,
+    documentType: nextDocumentType,
+    excludeId: id
+  });
+
+  const normalizedDocumentName = assertDocumentNameRules(nextDocumentType, nextDocumentName);
+
   const existingDocumentFilePath = document.document_file;
   let documentFilePath = document.document_file;
   let uploadedDocumentPath = null;
@@ -493,12 +589,14 @@ const updateVehicleDocument = async (id, payload) => {
 
   try {
     await document.update({
-      document_type: payload.document_type ?? document.document_type,
+      document_type: nextDocumentType,
       document_number: payload.document_number ?? document.document_number,
+      document_name: normalizedDocumentName,
       document_file: documentFilePath,
       expiry_date: payload.expiry_date ?? document.expiry_date,
       verification_status: payload.verification_status ?? document.verification_status,
-      remarks: payload.remarks ?? document.remarks
+      remarks:
+        payload.remarks === undefined ? document.remarks : normalizeOptionalText(payload.remarks)
     });
   } catch (error) {
     if (uploadedDocumentPath) {
@@ -526,32 +624,32 @@ const deleteVehicleDocument = async (id) => {
 };
 
 const getActiveAssignmentForDriver = async (driverId, transaction) =>
-  db.DriverVehicleAssignment.findOne({
+  db.VehicleAssignment.findOne({
     where: {
       driver_id: driverId,
-      status: 'ACTIVE'
+      status: 'ASSIGNED'
     },
     transaction
   });
 
 const getActiveAssignmentForVehicle = async (vehicleId, transaction) =>
-  db.DriverVehicleAssignment.findOne({
+  db.VehicleAssignment.findOne({
     where: {
       vehicle_id: vehicleId,
-      status: 'ACTIVE'
+      status: 'ASSIGNED'
     },
     transaction
   });
 
-const assignVehicle = async (payload) => {
+const assignVehicle = async (vehicleId, driverId, currentUser) => {
   const transaction = await db.sequelize.transaction();
 
   try {
     const [driver, vehicle, activeDriverAssignment, activeVehicleAssignment] = await Promise.all([
-      db.Driver.findByPk(payload.driver_id, { transaction }),
-      db.Vehicle.findByPk(payload.vehicle_id, { transaction }),
-      getActiveAssignmentForDriver(payload.driver_id, transaction),
-      getActiveAssignmentForVehicle(payload.vehicle_id, transaction)
+      db.Driver.findByPk(driverId, { transaction }),
+      db.Vehicle.findByPk(vehicleId, { transaction }),
+      getActiveAssignmentForDriver(driverId, transaction),
+      getActiveAssignmentForVehicle(vehicleId, transaction)
     ]);
 
     if (!driver) {
@@ -566,36 +664,77 @@ const assignVehicle = async (payload) => {
       throw new AppError('Only verified drivers can be assigned to vehicles.', 409);
     }
 
+    if (driver.status !== 'ACTIVE') {
+      throw new AppError('Only active drivers can be assigned to vehicles.', 409);
+    }
+
     if (vehicle.verification_status !== 'VERIFIED') {
       throw new AppError('Only verified vehicles can be assigned to drivers.', 409);
     }
 
-    if (activeDriverAssignment) {
+    if (vehicle.status !== 'ACTIVE') {
+      throw new AppError('Only active vehicles can be assigned.', 409);
+    }
+
+    if (vehicle.availability_status !== 'AVAILABLE') {
+      throw new AppError('Vehicle cannot be assigned unless it is available.', 409);
+    }
+
+    if (activeDriverAssignment || driver.vehicle_assigned) {
       throw new AppError('Driver already has an active vehicle assignment.', 409);
     }
 
-    if (activeVehicleAssignment) {
+    if (activeVehicleAssignment || vehicle.assigned_driver_id) {
       throw new AppError('Vehicle already has an active driver assignment.', 409);
     }
 
-    const assignment = await db.DriverVehicleAssignment.create(
+    const assignedAt = new Date();
+    const assignment = await db.VehicleAssignment.create(
       {
-        driver_id: payload.driver_id,
-        vehicle_id: payload.vehicle_id,
-        assigned_at: payload.assigned_at || new Date(),
-        status: 'ACTIVE'
+        driver_id: driverId,
+        vehicle_id: vehicleId,
+        assigned_by: currentUser.id,
+        assigned_at: assignedAt,
+        status: 'ASSIGNED'
       },
       { transaction }
     );
 
     await Promise.all([
-      vehicle.update({ availability_status: 'ASSIGNED' }, { transaction }),
-      driver.update({ availability_status: 'BUSY' }, { transaction })
+      vehicle.update(
+        {
+          availability_status: 'ASSIGNED',
+          assigned_driver_id: driverId,
+          assigned_at: assignedAt
+        },
+        { transaction }
+      ),
+      driver.update(
+        {
+          vehicle_assigned: true,
+          assigned_vehicle_id: vehicleId,
+          availability_status: 'BUSY'
+        },
+        { transaction }
+      ),
+      auditLogService.createAuditLog(
+        {
+          action: 'VEHICLE_ASSIGNED',
+          entityType: 'VEHICLE_ASSIGNMENT',
+          entityId: assignment.id,
+          performedBy: currentUser.id,
+          details: {
+            vehicle_id: vehicleId,
+            driver_id: driverId
+          }
+        },
+        { transaction }
+      )
     ]);
 
     await transaction.commit();
 
-    return db.DriverVehicleAssignment.findByPk(assignment.id, {
+    return db.VehicleAssignment.findByPk(assignment.id, {
       include: [
         {
           model: db.Driver,
@@ -613,6 +752,11 @@ const assignVehicle = async (payload) => {
               attributes: ['id', 'type_name']
             }
           ]
+        },
+        {
+          model: db.User,
+          as: 'assignedBy',
+          attributes: ['id', 'first_name', 'last_name', 'email']
         }
       ]
     });
@@ -749,6 +893,116 @@ const getAssignmentOptions = async () => {
   };
 };
 
+const returnVehicle = async (vehicleId, currentUser) => {
+  const transaction = await db.sequelize.transaction();
+
+  try {
+    const assignment = await db.VehicleAssignment.findOne({
+      where: {
+        vehicle_id: vehicleId,
+        status: 'ASSIGNED'
+      },
+      transaction
+    });
+
+    if (!assignment) {
+      throw new AppError('No active vehicle assignment found.', 404);
+    }
+
+    const [vehicle, driver] = await Promise.all([
+      db.Vehicle.findByPk(vehicleId, { transaction }),
+      db.Driver.findByPk(assignment.driver_id, { transaction })
+    ]);
+
+    const returnedAt = new Date();
+
+    await Promise.all([
+      assignment.update(
+        {
+          returned_at: returnedAt,
+          status: 'RETURNED'
+        },
+        { transaction }
+      ),
+      vehicle.update(
+        {
+          availability_status: 'AVAILABLE',
+          assigned_driver_id: null,
+          assigned_at: null
+        },
+        { transaction }
+      ),
+      driver.update(
+        {
+          vehicle_assigned: false,
+          assigned_vehicle_id: null,
+          availability_status: 'ONLINE'
+        },
+        { transaction }
+      ),
+      auditLogService.createAuditLog(
+        {
+          action: 'VEHICLE_RETURNED',
+          entityType: 'VEHICLE_ASSIGNMENT',
+          entityId: assignment.id,
+          performedBy: currentUser.id,
+          details: {
+            vehicle_id: vehicleId,
+            driver_id: assignment.driver_id
+          }
+        },
+        { transaction }
+      )
+    ]);
+
+    await transaction.commit();
+    return assignment;
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
+};
+
+const getVehicleAssignmentHistory = async (vehicleId) => {
+  await getVehicleById(vehicleId);
+
+  return db.VehicleAssignment.findAll({
+    where: { vehicle_id: vehicleId },
+    include: [
+      {
+        model: db.Driver,
+        as: 'driver',
+        attributes: ['id', 'driver_code', 'first_name', 'last_name']
+      },
+      {
+        model: db.User,
+        as: 'assignedBy',
+        attributes: ['id', 'first_name', 'last_name', 'email']
+      }
+    ],
+    order: [['assigned_at', 'DESC']]
+  });
+};
+
+const getAvailableVehiclesForAssignment = async () =>
+  db.Vehicle.findAll({
+    where: {
+      status: 'ACTIVE',
+      verification_status: 'VERIFIED',
+      availability_status: 'AVAILABLE',
+      assigned_driver_id: null
+    },
+    attributes: ['id', 'vehicle_number', 'brand', 'model', 'availability_status'],
+    include: [
+      {
+        model: db.VehicleType,
+        as: 'vehicleType',
+        attributes: ['id', 'type_name']
+      }
+    ],
+    order: [['vehicle_number', 'ASC']]
+  });
+
 const getVehicleDashboardStats = async () => {
   const [totalVehicles, activeVehicles, verifiedVehicles, availableVehicles, assignedVehicles] =
     await Promise.all([
@@ -774,6 +1028,7 @@ module.exports = {
   VEHICLE_AVAILABILITY_STATUS,
   VEHICLE_DOCUMENT_TYPES,
   DRIVER_VEHICLE_ASSIGNMENT_STATUS,
+  VEHICLE_ASSIGNMENT_STATUS,
   listVehicleTypes,
   getVehicleTypeById,
   createVehicleType,
@@ -793,6 +1048,9 @@ module.exports = {
   deleteVehicleDocument,
   assignVehicle,
   removeAssignment,
+  returnVehicle,
+  getVehicleAssignmentHistory,
+  getAvailableVehiclesForAssignment,
   listAssignments,
   getAssignmentOptions,
   getVehicleDashboardStats

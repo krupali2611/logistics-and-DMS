@@ -15,7 +15,6 @@ import VehicleList from './pages/vehicles/VehicleList';
 import VehicleForm from './pages/vehicles/VehicleForm';
 import VehicleDetails from './pages/vehicles/VehicleDetails';
 import VehicleDocuments from './pages/vehicles/VehicleDocuments';
-import VehicleAssignments from './pages/vehicles/VehicleAssignments';
 import VehicleTypeList from './pages/vehicles/VehicleTypeList';
 import CustomerList from './pages/customers/CustomerList';
 import CustomerForm from './pages/customers/CustomerForm';
@@ -23,6 +22,11 @@ import CustomerDetails from './pages/customers/CustomerDetails';
 import CustomerAddresses from './pages/customers/CustomerAddresses';
 import CustomerDocuments from './pages/customers/CustomerDocuments';
 import CustomerNotes from './pages/customers/CustomerNotes';
+import ShipmentList from './pages/shipments/ShipmentList';
+import ShipmentForm from './pages/shipments/ShipmentForm';
+import ShipmentDetails from './pages/shipments/ShipmentDetails';
+import ShipmentTimelinePage from './pages/shipments/ShipmentTimelinePage';
+import ShipmentAttachments from './pages/shipments/ShipmentAttachments';
 
 const PublicRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -71,7 +75,6 @@ const App = () => {
           <Route path="/vehicles/:id/edit" element={<VehicleForm mode="edit" />} />
           <Route path="/vehicles/:id/documents" element={<VehicleDocuments />} />
           <Route path="/vehicles/types" element={<VehicleTypeList />} />
-          <Route path="/vehicle-assignments" element={<VehicleAssignments />} />
           <Route path="/customers" element={<CustomerList />} />
           <Route path="/customers/new" element={<CustomerForm mode="create" />} />
           <Route path="/customers/:id" element={<CustomerDetails />} />
@@ -79,6 +82,12 @@ const App = () => {
           <Route path="/customers/:id/addresses" element={<CustomerAddresses />} />
           <Route path="/customers/:id/documents" element={<CustomerDocuments />} />
           <Route path="/customers/:id/notes" element={<CustomerNotes />} />
+          <Route path="/shipments" element={<ShipmentList />} />
+          <Route path="/shipments/new" element={<ShipmentForm mode="create" />} />
+          <Route path="/shipments/:id" element={<ShipmentDetails />} />
+          <Route path="/shipments/:id/edit" element={<ShipmentForm mode="edit" />} />
+          <Route path="/shipments/:id/timeline" element={<ShipmentTimelinePage />} />
+          <Route path="/shipments/:id/attachments" element={<ShipmentAttachments />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/change-password" element={<Navigate to="/profile" replace />} />
         </Route>

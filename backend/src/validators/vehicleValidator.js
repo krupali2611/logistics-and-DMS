@@ -4,7 +4,8 @@ const {
   VEHICLE_VERIFICATION_STATUS,
   VEHICLE_AVAILABILITY_STATUS,
   VEHICLE_DOCUMENT_TYPES,
-  DRIVER_VEHICLE_ASSIGNMENT_STATUS
+  DRIVER_VEHICLE_ASSIGNMENT_STATUS,
+  VEHICLE_ASSIGNMENT_STATUS
 } = require('../constants/vehicleConstants');
 
 const ACTIVE_INACTIVE_STATUS = ['ACTIVE', 'INACTIVE'];
@@ -20,6 +21,30 @@ const optionalFileRule = (field, label) =>
       if (!value?.content || !value?.original_name) {
         throw new Error(`${label} must include content and original_name.`);
       }
+      return true;
+    });
+
+const documentNameRule = body('document_name')
+  .optional({ nullable: true })
+  .trim()
+  .isLength({ min: 1, max: 100 })
+  .withMessage('Document name must be between 1 and 100 characters.');
+
+const futureOrTodayDateRule = (field, label) =>
+  body(field)
+    .optional({ values: 'falsy' })
+    .isISO8601()
+    .withMessage(`${label} must be a valid date.`)
+    .bail()
+    .custom((value) => {
+      const inputDate = new Date(`${value}T00:00:00Z`);
+      const today = new Date();
+      const todayUtc = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate());
+
+      if (inputDate.getTime() < todayUtc) {
+        throw new Error(`${label} cannot be in the past.`);
+      }
+
       return true;
     });
 
@@ -123,17 +148,14 @@ const createVehicleValidator = [
     .trim()
     .isLength({ max: 100 })
     .withMessage('Insurance number must be at most 100 characters.'),
-  body('insurance_expiry').optional().isISO8601().withMessage('Insurance expiry must be a valid date.'),
+  futureOrTodayDateRule('insurance_expiry', 'Insurance expiry'),
   body('registration_number')
     .trim()
     .notEmpty()
     .withMessage('Registration number is required.')
     .isLength({ min: 3, max: 100 })
     .withMessage('Registration number must be between 3 and 100 characters.'),
-  body('registration_expiry')
-    .optional()
-    .isISO8601()
-    .withMessage('Registration expiry must be a valid date.'),
+  futureOrTodayDateRule('registration_expiry', 'Registration expiry'),
   body('status').optional().isIn(VEHICLE_STATUS).withMessage(`Status must be one of: ${VEHICLE_STATUS.join(', ')}.`),
   body('verification_status')
     .optional()
@@ -173,16 +195,13 @@ const updateVehicleValidator = [
     .trim()
     .isLength({ max: 100 })
     .withMessage('Insurance number must be at most 100 characters.'),
-  body('insurance_expiry').optional().isISO8601().withMessage('Insurance expiry must be a valid date.'),
+  futureOrTodayDateRule('insurance_expiry', 'Insurance expiry'),
   body('registration_number')
     .optional()
     .trim()
     .isLength({ min: 3, max: 100 })
     .withMessage('Registration number must be between 3 and 100 characters.'),
-  body('registration_expiry')
-    .optional()
-    .isISO8601()
-    .withMessage('Registration expiry must be a valid date.'),
+  futureOrTodayDateRule('registration_expiry', 'Registration expiry'),
   body('status').optional().isIn(VEHICLE_STATUS).withMessage(`Status must be one of: ${VEHICLE_STATUS.join(', ')}.`),
   body('verification_status')
     .optional()
@@ -252,7 +271,14 @@ const createVehicleDocumentValidator = [
     .isIn(VEHICLE_DOCUMENT_TYPES)
     .withMessage(`Document type must be one of: ${VEHICLE_DOCUMENT_TYPES.join(', ')}.`),
   body('document_number').trim().notEmpty().withMessage('Document number is required.').isLength({ max: 100 }).withMessage('Document number must be at most 100 characters.'),
-  body('expiry_date').optional().isISO8601().withMessage('Expiry date must be a valid date.'),
+  documentNameRule,
+  futureOrTodayDateRule('expiry_date', 'Expiry date'),
+  body('document_name').custom((value, { req }) => {
+    if (req.body.document_type === 'OTHER' && !String(value || '').trim()) {
+      throw new Error('Document name is required when document type is OTHER.');
+    }
+    return true;
+  }),
   body('verification_status')
     .optional()
     .isIn(VEHICLE_VERIFICATION_STATUS)
@@ -273,7 +299,21 @@ const updateVehicleDocumentValidator = [
     .isIn(VEHICLE_DOCUMENT_TYPES)
     .withMessage(`Document type must be one of: ${VEHICLE_DOCUMENT_TYPES.join(', ')}.`),
   body('document_number').optional().trim().isLength({ min: 1, max: 100 }).withMessage('Document number must be between 1 and 100 characters.'),
-  body('expiry_date').optional().isISO8601().withMessage('Expiry date must be a valid date.'),
+  documentNameRule,
+  futureOrTodayDateRule('expiry_date', 'Expiry date'),
+  body('document_name').custom((value, { req }) => {
+    const documentType = req.body.document_type;
+
+    if (documentType === 'OTHER' && !String(value || '').trim()) {
+      throw new Error('Document name is required when document type is OTHER.');
+    }
+
+    if (documentType && documentType !== 'OTHER' && String(value || '').trim()) {
+      throw new Error('Document name can only be provided when document type is OTHER.');
+    }
+
+    return true;
+  }),
   body('verification_status')
     .optional()
     .isIn(VEHICLE_VERIFICATION_STATUS)
@@ -288,6 +328,19 @@ const createAssignmentValidator = [
   body('assigned_at').optional().isISO8601().withMessage('Assigned at must be a valid date.')
 ];
 
+const assignVehicleByVehicleIdValidator = [
+  uuidParam('vehicleId', 'Vehicle ID'),
+  body('driver_id').isUUID().withMessage('Driver ID is required.')
+];
+
+const vehicleHistoryValidator = [
+  uuidParam('vehicleId', 'Vehicle ID')
+];
+
+const returnVehicleValidator = [
+  uuidParam('vehicleId', 'Vehicle ID')
+];
+
 const listAssignmentsValidator = [
   query('page')
     .optional({ values: 'falsy' })
@@ -299,8 +352,10 @@ const listAssignmentsValidator = [
     .withMessage('Limit must be between 1 and 100.'),
   query('status')
     .optional({ values: 'falsy' })
-    .isIn(DRIVER_VEHICLE_ASSIGNMENT_STATUS)
-    .withMessage(`Status must be one of: ${DRIVER_VEHICLE_ASSIGNMENT_STATUS.join(', ')}.`),
+    .isIn([...DRIVER_VEHICLE_ASSIGNMENT_STATUS, ...VEHICLE_ASSIGNMENT_STATUS])
+    .withMessage(
+      `Status must be one of: ${[...DRIVER_VEHICLE_ASSIGNMENT_STATUS, ...VEHICLE_ASSIGNMENT_STATUS].join(', ')}.`
+    ),
   query('driver_id')
     .optional({ values: 'falsy' })
     .isUUID()
@@ -328,6 +383,9 @@ module.exports = {
   updateVehicleDocumentValidator,
   vehicleDocumentIdParamValidator: [uuidParam('id', 'Vehicle document ID')],
   createAssignmentValidator,
+  assignVehicleByVehicleIdValidator,
+  vehicleHistoryValidator,
+  returnVehicleValidator,
   listAssignmentsValidator,
   assignmentIdParamValidator: [uuidParam('id', 'Assignment ID')]
 };

@@ -9,22 +9,23 @@ import {
   getVehicleTypes,
   updateVehicle
 } from '../../api/vehicleApi';
-import { toBase64Payload } from '../../utils/fileHelpers';
+import { isImageMimeType, toBase64Payload } from '../../utils/fileHelpers';
+import {
+  getAvailableDocumentTypes,
+  getTodayDate,
+  hasDuplicateNonOtherDocument,
+  OTHER_DOCUMENT_VALUE,
+  vehicleDocumentTypes,
+  vehicleOtherDocumentNames
+} from '../../utils/documentOptions';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 import styles from '../../styles/Vehicle.module.css';
-
-const documentTypes = [
-  'RC_BOOK',
-  'INSURANCE',
-  'PUC',
-  'FITNESS_CERTIFICATE',
-  'PERMIT',
-  'OTHER'
-];
 
 const fuelTypes = ['PETROL', 'DIESEL', 'CNG', 'ELECTRIC', 'HYBRID', 'LPG', 'OTHER'];
 
 const createInitialDocument = (type = 'RC_BOOK') => ({
   document_type: type,
+  document_name: '',
   document_number: '',
   expiry_date: '',
   remarks: '',
@@ -51,13 +52,14 @@ const getValidationMessage = (error) => {
     return error.response.data.errors.map((item) => item.message).join(' ');
   }
 
-  return error.response?.data?.message || 'Unable to save vehicle.';
+  return error.response?.data?.message || error.message || 'Unable to save vehicle.';
 };
 
 const VehicleForm = ({ mode }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditMode = mode === 'edit';
+  const minExpiryDate = useMemo(() => getTodayDate(), []);
   const [vehicleTypes, setVehicleTypes] = useState([]);
   const [form, setForm] = useState(initialForm);
   const [documents, setDocuments] = useState([
@@ -110,13 +112,44 @@ const VehicleForm = ({ mode }) => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+
+    if (name === 'insurance_expiry' || name === 'registration_expiry') {
+      event.target.setCustomValidity('');
+
+      if (value && value < minExpiryDate) {
+        event.target.setCustomValidity('Expiry date cannot be in the past.');
+      }
+    }
+
     setForm((current) => ({ ...current, [name]: value }));
   };
 
   const handleDocumentChange = (index, field, value) => {
+    if (
+      field === 'document_type' &&
+      hasDuplicateNonOtherDocument({
+        documentType: value,
+        rows: documents,
+        currentIndex: index
+      })
+    ) {
+      setError(`${value} document already added.`);
+      return;
+    }
+
+    setError('');
+
     setDocuments((current) =>
       current.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, [field]: value } : item
+        itemIndex === index
+          ? {
+              ...item,
+              [field]: value,
+              ...(field === 'document_type' && value !== OTHER_DOCUMENT_VALUE
+                ? { document_name: '' }
+                : {})
+            }
+          : item
       )
     );
   };
@@ -140,6 +173,10 @@ const VehicleForm = ({ mode }) => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setSaving(true);
     setError('');
 
@@ -157,8 +194,29 @@ const VehicleForm = ({ mode }) => {
       const documentsToUpload = documents.filter((item) => item.document_number && item.file);
 
       for (const document of documentsToUpload) {
+        if (
+          hasDuplicateNonOtherDocument({
+            documentType: document.document_type,
+            rows: documents,
+            currentIndex: documents.indexOf(document)
+          })
+        ) {
+          throw new Error(`${document.document_type} document already added.`);
+        }
+
+        if (
+          document.document_type === OTHER_DOCUMENT_VALUE &&
+          !document.document_name.trim()
+        ) {
+          throw new Error('Document name is required when document type is OTHER.');
+        }
+
         await createVehicleDocument(vehicle.id, {
           document_type: document.document_type,
+          document_name:
+            document.document_type === OTHER_DOCUMENT_VALUE
+              ? document.document_name.trim()
+              : undefined,
           document_number: document.document_number,
           expiry_date: document.expiry_date || undefined,
           remarks: document.remarks || undefined,
@@ -193,7 +251,7 @@ const VehicleForm = ({ mode }) => {
         </Link>
       </div>
 
-      <form className={styles.formShell} onSubmit={handleSubmit}>
+      <form className={styles.formShell} onSubmit={handleSubmit} {...getFormValidationProps()}>
         <section className={styles.formCard}>
           <div className={styles.cardHeader}>
             <h3>Vehicle Details</h3>
@@ -282,6 +340,7 @@ const VehicleForm = ({ mode }) => {
                 type="date"
                 value={form.insurance_expiry}
                 onChange={handleChange}
+                min={minExpiryDate}
               />
             </label>
             <label className={styles.field}>
@@ -300,6 +359,7 @@ const VehicleForm = ({ mode }) => {
                 type="date"
                 value={form.registration_expiry}
                 onChange={handleChange}
+                min={minExpiryDate}
               />
             </label>
           </div>
@@ -324,13 +384,36 @@ const VehicleForm = ({ mode }) => {
                           handleDocumentChange(index, 'document_type', event.target.value)
                         }
                       >
-                        {documentTypes.map((type) => (
+                        {getAvailableDocumentTypes({
+                          allTypes: vehicleDocumentTypes,
+                          currentType: document.document_type,
+                          rows: documents,
+                          currentIndex: index
+                        }).map((type) => (
                           <option key={type} value={type}>
                             {type}
                           </option>
                         ))}
                       </select>
                     </label>
+                    {document.document_type === OTHER_DOCUMENT_VALUE ? (
+                      <label className={styles.field}>
+                        <span>Document Name</span>
+                        <input
+                          list={`vehicle-form-other-document-names-${index}`}
+                          value={document.document_name}
+                          onChange={(event) =>
+                            handleDocumentChange(index, 'document_name', event.target.value)
+                          }
+                          required
+                        />
+                        <datalist id={`vehicle-form-other-document-names-${index}`}>
+                          {vehicleOtherDocumentNames.map((name) => (
+                            <option key={name} value={name} />
+                          ))}
+                        </datalist>
+                      </label>
+                    ) : null}
                     <label className={styles.field}>
                       <span>Document Number</span>
                       <input
@@ -348,6 +431,7 @@ const VehicleForm = ({ mode }) => {
                         onChange={(event) =>
                           handleDocumentChange(index, 'expiry_date', event.target.value)
                         }
+                        min={minExpiryDate}
                       />
                     </label>
                     <label className={styles.field}>
@@ -374,7 +458,7 @@ const VehicleForm = ({ mode }) => {
 
                   {document.preview ? (
                     <div className={styles.inlinePreview}>
-                      {document.file?.type?.startsWith('image/') ? (
+                      {isImageMimeType(document.file?.type) ? (
                         <img
                           src={document.preview}
                           alt={`${document.document_type} preview`}

@@ -12,7 +12,10 @@ const {
   updateVehicleStatusValidator,
   updateVehicleAvailabilityValidator,
   verifyVehicleValidator,
-  createVehicleDocumentValidator
+  createVehicleDocumentValidator,
+  assignVehicleByVehicleIdValidator,
+  vehicleHistoryValidator,
+  returnVehicleValidator
 } = require('../validators/vehicleValidator');
 
 const router = express.Router();
@@ -23,6 +26,11 @@ router.get(
   '/dashboard/stats',
   permissionMiddleware('vehicle_view'),
   asyncHandler(vehicleController.getVehicleDashboardStats)
+);
+router.get(
+  '/available-for-assignment',
+  permissionMiddleware('vehicle_assign'),
+  asyncHandler(vehicleController.getAvailableVehiclesForAssignment)
 );
 router.get(
   '/',
@@ -79,6 +87,27 @@ router.patch(
   updateVehicleAvailabilityValidator,
   validationMiddleware,
   asyncHandler(vehicleController.updateVehicleAvailability)
+);
+router.post(
+  '/:vehicleId/assign',
+  permissionMiddleware('vehicle_assign'),
+  assignVehicleByVehicleIdValidator,
+  validationMiddleware,
+  asyncHandler(vehicleController.assignVehicle)
+);
+router.post(
+  '/:vehicleId/return',
+  permissionMiddleware('vehicle_assign'),
+  returnVehicleValidator,
+  validationMiddleware,
+  asyncHandler(vehicleController.returnVehicle)
+);
+router.get(
+  '/:vehicleId/history',
+  permissionMiddleware('vehicle_assign'),
+  vehicleHistoryValidator,
+  validationMiddleware,
+  asyncHandler(vehicleController.getVehicleAssignmentHistory)
 );
 router.post(
   '/:id/documents',

@@ -4,6 +4,7 @@ import axiosInstance from '../../api/axiosInstance';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from '../../styles/AuthPages.module.css';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('admin@logistics.com');
@@ -13,6 +14,10 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setLoading(true);
     setMessage('');
     setResetToken('');
@@ -28,13 +33,13 @@ const ForgotPassword = () => {
 
   return (
     <div className={styles.centeredShell}>
-      <form className={styles.formCard} onSubmit={handleSubmit}>
+      <form className={styles.formCard} onSubmit={handleSubmit} {...getFormValidationProps()}>
         <div>
           <h2>Forgot Password</h2>
           <p>Generate a reset token for the selected account.</p>
         </div>
 
-        <Input label="Email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+        <Input label="Email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required />
 
         {message ? <div className={styles.successBox}>{message}</div> : null}
         {resetToken ? <div className={styles.tokenBox}>Reset Token: {resetToken}</div> : null}

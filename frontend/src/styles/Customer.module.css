@@ -1,6 +1,9 @@
 .page {
   display: grid;
   gap: 16px;
+  min-height: 100%;
+  min-width: 0;
+  align-content: start;
 }
 
 .toolbar,
@@ -85,7 +88,7 @@
 .filterCard,
 .tableCard,
 .formCard {
-  padding: 20px;
+  padding: 18px;
 }
 
 .filterGrid,
@@ -93,8 +96,14 @@
 .infoGrid,
 .metricGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-columns: minmax(240px, 1.5fr) repeat(3, minmax(150px, 0.9fr)) auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.documentFormGrid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: start;
 }
 
 .field {
@@ -102,6 +111,18 @@
   gap: 8px;
   color: #35516f;
   font-weight: 600;
+  min-width: 0;
+}
+
+.field > span:first-child::after {
+  content: "";
+}
+
+.field:has(input[required]) > span:first-child::after,
+.field:has(select[required]) > span:first-child::after,
+.field:has(textarea[required]) > span:first-child::after {
+  content: " *";
+  color: #c3472e;
 }
 
 .field input,
@@ -110,9 +131,19 @@
   width: 100%;
   border: 1px solid #d9e2eb;
   border-radius: 12px;
-  padding: 11px 13px;
+  min-height: 42px;
+  padding: 9px 12px;
   background: #fbfdff;
   color: #163558;
+}
+
+.field input[type="file"] {
+  min-width: 0;
+  padding-block: 8px;
+}
+
+.searchField input {
+  min-width: 0;
 }
 
 .checkboxField {
@@ -140,7 +171,11 @@
   flex-wrap: wrap;
 }
 
-.filterActions,
+.filterActions {
+  justify-content: flex-end;
+  align-self: end;
+}
+
 .submitRow {
   margin-top: 14px;
 }
@@ -148,10 +183,39 @@
 .statusText {
   color: #3d5874;
   font-size: 0.95rem;
+  grid-column: 1 / -1;
+}
+
+.resetButton {
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  border-radius: 12px;
+  padding: 0 18px;
+  font-weight: 600;
+  background: #2f79c5;
+  color: #ffffff;
 }
 
 .tableWrap {
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  overflow-y: auto;
+}
+
+.tableCard {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .table {
@@ -209,7 +273,10 @@
 }
 
 .actionStack {
-  justify-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 
 .textLink,
@@ -222,6 +289,53 @@
 
 .deleteButton {
   color: #c3472e;
+}
+
+.actionIconLink,
+.actionIconButton,
+.actionIconDanger {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  border: 1px solid #d8e3ef;
+  background: #f7fbff;
+  color: #1b5f96;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.actionIconDanger {
+  color: #c3472e;
+  background: #fff5f2;
+  border-color: #f1d3cb;
+}
+
+.actionIconLink:hover,
+.actionIconButton:hover,
+.actionIconDanger:hover,
+.actionIconLink:focus-visible,
+.actionIconButton:focus-visible,
+.actionIconDanger:focus-visible {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(17, 51, 82, 0.12);
+}
+
+.actionIconLink:focus-visible,
+.actionIconButton:focus-visible,
+.actionIconDanger:focus-visible {
+  outline: 2px solid #2f79c5;
+  outline-offset: 2px;
+}
+
+.actionIconLink svg,
+.actionIconButton svg,
+.actionIconDanger svg {
+  width: 18px;
+  height: 18px;
 }
 
 .pagination {
@@ -288,6 +402,11 @@
   gap: 8px;
 }
 
+.summaryCard strong,
+.summaryCard span {
+  overflow-wrap: anywhere;
+}
+
 .metricCard {
   text-align: center;
 }
@@ -334,6 +453,14 @@
   .pagination {
     grid-template-columns: 1fr;
     display: grid;
+  }
+
+  .filterActions {
+    justify-content: stretch;
+  }
+
+  .resetButton {
+    width: 100%;
   }
 
   .table {

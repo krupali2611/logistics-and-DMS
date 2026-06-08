@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from '../../styles/Profile.module.css';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
 const ChangePassword = () => {
   const [form, setForm] = useState({ current_password: '', new_password: '' });
@@ -20,6 +21,10 @@ const ChangePassword = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setLoading(true);
     setMessage('');
     setError('');
@@ -39,10 +44,10 @@ const ChangePassword = () => {
   };
 
   return (
-    <form className={styles.card} onSubmit={handleSubmit}>
+    <form className={styles.card} onSubmit={handleSubmit} {...getFormValidationProps()}>
       <h2>Change Password</h2>
-      <Input label="Current Password" name="current_password" type="password" value={form.current_password} onChange={handleChange} />
-      <Input label="New Password" name="new_password" type="password" value={form.new_password} onChange={handleChange} />
+      <Input label="Current Password" name="current_password" type="password" value={form.current_password} onChange={handleChange} required />
+      <Input label="New Password" name="new_password" type="password" value={form.new_password} onChange={handleChange} required />
       {error ? <div className={styles.error}>{error}</div> : null}
       {message ? <div className={styles.success}>{message}</div> : null}
       <Button type="submit" disabled={loading}>

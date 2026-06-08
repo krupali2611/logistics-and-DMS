@@ -8,6 +8,17 @@
   font-weight: 600;
 }
 
+.labelText::after {
+  content: "";
+}
+
+.field:has(input[required]) .labelText::after,
+.field:has(select[required]) .labelText::after,
+.field:has(textarea[required]) .labelText::after {
+  content: " *";
+  color: #c3472e;
+}
+
 .field input {
   border: 1px solid #d3dee8;
   border-radius: 12px;

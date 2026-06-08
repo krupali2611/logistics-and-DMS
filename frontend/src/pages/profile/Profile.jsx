@@ -6,6 +6,7 @@ import Input from '../../components/Input/Input';
 import ChangePassword from './ChangePassword';
 import Loader from '../../components/Loader/Loader';
 import styles from '../../styles/Profile.module.css';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
 const Profile = () => {
   const { user, roles, refreshProfile } = useAuth();
@@ -35,6 +36,10 @@ const Profile = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setLoading(true);
     setMessage('');
 
@@ -49,10 +54,10 @@ const Profile = () => {
 
   return (
     <div className={styles.profileGrid}>
-      <form className={styles.card} onSubmit={handleSubmit}>
+      <form className={styles.card} onSubmit={handleSubmit} {...getFormValidationProps()}>
         <h2>Profile Information</h2>
-        <Input label="First Name" name="first_name" value={form.first_name} onChange={handleChange} />
-        <Input label="Last Name" name="last_name" value={form.last_name} onChange={handleChange} />
+        <Input label="First Name" name="first_name" value={form.first_name} onChange={handleChange} required />
+        <Input label="Last Name" name="last_name" value={form.last_name} onChange={handleChange} required />
         <Input label="Phone" name="phone" value={form.phone} onChange={handleChange} />
         {message ? <div className={styles.success}>{message}</div> : null}
         <Button type="submit" disabled={loading}>

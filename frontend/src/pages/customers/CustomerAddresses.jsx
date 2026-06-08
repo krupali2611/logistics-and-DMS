@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import ActionIcon from '../../components/ActionIcon/ActionIcon';
 import Button from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../../context/AuthContext';
@@ -11,6 +12,7 @@ import {
   updateCustomerAddress
 } from '../../api/customerApi';
 import styles from '../../styles/Customer.module.css';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
 const emptyAddressForm = {
   address_type: 'PICKUP',
@@ -93,6 +95,10 @@ const CustomerAddresses = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setSaving(true);
     setError('');
 
@@ -162,7 +168,7 @@ const CustomerAddresses = () => {
 
       <div className={styles.detailGrid}>
         {canUpdate ? (
-          <form className={styles.formCard} onSubmit={handleSubmit}>
+          <form className={styles.formCard} onSubmit={handleSubmit} {...getFormValidationProps()}>
             <div className={styles.cardHeader}>
               <h3>{editingId ? 'Update Address' : 'Add Address'}</h3>
               <p>Only one billing address can stay marked as default at a time.</p>
@@ -275,19 +281,23 @@ const CustomerAddresses = () => {
                     {canUpdate ? (
                       <button
                         type="button"
-                        className={styles.textButton}
+                        className={styles.actionIconButton}
+                        title="Edit address"
+                        aria-label="Edit address"
                         onClick={() => handleEdit(address)}
                       >
-                        Edit
+                        <ActionIcon name="edit" />
                       </button>
                     ) : null}
                     {canDelete ? (
                       <button
                         type="button"
-                        className={styles.deleteButton}
+                        className={styles.actionIconDanger}
+                        title="Delete address"
+                        aria-label="Delete address"
                         onClick={() => handleDelete(address.id)}
                       >
-                        Delete
+                        <ActionIcon name="delete" />
                       </button>
                     ) : null}
                   </div>

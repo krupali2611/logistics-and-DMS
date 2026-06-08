@@ -5,7 +5,11 @@ const AppError = require('../../../utils/AppError');
 
 const MIME_EXTENSION_MAP = {
   'image/jpeg': '.jpg',
+  'image/jpg': '.jpg',
   'image/png': '.png',
+  'image/gif': '.gif',
+  'image/avif': '.avif',
+  'image/svg+xml': '.svg',
   'image/webp': '.webp',
   'application/pdf': '.pdf'
 };

@@ -3,6 +3,11 @@ const db = require('../models');
 const AppError = require('../utils/AppError');
 const storageService = require('./storage/storageService');
 const {
+  assertDocumentNameRules,
+  assertUniqueDocumentType,
+  normalizeOptionalText
+} = require('../utils/documentValidation');
+const {
   CUSTOMER_TYPES,
   CUSTOMER_STATUS,
   CUSTOMER_VERIFICATION_STATUS,
@@ -10,7 +15,16 @@ const {
   CUSTOMER_DOCUMENT_TYPES
 } = require('../constants/customerConstants');
 
-const DOCUMENT_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
+const DOCUMENT_MIME_TYPES = [
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/gif',
+  'image/avif',
+  'image/svg+xml',
+  'image/webp',
+  'application/pdf'
+];
 
 const buildPagination = ({ page, limit, totalRecords }) => ({
   page,
@@ -410,6 +424,19 @@ const deleteCustomerAddress = async (id) => {
 
 const createCustomerDocument = async (customerId, payload) => {
   await getCustomerById(customerId);
+  const existingDocuments = await db.CustomerDocument.findAll({
+    where: { customer_id: customerId },
+    attributes: ['id', 'customer_id', 'document_type']
+  });
+
+  assertUniqueDocumentType({
+    documents: existingDocuments,
+    ownerKey: 'customer_id',
+    ownerId: customerId,
+    documentType: payload.document_type
+  });
+
+  const documentName = assertDocumentNameRules(payload.document_type, payload.document_name);
 
   const uploaded = await storageService.uploadFile({
     folder: `customers/documents/${customerId}`,
@@ -422,9 +449,10 @@ const createCustomerDocument = async (customerId, payload) => {
       customer_id: customerId,
       document_type: payload.document_type,
       document_number: payload.document_number,
+      document_name: documentName,
       document_file: uploaded.path,
       verification_status: payload.verification_status || 'PENDING',
-      remarks: payload.remarks || null
+      remarks: normalizeOptionalText(payload.remarks)
     });
   } catch (error) {
     await storageService.deleteFile(uploaded.path);
@@ -448,6 +476,24 @@ const updateCustomerDocument = async (id, payload) => {
     throw new AppError('Customer document not found.', 404);
   }
 
+  const nextDocumentType = payload.document_type ?? document.document_type;
+  const nextDocumentName = payload.document_name ?? document.document_name;
+
+  const existingDocuments = await db.CustomerDocument.findAll({
+    where: { customer_id: document.customer_id },
+    attributes: ['id', 'customer_id', 'document_type']
+  });
+
+  assertUniqueDocumentType({
+    documents: existingDocuments,
+    ownerKey: 'customer_id',
+    ownerId: document.customer_id,
+    documentType: nextDocumentType,
+    excludeId: id
+  });
+
+  const normalizedDocumentName = assertDocumentNameRules(nextDocumentType, nextDocumentName);
+
   const existingFilePath = document.document_file;
   let documentFilePath = document.document_file;
   let uploadedDocumentPath = null;
@@ -464,11 +510,13 @@ const updateCustomerDocument = async (id, payload) => {
 
   try {
     await document.update({
-      document_type: payload.document_type ?? document.document_type,
+      document_type: nextDocumentType,
       document_number: payload.document_number ?? document.document_number,
+      document_name: normalizedDocumentName,
       document_file: documentFilePath,
       verification_status: payload.verification_status ?? document.verification_status,
-      remarks: payload.remarks ?? document.remarks
+      remarks:
+        payload.remarks === undefined ? document.remarks : normalizeOptionalText(payload.remarks)
     });
   } catch (error) {
     if (uploadedDocumentPath) {

@@ -65,6 +65,15 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING(255),
         allowNull: true
       },
+      vehicle_assigned: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      assigned_vehicle_id: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
       status: {
         type: DataTypes.ENUM(...DRIVER_STATUS),
         allowNull: false,

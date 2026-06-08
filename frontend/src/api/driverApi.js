@@ -13,6 +13,31 @@ export const getDriverById = async (id) => {
   return response.data.data.driver;
 };
 
+export const getAvailableDriversForAssignment = async () => {
+  const response = await axiosInstance.get('/drivers/available-for-assignment');
+  return response.data.data.drivers;
+};
+
+export const getAvailableVehiclesForAssignment = async () => {
+  const response = await axiosInstance.get('/drivers/available-vehicles-for-assignment');
+  return response.data.data.vehicles;
+};
+
+export const assignVehicleToDriver = async (driverId, vehicle_id) => {
+  const response = await axiosInstance.post(`/drivers/${driverId}/assign-vehicle`, { vehicle_id });
+  return response.data.data.assignment;
+};
+
+export const returnDriverVehicle = async (driverId) => {
+  const response = await axiosInstance.post(`/drivers/${driverId}/return-vehicle`);
+  return response.data.data.assignment;
+};
+
+export const getDriverVehicleHistory = async (driverId) => {
+  const response = await axiosInstance.get(`/drivers/${driverId}/vehicle-history`);
+  return response.data.data.history;
+};
+
 export const createDriver = async (payload) => {
   const response = await axiosInstance.post('/drivers', payload);
   return response.data.data.driver;

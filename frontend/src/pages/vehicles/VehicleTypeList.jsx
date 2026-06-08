@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import ActionIcon from '../../components/ActionIcon/ActionIcon';
 import Button from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../../context/AuthContext';
@@ -9,6 +10,7 @@ import {
   updateVehicleType
 } from '../../api/vehicleApi';
 import styles from '../../styles/Vehicle.module.css';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
 const initialForm = {
   type_name: '',
@@ -60,6 +62,10 @@ const VehicleTypeList = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setSaving(true);
     setError('');
 
@@ -132,7 +138,7 @@ const VehicleTypeList = () => {
       {error ? <div className={styles.errorBox}>{error}</div> : null}
 
       {canCreate || editingId ? (
-        <form className={styles.formCard} onSubmit={handleSubmit}>
+        <form className={styles.formCard} onSubmit={handleSubmit} {...getFormValidationProps()}>
           <div className={styles.cardHeader}>
             <h3>{editingId ? 'Update Vehicle Type' : 'Add Vehicle Type'}</h3>
           </div>
@@ -230,19 +236,23 @@ const VehicleTypeList = () => {
                         {canUpdate ? (
                           <button
                             type="button"
-                            className={styles.textButton}
+                            className={styles.actionIconButton}
+                            title="Edit vehicle type"
+                            aria-label="Edit vehicle type"
                             onClick={() => handleEdit(vehicleType)}
                           >
-                            Edit
+                            <ActionIcon name="edit" />
                           </button>
                         ) : null}
                         {canDelete ? (
                           <button
                             type="button"
-                            className={styles.deleteButton}
+                            className={styles.actionIconDanger}
+                            title="Delete vehicle type"
+                            aria-label="Delete vehicle type"
                             onClick={() => handleDelete(vehicleType.id)}
                           >
-                            Delete
+                            <ActionIcon name="delete" />
                           </button>
                         ) : null}
                       </div>

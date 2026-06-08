@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from '../../styles/AuthPages.module.css';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
 const Login = () => {
   const [form, setForm] = useState({ email: 'admin@logistics.com', password: 'Admin@123' });
@@ -19,6 +20,10 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setLoading(true);
     setError('');
 
@@ -41,14 +46,14 @@ const Login = () => {
       </section>
 
       <section className={styles.formPanel}>
-        <form className={styles.formCard} onSubmit={handleSubmit}>
+        <form className={styles.formCard} onSubmit={handleSubmit} {...getFormValidationProps()}>
           <div>
             <h2>Admin Login</h2>
             <p>Use the seeded Super Admin credentials to access the dashboard.</p>
           </div>
 
-          <Input label="Email" name="email" type="email" value={form.email} onChange={handleChange} />
-          <Input label="Password" name="password" type="password" value={form.password} onChange={handleChange} />
+          <Input label="Email" name="email" type="email" value={form.email} onChange={handleChange} required />
+          <Input label="Password" name="password" type="password" value={form.password} onChange={handleChange} required />
 
           {error ? <div className={styles.errorBox}>{error}</div> : null}
 

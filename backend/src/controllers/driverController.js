@@ -69,6 +69,37 @@ const getDriverDashboardStats = async (req, res) => {
   return ApiResponse.success(res, 'Driver dashboard stats fetched successfully.', { stats });
 };
 
+const getAvailableDriversForAssignment = async (req, res) => {
+  const drivers = await driverService.getAvailableDriversForAssignment();
+  return ApiResponse.success(res, 'Available drivers fetched successfully.', { drivers });
+};
+
+const getAvailableVehiclesForAssignment = async (req, res) => {
+  const vehicles = await driverService.getAvailableVehiclesForAssignment();
+  return ApiResponse.success(res, 'Available vehicles fetched successfully.', { vehicles });
+};
+
+const assignVehicleToDriver = async (req, res) => {
+  const assignment = await driverService.assignVehicleToDriver(
+    req.params.id,
+    req.body.vehicle_id,
+    req.user
+  );
+  return ApiResponse.success(res, 'Vehicle assigned successfully.', { assignment }, 201);
+};
+
+const returnAssignedVehicle = async (req, res) => {
+  const assignment = await driverService.returnAssignedVehicle(req.params.id, req.user);
+  return ApiResponse.success(res, 'Vehicle returned successfully.', { assignment });
+};
+
+const getDriverVehicleAssignmentHistory = async (req, res) => {
+  const history = await driverService.getDriverVehicleAssignmentHistory(req.params.id);
+  return ApiResponse.success(res, 'Driver vehicle assignment history fetched successfully.', {
+    history
+  });
+};
+
 module.exports = {
   listDrivers,
   getDriverById,
@@ -82,5 +113,10 @@ module.exports = {
   listDriverDocuments,
   updateDriverDocument,
   deleteDriverDocument,
-  getDriverDashboardStats
+  getDriverDashboardStats,
+  getAvailableDriversForAssignment,
+  getAvailableVehiclesForAssignment,
+  assignVehicleToDriver,
+  returnAssignedVehicle,
+  getDriverVehicleAssignmentHistory
 };

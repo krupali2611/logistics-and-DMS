@@ -8,7 +8,10 @@ const getBreadcrumb = (pathname) => {
     return 'Dashboard';
   }
 
-  const parts = pathname.split('/').filter(Boolean);
+  const parts = pathname
+    .split('/')
+    .filter(Boolean)
+    .filter((part) => !/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(part));
   return parts
     .map((part) =>
       part
@@ -21,13 +24,14 @@ const getBreadcrumb = (pathname) => {
 
 const AdminLayout = () => {
   const location = useLocation();
+  const isDashboard = location.pathname === '/';
 
   return (
     <div className={styles.shell}>
       <Sidebar />
       <div className={styles.main}>
         <Header />
-        <div className={styles.contentWrap}>
+        <div className={`${styles.contentWrap} ${isDashboard ? styles.dashboardWrap : ''}`}>
           <div className={styles.breadcrumbCard}>
             <span className={styles.breadcrumbLabel}>Breadcrumb</span>
             <h1>{getBreadcrumb(location.pathname)}</h1>

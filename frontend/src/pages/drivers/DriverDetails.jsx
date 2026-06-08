@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
 import { getDriverById } from '../../api/driverApi';
 import { getFileUrl, isImageFile } from '../../utils/fileHelpers';
+import { getDocumentDisplayName } from '../../utils/documentOptions';
 import styles from '../../styles/Driver.module.css';
 
 const DriverDetails = () => {
@@ -10,6 +11,7 @@ const DriverDetails = () => {
   const [driver, setDriver] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [profileImageError, setProfileImageError] = useState(false);
 
   useEffect(() => {
     const loadDriver = async () => {
@@ -19,6 +21,7 @@ const DriverDetails = () => {
       try {
         const response = await getDriverById(id);
         setDriver(response);
+        setProfileImageError(false);
       } catch (requestError) {
         setError(requestError.response?.data?.message || 'Unable to load driver details.');
       } finally {
@@ -48,6 +51,9 @@ const DriverDetails = () => {
           <p className={styles.pageCopy}>Driver code: {driver.driver_code}</p>
         </div>
         <div className={styles.linkGroup}>
+          <Link to="/drivers" className={styles.secondaryLink}>
+            Back
+          </Link>
           <Link to={`/drivers/${id}/edit`} className={styles.secondaryLink}>
             Edit Driver
           </Link>
@@ -62,15 +68,35 @@ const DriverDetails = () => {
           <div className={styles.cardHeader}>
             <h3>Identity & Contact</h3>
           </div>
-          <div className={styles.infoGrid}>
-            <div><strong>Email:</strong> {driver.email}</div>
-            <div><strong>Phone:</strong> {driver.phone}</div>
-            <div><strong>DOB:</strong> {driver.date_of_birth || 'Not set'}</div>
-            <div><strong>Gender:</strong> {driver.gender || 'Not set'}</div>
-            <div><strong>Status:</strong> {driver.status}</div>
-            <div><strong>Availability:</strong> {driver.availability_status}</div>
-            <div><strong>Verification:</strong> {driver.verification_status}</div>
-            <div><strong>Created:</strong> {new Date(driver.created_at).toLocaleString()}</div>
+          <div className={styles.detailInfoGrid}>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Email</span>
+              <strong>{driver.email || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Phone</span>
+              <strong>{driver.phone || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>DOB</span>
+              <strong>{driver.date_of_birth || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Gender</span>
+              <strong>{driver.gender || 'Not set'}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Status</span>
+              <strong>{driver.status}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Availability</span>
+              <strong>{driver.availability_status}</strong>
+            </div>
+            <div className={styles.infoItem}>
+              <span className={styles.infoLabel}>Verification</span>
+              <strong>{driver.verification_status}</strong>
+            </div>
           </div>
         </section>
 
@@ -89,12 +115,17 @@ const DriverDetails = () => {
           <div className={styles.cardHeader}>
             <h3>Profile Image</h3>
           </div>
-          {driver.profile_image ? (
+          {driver.profile_image && !profileImageError ? (
             <img
               src={getFileUrl(driver.profile_image)}
               alt={`${driver.first_name} ${driver.last_name}`}
               className={styles.profilePreview}
+              onError={() => setProfileImageError(true)}
             />
+          ) : driver.profile_image ? (
+            <a href={getFileUrl(driver.profile_image)} target="_blank" rel="noreferrer" className={styles.textLink}>
+              Open profile image
+            </a>
           ) : (
             <p className={styles.pageCopy}>No profile image uploaded yet.</p>
           )}
@@ -111,7 +142,7 @@ const DriverDetails = () => {
             ) : (
               driver.documents.map((document) => (
                 <div key={document.id} className={styles.summaryCard}>
-                  <strong>{document.document_type}</strong>
+                  <strong>{getDocumentDisplayName(document)}</strong>
                   <span>{document.document_number}</span>
                   <span>{document.verification_status}</span>
                   <a

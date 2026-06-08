@@ -1,18 +1,24 @@
 .shell {
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;
   background: linear-gradient(180deg, #eff4f9 0%, #f8fbfd 100%);
+  overflow: hidden;
 }
 
 .main {
   flex: 1;
   min-width: 0;
-  min-height: 100vh;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .contentWrap {
+  flex: 1;
+  min-height: 0;
   padding: 18px 24px 24px;
+  overflow-y: auto;
 }
 
 .breadcrumbCard {
@@ -41,15 +47,25 @@
 
 .content {
   margin-top: 18px;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.dashboardWrap {
+  overflow-y: auto;
 }
 
 @media (max-width: 960px) {
   .shell {
     flex-direction: column;
+    height: auto;
+    overflow: visible;
   }
 
   .contentWrap {
     padding: 18px 20px 20px;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   .breadcrumbCard {

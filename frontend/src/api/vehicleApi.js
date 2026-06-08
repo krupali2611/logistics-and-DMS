@@ -36,6 +36,11 @@ export const getVehicles = async (params) => {
   return response.data.data;
 };
 
+export const getAvailableVehiclesForAssignment = async () => {
+  const response = await axiosInstance.get('/vehicles/available-for-assignment');
+  return response.data.data.vehicles;
+};
+
 export const getVehicleById = async (id) => {
   const response = await axiosInstance.get(`/vehicles/${id}`);
   return response.data.data.vehicle;
@@ -79,6 +84,21 @@ export const getVehicleDocuments = async (vehicleId) => {
   return response.data.data.documents;
 };
 
+export const assignVehicleToDriver = async (vehicleId, driver_id) => {
+  const response = await axiosInstance.post(`/vehicles/${vehicleId}/assign`, { driver_id });
+  return response.data.data.assignment;
+};
+
+export const returnVehicleAssignment = async (vehicleId) => {
+  const response = await axiosInstance.post(`/vehicles/${vehicleId}/return`);
+  return response.data.data.assignment;
+};
+
+export const getVehicleAssignmentHistory = async (vehicleId) => {
+  const response = await axiosInstance.get(`/vehicles/${vehicleId}/history`);
+  return response.data.data.history;
+};
+
 export const createVehicleDocument = async (vehicleId, payload) => {
   const response = await axiosInstance.post(`/vehicles/${vehicleId}/documents`, payload);
   return response.data.data.document;
@@ -91,27 +111,6 @@ export const updateVehicleDocument = async (id, payload) => {
 
 export const deleteVehicleDocument = async (id) => {
   await axiosInstance.delete(`/vehicle-documents/${id}`);
-};
-
-export const getVehicleAssignments = async (params) => {
-  const response = await axiosInstance.get('/vehicle-assignments', {
-    params: cleanParams(params)
-  });
-  return response.data.data;
-};
-
-export const getVehicleAssignmentOptions = async () => {
-  const response = await axiosInstance.get('/vehicle-assignments/options');
-  return response.data.data;
-};
-
-export const assignVehicle = async (payload) => {
-  const response = await axiosInstance.post('/vehicle-assignments', payload);
-  return response.data.data.assignment;
-};
-
-export const removeVehicleAssignment = async (id) => {
-  await axiosInstance.delete(`/vehicle-assignments/${id}`);
 };
 
 export const getVehicleDashboardStats = async () => {

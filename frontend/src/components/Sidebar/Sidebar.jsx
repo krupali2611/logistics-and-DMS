@@ -13,7 +13,7 @@ const Sidebar = () => {
     ...(permissions.includes('driver_view') ? [{ to: '/drivers', label: 'Drivers' }] : []),
     ...(permissions.includes('vehicle_view') ? [{ to: '/vehicles', label: 'Vehicles' }] : []),
     ...(permissions.includes('customer_view') ? [{ to: '/customers', label: 'Customers' }] : []),
-    ...(permissions.includes('vehicle_assign') ? [{ to: '/vehicle-assignments', label: 'Assignments' }] : [])
+    ...(permissions.includes('shipment_view') ? [{ to: '/shipments', label: 'Shipments' }] : [])
   ];
 
   const getShortLabel = (label) => {
@@ -22,7 +22,7 @@ const Sidebar = () => {
       Drivers: 'Drvs',
       Vehicles: 'Veh',
       Customers: 'Cust',
-      Assignments: 'Asgn'
+      Shipments: 'Ship'
     };
 
     return abbreviations[label] || label;
@@ -58,7 +58,7 @@ const Sidebar = () => {
           onClick={() => setCollapsed((value) => !value)}
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {collapsed ? '>' : '<'}
+          {collapsed ? '>>' : '<<'}
         </button>
       </div>
 
@@ -71,7 +71,9 @@ const Sidebar = () => {
             className={({ isActive }) => `${styles.link} ${isActive ? styles.active : ''}`}
             title={item.label}
           >
-            <span className={styles.linkLabel}>{collapsed ? getShortLabel(item.label) : item.label}</span>
+            <span className={styles.linkLabel}>
+              {collapsed ? getShortLabel(item.label) : item.label}
+            </span>
           </NavLink>
         ))}
       </nav>

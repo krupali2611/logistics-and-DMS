@@ -1,4 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+const IMAGE_FILE_PATTERN = /\.(jpg|jpeg|png|webp|gif|bmp|svg|avif|jfif)(\?.*)?(#.*)?$/i;
 
 export const toBase64Payload = (file) =>
   new Promise((resolve, reject) => {
@@ -28,4 +29,8 @@ export const getFileUrl = (filePath) => {
   return `${origin}${filePath}`;
 };
 
-export const isImageFile = (filePath) => /\.(jpg|jpeg|png|webp)$/i.test(filePath || '');
+export const isImageFile = (filePath) => IMAGE_FILE_PATTERN.test(filePath || '');
+
+export const isImageMimeType = (mimeType) => /^image\//i.test(mimeType || '');
+
+export const isImageUrl = (filePath) => IMAGE_FILE_PATTERN.test(filePath || '');

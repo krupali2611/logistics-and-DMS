@@ -1,0 +1,90 @@
+const { DataTypes } = require('sequelize');
+const {
+  SHIPMENT_TYPES,
+  SHIPMENT_PRIORITIES,
+  SHIPMENT_STATUSES
+} = require('../constants/shipmentConstants');
+
+module.exports = (sequelize) => {
+  const Shipment = sequelize.define(
+    'Shipment',
+    {
+      id: {
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+        primaryKey: true
+      },
+      shipment_number: {
+        type: DataTypes.STRING(30),
+        allowNull: false,
+        unique: true
+      },
+      customer_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      pickup_address_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      delivery_address_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      vehicle_type_id: {
+        type: DataTypes.UUID,
+        allowNull: false
+      },
+      shipment_type: {
+        type: DataTypes.ENUM(...SHIPMENT_TYPES),
+        allowNull: false
+      },
+      priority: {
+        type: DataTypes.ENUM(...SHIPMENT_PRIORITIES),
+        allowNull: false,
+        defaultValue: 'NORMAL'
+      },
+      package_count: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+      },
+      total_weight: {
+        type: DataTypes.DECIMAL(12, 2),
+        allowNull: false,
+        defaultValue: 0
+      },
+      total_volume: {
+        type: DataTypes.DECIMAL(14, 2),
+        allowNull: false,
+        defaultValue: 0
+      },
+      estimated_distance: {
+        type: DataTypes.DECIMAL(12, 2),
+        allowNull: true
+      },
+      estimated_delivery_date: {
+        type: DataTypes.DATEONLY,
+        allowNull: true
+      },
+      special_instructions: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
+      status: {
+        type: DataTypes.ENUM(...SHIPMENT_STATUSES),
+        allowNull: false,
+        defaultValue: 'DRAFT'
+      },
+      created_by: {
+        type: DataTypes.UUID,
+        allowNull: false
+      }
+    },
+    {
+      tableName: 'shipments'
+    }
+  );
+
+  return Shipment;
+};

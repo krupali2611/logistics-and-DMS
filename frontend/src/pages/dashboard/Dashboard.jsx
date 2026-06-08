@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { getDriverDashboardStats } from '../../api/driverApi';
 import { getVehicleDashboardStats } from '../../api/vehicleApi';
 import { getCustomerDashboardStats } from '../../api/customerApi';
+import { getShipmentDashboardStats } from '../../api/shipmentApi';
 import styles from '../../styles/Dashboard.module.css';
 
 const Dashboard = () => {
@@ -21,13 +22,19 @@ const Dashboard = () => {
     totalCustomers: 0,
     verifiedCustomers: 0,
     businessCustomers: 0,
-    activeCustomers: 0
+    activeCustomers: 0,
+    totalShipments: 0,
+    pendingAssignment: 0,
+    assigned: 0,
+    inTransit: 0,
+    delivered: 0,
+    cancelled: 0
   });
 
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const [driverStats, vehicleStats, customerStats] = await Promise.all([
+        const [driverStats, vehicleStats, customerStats, shipmentStats] = await Promise.all([
           permissions.includes('driver_view')
             ? getDriverDashboardStats()
             : Promise.resolve({
@@ -52,12 +59,23 @@ const Dashboard = () => {
                 verifiedCustomers: 0,
                 businessCustomers: 0,
                 activeCustomers: 0
+              }),
+          permissions.includes('shipment_view')
+            ? getShipmentDashboardStats()
+            : Promise.resolve({
+                totalShipments: 0,
+                pendingAssignment: 0,
+                assigned: 0,
+                inTransit: 0,
+                delivered: 0,
+                cancelled: 0
               })
         ]);
         setStats({
           ...driverStats,
           ...vehicleStats,
-          ...customerStats
+          ...customerStats,
+          ...shipmentStats
         });
       } catch (error) {
         setStats({
@@ -73,7 +91,13 @@ const Dashboard = () => {
           totalCustomers: 0,
           verifiedCustomers: 0,
           businessCustomers: 0,
-          activeCustomers: 0
+          activeCustomers: 0,
+          totalShipments: 0,
+          pendingAssignment: 0,
+          assigned: 0,
+          inTransit: 0,
+          delivered: 0,
+          cancelled: 0
         });
       }
     };
@@ -157,6 +181,36 @@ const Dashboard = () => {
       <section className={styles.card}>
         <h3>Active Customers</h3>
         <p>{stats.activeCustomers}</p>
+      </section>
+
+      <section className={styles.card}>
+        <h3>Total Shipments</h3>
+        <p>{stats.totalShipments}</p>
+      </section>
+
+      <section className={styles.card}>
+        <h3>Pending Assignment</h3>
+        <p>{stats.pendingAssignment}</p>
+      </section>
+
+      <section className={styles.card}>
+        <h3>Assigned</h3>
+        <p>{stats.assigned}</p>
+      </section>
+
+      <section className={styles.card}>
+        <h3>In Transit</h3>
+        <p>{stats.inTransit}</p>
+      </section>
+
+      <section className={styles.card}>
+        <h3>Delivered</h3>
+        <p>{stats.delivered}</p>
+      </section>
+
+      <section className={styles.card}>
+        <h3>Cancelled</h3>
+        <p>{stats.cancelled}</p>
       </section>
     </div>
   );

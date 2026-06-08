@@ -59,6 +59,14 @@ module.exports = (sequelize) => {
         type: DataTypes.DATEONLY,
         allowNull: true
       },
+      assigned_driver_id: {
+        type: DataTypes.UUID,
+        allowNull: true
+      },
+      assigned_at: {
+        type: DataTypes.DATE,
+        allowNull: true
+      },
       status: {
         type: DataTypes.ENUM(...VEHICLE_STATUS),
         allowNull: false,

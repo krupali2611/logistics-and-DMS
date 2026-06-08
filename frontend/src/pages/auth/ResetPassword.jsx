@@ -4,6 +4,7 @@ import axiosInstance from '../../api/axiosInstance';
 import Button from '../../components/Button/Button';
 import Input from '../../components/Input/Input';
 import styles from '../../styles/AuthPages.module.css';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
 const ResetPassword = () => {
   const [form, setForm] = useState({ token: '', password: '' });
@@ -18,6 +19,10 @@ const ResetPassword = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setLoading(true);
     setError('');
     setMessage('');
@@ -35,14 +40,14 @@ const ResetPassword = () => {
 
   return (
     <div className={styles.centeredShell}>
-      <form className={styles.formCard} onSubmit={handleSubmit}>
+      <form className={styles.formCard} onSubmit={handleSubmit} {...getFormValidationProps()}>
         <div>
           <h2>Reset Password</h2>
           <p>Paste the reset token and set a new password.</p>
         </div>
 
-        <Input label="Reset Token" name="token" value={form.token} onChange={handleChange} />
-        <Input label="New Password" name="password" type="password" value={form.password} onChange={handleChange} />
+        <Input label="Reset Token" name="token" value={form.token} onChange={handleChange} required />
+        <Input label="New Password" name="password" type="password" value={form.password} onChange={handleChange} required />
 
         {error ? <div className={styles.errorBox}>{error}</div> : null}
         {message ? <div className={styles.successBox}>{message}</div> : null}

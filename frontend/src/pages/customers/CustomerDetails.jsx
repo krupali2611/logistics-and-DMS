@@ -46,7 +46,7 @@ const CustomerDetails = () => {
       <div className={styles.toolbar}>
         <div>
           <span className={styles.eyebrow}>Customer Profile</span>
-          <h2 className={styles.pageTitle}>{customer.company_name}</h2>
+          <h2 className={styles.pageTitle}>{customer.company_name || customer.contact_person}</h2>
           <p className={styles.pageCopy}>Customer code: {customer.customer_code}</p>
         </div>
         <div className={styles.linkGroup}>
@@ -70,7 +70,7 @@ const CustomerDetails = () => {
             <h3>Account Overview</h3>
           </div>
           <div className={styles.infoGrid}>
-            <div><strong>Contact Person:</strong> {customer.contact_person}</div>
+            <div><strong>Customer Name:</strong> {customer.company_name || customer.contact_person}</div>
             <div><strong>Email:</strong> {customer.email}</div>
             <div><strong>Phone:</strong> {customer.phone}</div>
             <div><strong>Alternate Phone:</strong> {customer.alternate_phone || 'Not set'}</div>

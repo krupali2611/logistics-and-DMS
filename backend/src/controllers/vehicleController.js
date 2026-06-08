@@ -90,13 +90,28 @@ const deleteVehicleDocument = async (req, res) => {
 };
 
 const assignVehicle = async (req, res) => {
-  const assignment = await vehicleService.assignVehicle(req.body);
+  const assignment = await vehicleService.assignVehicle(req.params.vehicleId, req.body.driver_id, req.user);
   return ApiResponse.success(res, 'Vehicle assigned successfully.', { assignment }, 201);
 };
 
 const removeAssignment = async (req, res) => {
   await vehicleService.removeAssignment(req.params.id);
   return ApiResponse.success(res, 'Vehicle assignment removed successfully.');
+};
+
+const returnVehicle = async (req, res) => {
+  const assignment = await vehicleService.returnVehicle(req.params.vehicleId, req.user);
+  return ApiResponse.success(res, 'Vehicle returned successfully.', { assignment });
+};
+
+const getVehicleAssignmentHistory = async (req, res) => {
+  const history = await vehicleService.getVehicleAssignmentHistory(req.params.vehicleId);
+  return ApiResponse.success(res, 'Vehicle assignment history fetched successfully.', { history });
+};
+
+const getAvailableVehiclesForAssignment = async (req, res) => {
+  const vehicles = await vehicleService.getAvailableVehiclesForAssignment();
+  return ApiResponse.success(res, 'Available vehicles fetched successfully.', { vehicles });
 };
 
 const listAssignments = async (req, res) => {
@@ -134,6 +149,9 @@ module.exports = {
   deleteVehicleDocument,
   assignVehicle,
   removeAssignment,
+  returnVehicle,
+  getVehicleAssignmentHistory,
+  getAvailableVehiclesForAssignment,
   listAssignments,
   getAssignmentOptions,
   getVehicleDashboardStats

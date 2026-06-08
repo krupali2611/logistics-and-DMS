@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import ActionIcon from '../../components/ActionIcon/ActionIcon';
 import Button from '../../components/Button/Button';
 import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../../context/AuthContext';
@@ -10,6 +11,7 @@ import {
   getCustomerNotes
 } from '../../api/customerApi';
 import styles from '../../styles/Customer.module.css';
+import { getFormValidationProps, validateForm } from '../../utils/formValidation';
 
 const CustomerNotes = () => {
   const { id } = useParams();
@@ -47,6 +49,10 @@ const CustomerNotes = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!validateForm(event.currentTarget)) {
+      return;
+    }
+
     setSaving(true);
     setError('');
 
@@ -103,7 +109,7 @@ const CustomerNotes = () => {
 
       <div className={styles.detailGrid}>
         {canUpdate ? (
-          <form className={styles.formCard} onSubmit={handleSubmit}>
+          <form className={styles.formCard} onSubmit={handleSubmit} {...getFormValidationProps()}>
             <div className={styles.cardHeader}>
               <h3>Add Note</h3>
               <p>Notes are stamped with the currently logged-in user.</p>
@@ -148,10 +154,12 @@ const CustomerNotes = () => {
                   {canDelete ? (
                     <button
                       type="button"
-                      className={styles.deleteButton}
+                      className={styles.actionIconDanger}
+                      title="Delete note"
+                      aria-label="Delete note"
                       onClick={() => handleDelete(item.id)}
                     >
-                      Delete
+                      <ActionIcon name="delete" />
                     </button>
                   ) : null}
                 </div>

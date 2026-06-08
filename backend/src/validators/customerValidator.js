@@ -20,6 +20,12 @@ const optionalFileRule = (field, label) =>
       return true;
     });
 
+const documentNameRule = body('document_name')
+  .optional({ nullable: true })
+  .trim()
+  .isLength({ min: 1, max: 100 })
+  .withMessage('Document name must be between 1 and 100 characters.');
+
 const createCustomerValidator = [
   body('customer_code')
     .optional()
@@ -305,6 +311,13 @@ const createCustomerDocumentValidator = [
     .withMessage('Document number is required.')
     .isLength({ max: 100 })
     .withMessage('Document number must be at most 100 characters.'),
+  documentNameRule,
+  body('document_name').custom((value, { req }) => {
+    if (req.body.document_type === 'OTHER' && !String(value || '').trim()) {
+      throw new Error('Document name is required when document type is OTHER.');
+    }
+    return true;
+  }),
   body('verification_status')
     .optional()
     .isIn(CUSTOMER_VERIFICATION_STATUS)
@@ -335,6 +348,20 @@ const updateCustomerDocumentValidator = [
     .trim()
     .isLength({ min: 1, max: 100 })
     .withMessage('Document number must be between 1 and 100 characters.'),
+  documentNameRule,
+  body('document_name').custom((value, { req }) => {
+    const documentType = req.body.document_type;
+
+    if (documentType === 'OTHER' && !String(value || '').trim()) {
+      throw new Error('Document name is required when document type is OTHER.');
+    }
+
+    if (documentType && documentType !== 'OTHER' && String(value || '').trim()) {
+      throw new Error('Document name can only be provided when document type is OTHER.');
+    }
+
+    return true;
+  }),
   body('verification_status')
     .optional()
     .isIn(CUSTOMER_VERIFICATION_STATUS)
