@@ -123,9 +123,7 @@ const DriverDetails = () => {
               onError={() => setProfileImageError(true)}
             />
           ) : driver.profile_image ? (
-            <a href={getFileUrl(driver.profile_image)} target="_blank" rel="noreferrer" className={styles.textLink}>
-              Open profile image
-            </a>
+            <p className={styles.pageCopy}>Profile image preview is unavailable.</p>
           ) : (
             <p className={styles.pageCopy}>No profile image uploaded yet.</p>
           )}
