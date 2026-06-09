@@ -43,6 +43,13 @@ const trackShipment = async (req, res) => {
   });
 };
 
+const previewShipmentRoute = async (req, res) => {
+  const route = await shipmentService.previewShipmentRoute(req.body);
+  return ApiResponse.success(res, 'Shipment route preview calculated successfully.', {
+    route
+  });
+};
+
 const createShipment = async (req, res) => {
   const shipment = await shipmentService.createShipment(req.body, req.user);
   return ApiResponse.success(res, 'Shipment created successfully.', {
@@ -128,6 +135,7 @@ module.exports = {
   getShipmentById,
   getMyShipmentById,
   trackShipment,
+  previewShipmentRoute,
   createShipment,
   updateShipment,
   cancelShipment,

@@ -3,6 +3,10 @@ const db = require('../models');
 const AppError = require('../utils/AppError');
 const storageService = require('./storage/storageService');
 const {
+  getCustomerAddressAttributes,
+  getCustomerAddressSchema
+} = require('../utils/customerAddressSchema');
+const {
   assertDocumentNameRules,
   assertUniqueDocumentType,
   normalizeOptionalText
@@ -36,6 +40,62 @@ const buildPagination = ({ page, limit, totalRecords }) => ({
 const normalizeEmail = (email) => (email ? email.toLowerCase() : email);
 const normalizeText = (value) => (typeof value === 'string' ? value.trim() : value);
 const toBoolean = (value) => value === true || value === 'true';
+const buildFormattedAddress = (payload = {}) =>
+  [
+    payload.address_line_1,
+    payload.address_line_2,
+    payload.landmark,
+    payload.city,
+    payload.state,
+    payload.country,
+    payload.pincode
+  ]
+    .map(normalizeText)
+    .filter(Boolean)
+    .join(', ');
+
+const buildCustomerAddressPayload = async (sequelize, payload, currentAddress = null) => {
+  const schema = await getCustomerAddressSchema(sequelize);
+
+  const nextPayload = {
+    address_type: payload.address_type ?? currentAddress?.address_type,
+    address_line_1: payload.address_line_1 ?? currentAddress?.address_line_1,
+    address_line_2:
+      payload.address_line_2 !== undefined ? payload.address_line_2 : currentAddress?.address_line_2,
+    landmark: payload.landmark !== undefined ? payload.landmark : currentAddress?.landmark,
+    city: payload.city ?? currentAddress?.city,
+    state: payload.state ?? currentAddress?.state,
+    country: payload.country ?? currentAddress?.country,
+    pincode: payload.pincode ?? currentAddress?.pincode,
+    latitude: payload.latitude !== undefined ? payload.latitude : currentAddress?.latitude,
+    longitude: payload.longitude !== undefined ? payload.longitude : currentAddress?.longitude,
+    is_default:
+      payload.is_default === undefined
+        ? currentAddress?.is_default ?? false
+        : toBoolean(payload.is_default)
+  };
+
+  if (schema.hasPlaceId) {
+    nextPayload.place_id =
+      payload.place_id !== undefined ? normalizeText(payload.place_id) || null : currentAddress?.place_id ?? null;
+  }
+
+  if (schema.hasFormattedAddress) {
+    nextPayload.formatted_address =
+      payload.formatted_address !== undefined
+        ? normalizeText(payload.formatted_address) || null
+        : buildFormattedAddress(nextPayload);
+  }
+
+  if (schema.hasIsFavorite) {
+    nextPayload.is_favorite =
+      payload.is_favorite === undefined
+        ? currentAddress?.is_favorite ?? false
+        : toBoolean(payload.is_favorite);
+  }
+
+  return nextPayload;
+};
 
 const buildCustomerFilters = ({ search, customer_type, status, verification_status }) => {
   const filters = {};
@@ -70,11 +130,13 @@ const buildCustomerFilters = ({ search, customer_type, status, verification_stat
 };
 
 const getCustomerById = async (id) => {
+  const addressAttributes = await getCustomerAddressAttributes(db.sequelize);
   const customer = await db.Customer.findByPk(id, {
     include: [
       {
         model: db.CustomerAddress,
-        as: 'addresses'
+        as: 'addresses',
+        attributes: addressAttributes
       },
       {
         model: db.CustomerDocument,
@@ -176,6 +238,7 @@ const generateCustomerCode = async () => {
 };
 
 const listCustomers = async (query) => {
+  const addressAttributes = await getCustomerAddressAttributes(db.sequelize);
   const page = Number(query.page || 1);
   const limit = Math.min(Number(query.limit || 10), 100);
   const offset = (page - 1) * limit;
@@ -189,7 +252,9 @@ const listCustomers = async (query) => {
       {
         model: db.CustomerAddress,
         as: 'addresses',
-        attributes: ['id', 'address_type', 'is_default']
+        attributes: addressAttributes.filter((attribute) =>
+          ['id', 'address_type', 'is_default', 'is_favorite', 'formatted_address'].includes(attribute)
+        )
       },
       {
         model: db.CustomerDocument,
@@ -311,20 +376,15 @@ const createCustomerAddress = async (customerId, payload) => {
       await resetDefaultBillingAddress(customerId, transaction);
     }
 
+    const addressPayload = await buildCustomerAddressPayload(db.sequelize, {
+      ...payload,
+      customer_id: customerId
+    });
+
     const address = await db.CustomerAddress.create(
       {
         customer_id: customerId,
-        address_type: payload.address_type,
-        address_line_1: payload.address_line_1,
-        address_line_2: payload.address_line_2 || null,
-        landmark: payload.landmark || null,
-        city: payload.city,
-        state: payload.state,
-        country: payload.country,
-        pincode: payload.pincode,
-        latitude: payload.latitude || null,
-        longitude: payload.longitude || null,
-        is_default: toBoolean(payload.is_default)
+        ...addressPayload
       },
       { transaction }
     );
@@ -339,9 +399,11 @@ const createCustomerAddress = async (customerId, payload) => {
 
 const listCustomerAddresses = async (customerId) => {
   await getCustomerById(customerId);
+  const addressAttributes = await getCustomerAddressAttributes(db.sequelize);
 
   return db.CustomerAddress.findAll({
     where: { customer_id: customerId },
+    attributes: addressAttributes,
     order: [
       ['is_default', 'DESC'],
       ['created_at', 'DESC']
@@ -366,20 +428,18 @@ const updateCustomerAddress = async (id, payload) => {
       await resetDefaultBillingAddress(address.customer_id, transaction, id);
     }
 
-    await address.update(
+    const addressPayload = await buildCustomerAddressPayload(
+      db.sequelize,
       {
+        ...payload,
         address_type: addressType,
-        address_line_1: payload.address_line_1 ?? address.address_line_1,
-        address_line_2: payload.address_line_2 ?? address.address_line_2,
-        landmark: payload.landmark ?? address.landmark,
-        city: payload.city ?? address.city,
-        state: payload.state ?? address.state,
-        country: payload.country ?? address.country,
-        pincode: payload.pincode ?? address.pincode,
-        latitude: payload.latitude ?? address.latitude,
-        longitude: payload.longitude ?? address.longitude,
         is_default: isDefault
       },
+      address
+    );
+
+    await address.update(
+      addressPayload,
       { transaction }
     );
 

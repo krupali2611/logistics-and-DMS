@@ -6,6 +6,7 @@ const asyncHandler = require('../utils/asyncHandler');
 const customerOwnershipMiddleware = require('../middleware/customerOwnershipMiddleware');
 const {
   shipmentIdParamValidator,
+  previewShipmentRouteValidator,
   createShipmentValidator,
   listShipmentsValidator
 } = require('../validators/shipmentValidator');
@@ -23,6 +24,12 @@ router.get(
   listShipmentsValidator,
   validationMiddleware,
   asyncHandler(shipmentController.listMyShipments)
+);
+router.post(
+  '/route-preview',
+  previewShipmentRouteValidator,
+  validationMiddleware,
+  asyncHandler(shipmentController.previewShipmentRoute)
 );
 router.post(
   '/',

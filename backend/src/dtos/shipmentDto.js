@@ -43,9 +43,31 @@ const mapAddressSummary = (address) =>
         city: address.city,
         state: address.state,
         country: address.country,
-        pincode: address.pincode
+        pincode: address.pincode,
+        latitude: address.latitude,
+        longitude: address.longitude,
+        place_id: address.place_id,
+        formatted_address: address.formatted_address,
+        is_favorite: address.is_favorite
       }
     : null;
+
+const mapShipmentLocation = (shipment, prefix) => {
+  const savedAddress = prefix === 'pickup' ? shipment.pickupAddress : shipment.deliveryAddress;
+  return {
+    address: shipment[`${prefix}_address`],
+    address_snapshot: shipment[`${prefix}_address_snapshot`],
+    latitude: shipment[`${prefix}_latitude`],
+    longitude: shipment[`${prefix}_longitude`],
+    place_id: shipment[`${prefix}_place_id`],
+    city: shipment[`${prefix}_city`],
+    state: shipment[`${prefix}_state`],
+    country: shipment[`${prefix}_country`],
+    pincode: shipment[`${prefix}_pincode`],
+    saved_address_id: shipment[`${prefix}_address_id`],
+    saved_address: mapAddressSummary(savedAddress)
+  };
+};
 
 const mapVehicleTypeSummary = (vehicleType) =>
   vehicleType
@@ -55,7 +77,17 @@ const mapVehicleTypeSummary = (vehicleType) =>
         description: vehicleType.description,
         min_capacity: vehicleType.min_capacity,
         max_capacity: vehicleType.max_capacity,
-        status: vehicleType.status
+        status: vehicleType.status,
+        pricing_rule: vehicleType.pricingRule
+          ? {
+              id: vehicleType.pricingRule.id,
+              base_fare: vehicleType.pricingRule.base_fare,
+              per_km_rate: vehicleType.pricingRule.per_km_rate,
+              per_kg_rate: vehicleType.pricingRule.per_kg_rate,
+              minimum_fare: vehicleType.pricingRule.minimum_fare,
+              status: vehicleType.pricingRule.status
+            }
+          : null
       }
     : null;
 
@@ -140,7 +172,7 @@ const mapTrackingEvent = (event) => ({
   assignment_id: event.shipment_assignment_id
 });
 
-const mapFareEstimation = (estimation) =>
+const mapFareEstimation = (estimation, shipment) =>
   estimation
     ? {
         id: estimation.id,
@@ -153,7 +185,64 @@ const mapFareEstimation = (estimation) =>
         weight_charge: estimation.weight_charge,
         final_amount: estimation.final_amount,
         created_at: estimation.created_at,
-        updated_at: estimation.updated_at
+        updated_at: estimation.updated_at,
+        fare_breakdown: {
+          base_fare: estimation.base_fare,
+          distance_charge: estimation.distance_charge,
+          weight_charge: estimation.weight_charge,
+          minimum_fare: shipment?.vehicleType?.pricingRule?.minimum_fare || 0,
+          computed_amount:
+            Number(estimation.base_fare || 0) +
+            Number(estimation.distance_charge || 0) +
+            Number(estimation.weight_charge || 0),
+          final_amount: estimation.final_amount,
+          applied_minimum_fare:
+            Number(estimation.final_amount || 0) >
+            Number(estimation.base_fare || 0) +
+              Number(estimation.distance_charge || 0) +
+              Number(estimation.weight_charge || 0)
+        },
+        pricing_rule: shipment?.vehicleType?.pricingRule
+          ? {
+              id: shipment.vehicleType.pricingRule.id,
+              base_fare: shipment.vehicleType.pricingRule.base_fare,
+              per_km_rate: shipment.vehicleType.pricingRule.per_km_rate,
+              per_kg_rate: shipment.vehicleType.pricingRule.per_kg_rate,
+              minimum_fare: shipment.vehicleType.pricingRule.minimum_fare,
+              status: shipment.vehicleType.pricingRule.status
+            }
+          : null,
+        vehicle_type: shipment?.vehicleType
+          ? {
+              id: shipment.vehicleType.id,
+              type_name: shipment.vehicleType.type_name
+            }
+          : null,
+        debug: {
+          distance_source: shipment?.route_provider || null,
+          route_distance_km: shipment?.route_distance_km ?? estimation.distance_km,
+          vehicle_type: shipment?.vehicleType?.type_name || null,
+          pricing_rule_id: shipment?.vehicleType?.pricingRule?.id || null,
+          pricing_rule_status: shipment?.vehicleType?.pricingRule?.status || null,
+          base_fare:
+            shipment?.vehicleType?.pricingRule?.base_fare ?? estimation.base_fare,
+          per_km_rate: shipment?.vehicleType?.pricingRule?.per_km_rate ?? null,
+          per_kg_rate: shipment?.vehicleType?.pricingRule?.per_kg_rate ?? null,
+          minimum_fare: shipment?.vehicleType?.pricingRule?.minimum_fare ?? 0,
+          weight_kg: estimation.weight_kg,
+          formula: shipment?.vehicleType?.pricingRule
+            ? `max(${Number(shipment.vehicleType.pricingRule.base_fare || 0).toFixed(2)} + (${Number(
+                shipment?.route_distance_km ?? estimation.distance_km ?? 0
+              ).toFixed(2)} x ${Number(shipment.vehicleType.pricingRule.per_km_rate || 0).toFixed(
+                2
+              )}) + (${Number(estimation.weight_kg || 0).toFixed(2)} x ${Number(
+                shipment.vehicleType.pricingRule.per_kg_rate || 0
+              ).toFixed(2)}), ${Number(shipment.vehicleType.pricingRule.minimum_fare || 0).toFixed(
+                2
+              )})`
+            : null,
+          final_amount: estimation.final_amount
+        }
       }
     : null;
 
@@ -162,9 +251,19 @@ const mapShipmentBase = (shipment) => ({
   shipment_number: shipment.shipment_number,
   customer_id: shipment.customer_id,
   pickup_address_id: shipment.pickup_address_id,
+  pickup_address: shipment.pickup_address,
   pickup_address_snapshot: shipment.pickup_address_snapshot,
+  pickup_city: shipment.pickup_city,
+  pickup_state: shipment.pickup_state,
+  pickup_country: shipment.pickup_country,
+  pickup_pincode: shipment.pickup_pincode,
   delivery_address_id: shipment.delivery_address_id,
+  delivery_address: shipment.delivery_address,
   delivery_address_snapshot: shipment.delivery_address_snapshot,
+  delivery_city: shipment.delivery_city,
+  delivery_state: shipment.delivery_state,
+  delivery_country: shipment.delivery_country,
+  delivery_pincode: shipment.delivery_pincode,
   pickup_latitude: shipment.pickup_latitude,
   pickup_longitude: shipment.pickup_longitude,
   delivery_latitude: shipment.delivery_latitude,
@@ -178,6 +277,11 @@ const mapShipmentBase = (shipment) => ({
   total_weight: shipment.total_weight,
   total_volume: shipment.total_volume,
   estimated_distance: shipment.estimated_distance,
+  route_distance_km: shipment.route_distance_km,
+  route_duration_minutes: shipment.route_duration_minutes,
+  estimated_eta: shipment.estimated_eta,
+  route_provider: shipment.route_provider,
+  route_geometry: shipment.route_geometry,
   estimated_delivery_date: shipment.estimated_delivery_date,
   special_instructions: shipment.special_instructions,
   status: shipment.status,
@@ -197,14 +301,21 @@ const mapShipmentBase = (shipment) => ({
 const toShipmentListDto = (shipment) => ({
   ...mapShipmentBase(shipment),
   customer: mapCustomerSummary(shipment.customer),
-  pickup_address: mapAddressSummary(shipment.pickupAddress),
-  delivery_address: mapAddressSummary(shipment.deliveryAddress),
+  pickup_location: mapShipmentLocation(shipment, 'pickup'),
+  delivery_location: mapShipmentLocation(shipment, 'delivery'),
+  route: {
+    distance_km: shipment.route_distance_km,
+    duration_minutes: shipment.route_duration_minutes,
+    estimated_eta: shipment.estimated_eta,
+    provider: shipment.route_provider,
+    geometry: shipment.route_geometry
+  },
   vehicle_type: mapVehicleTypeSummary(shipment.vehicleType)
 });
 
 const toShipmentDetailDto = (shipment) => ({
   ...toShipmentListDto(shipment),
-  fare_estimation: mapFareEstimation(shipment.fareEstimation),
+  fare_estimation: mapFareEstimation(shipment.fareEstimation, shipment),
   created_by_user: mapUserSummary(shipment.createdBy),
   cancelled_by_user: mapUserSummary(shipment.cancelledBy),
   created_by_customer_user: mapCustomerUserSummary(shipment.createdByCustomerUser),

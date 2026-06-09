@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Loader from '../../components/Loader/Loader';
+import ShipmentRoutePreview from '../../components/shipments/ShipmentRoutePreview';
 import ShipmentTimeline from '../../components/shipments/ShipmentTimeline';
 import { cancelShipment, getShipmentById } from '../../api/shipmentApi';
 import { getFileUrl } from '../../utils/fileHelpers';
@@ -10,22 +11,23 @@ import styles from '../../styles/Shipment.module.css';
 const EDITABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT'];
 const CANCELLABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT', 'ASSIGNED'];
 
-const formatAddress = (address) => {
-  if (!address) {
+const formatAddress = (location) => {
+  if (!location) {
     return 'Not available';
   }
 
-  return [
-    address.address_line_1,
-    address.address_line_2,
-    address.landmark,
-    address.city,
-    address.state,
-    address.country,
-    address.pincode
-  ]
-    .filter(Boolean)
-    .join(', ');
+  return (
+    location.address ||
+    [
+      location.saved_address?.formatted_address,
+      location.city,
+      location.state,
+      location.country,
+      location.pincode
+    ]
+      .filter(Boolean)
+      .join(', ')
+  );
 };
 
 const formatCurrency = (value) =>
@@ -34,6 +36,51 @@ const formatCurrency = (value) =>
     currency: 'INR',
     maximumFractionDigits: 2
   }).format(Number(value || 0));
+
+const formatDistance = (value) =>
+  Number.isFinite(Number(value)) && Number(value) > 0 ? `${Number(value).toFixed(1)} KM` : 'Pending';
+
+const formatDuration = (value) => {
+  const totalMinutes = Math.round(Number(value || 0));
+  if (!Number.isFinite(totalMinutes) || totalMinutes <= 0) {
+    return 'Pending';
+  }
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  if (hours > 0 && minutes > 0) {
+    return `${hours} Hr ${minutes} Min`;
+  }
+
+  if (hours > 0) {
+    return `${hours} Hr`;
+  }
+
+  return `${minutes} Min`;
+};
+
+const formatEta = (value) => {
+  if (!value) {
+    return 'Pending';
+  }
+
+  const eta = new Date(value);
+  if (Number.isNaN(eta.getTime())) {
+    return 'Pending';
+  }
+
+  const now = new Date();
+  const sameDay =
+    eta.getFullYear() === now.getFullYear() &&
+    eta.getMonth() === now.getMonth() &&
+    eta.getDate() === now.getDate();
+
+  return `${sameDay ? 'Today' : eta.toLocaleDateString()} ${eta.toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit'
+  })}`;
+};
 
 const ShipmentDetails = () => {
   const { id } = useParams();
@@ -71,8 +118,9 @@ const ShipmentDetails = () => {
   const fareEstimation = shipment?.fare_estimation || shipment?.fareEstimation || null;
   const vehicleType = shipment?.vehicle_type || shipment?.vehicleType || null;
   const customer = shipment?.customer || null;
-  const pickupAddress = shipment?.pickup_address || shipment?.pickupAddress || null;
-  const deliveryAddress = shipment?.delivery_address || shipment?.deliveryAddress || null;
+  const pickupLocation = shipment?.pickup_location || null;
+  const deliveryLocation = shipment?.delivery_location || null;
+  const route = shipment?.route || null;
   const statusHistory = shipment?.status_history || shipment?.statusHistory || [];
   const attachments = shipment?.attachments || [];
   const packages = shipment?.packages || [];
@@ -168,7 +216,9 @@ const ShipmentDetails = () => {
                 ? new Date(shipment.estimated_delivery_date).toLocaleDateString()
                 : 'Not set'}
             </div>
-            <div><strong>Estimated Distance:</strong> {shipment.estimated_distance || '0'} km</div>
+            <div><strong>Estimated Distance:</strong> {formatDistance(shipment.estimated_distance)}</div>
+            <div><strong>Route Distance:</strong> {formatDistance(route?.distance_km || shipment.route_distance_km)}</div>
+            <div><strong>ETA:</strong> {formatEta(route?.estimated_eta || shipment.estimated_eta)}</div>
             <div><strong>Created:</strong> {new Date(shipment.created_at).toLocaleString()}</div>
             <div>
               <strong>Cancelled At:</strong>{' '}
@@ -184,11 +234,11 @@ const ShipmentDetails = () => {
           <div className={styles.addressPair}>
             <div className={styles.summaryCard}>
               <strong>Pickup</strong>
-              <span>{formatAddress(pickupAddress)}</span>
+              <span>{formatAddress(pickupLocation)}</span>
             </div>
             <div className={styles.summaryCard}>
               <strong>Delivery</strong>
-              <span>{formatAddress(deliveryAddress)}</span>
+              <span>{formatAddress(deliveryLocation)}</span>
             </div>
           </div>
         </section>
@@ -223,7 +273,7 @@ const ShipmentDetails = () => {
           </div>
           <div className={styles.metricGrid}>
             <div className={styles.metricCard}>
-              <strong>{Number(fareEstimation?.distance_km || shipment.estimated_distance || 0).toFixed(2)}</strong>
+              <strong>{formatDistance(fareEstimation?.distance_km || shipment.estimated_distance)}</strong>
               <span>Distance (km)</span>
             </div>
             <div className={styles.metricCard}>
@@ -239,10 +289,41 @@ const ShipmentDetails = () => {
               <span>Weight Charge</span>
             </div>
             <div className={styles.metricCard}>
+              <strong>{formatCurrency(fareEstimation?.fare_breakdown?.minimum_fare || 0)}</strong>
+              <span>Minimum Fare</span>
+            </div>
+            <div className={styles.metricCard}>
               <strong>{formatCurrency(fareEstimation?.final_amount || 0)}</strong>
               <span>Final Amount</span>
             </div>
           </div>
+          <div className={styles.documentSummary}>
+            <div className={styles.summaryCard}>
+              <strong>Pricing Debug</strong>
+              <span>Distance Source: {fareEstimation?.debug?.distance_source || route?.provider || 'Not available'}</span>
+              <span>Vehicle Type: {fareEstimation?.debug?.vehicle_type || vehicleType?.type_name || 'Not available'}</span>
+              <span>Pricing Rule: {fareEstimation?.debug?.pricing_rule_id || fareEstimation?.pricing_rule?.id || 'Not available'}</span>
+              <span>Formula: {fareEstimation?.debug?.formula || 'Not available'}</span>
+            </div>
+          </div>
+        </section>
+
+        <section className={styles.formCard}>
+          <div className={styles.cardHeader}>
+            <h3>Route Preview</h3>
+          </div>
+          <div className={styles.infoGridCompact}>
+            <div><strong>Distance:</strong> {formatDistance(route?.distance_km)}</div>
+            <div><strong>Duration:</strong> {formatDuration(route?.duration_minutes)}</div>
+            <div><strong>ETA:</strong> {formatEta(route?.estimated_eta)}</div>
+            <div><strong>Provider:</strong> {route?.provider || 'Not available'}</div>
+          </div>
+          <ShipmentRoutePreview
+            pickup={pickupLocation}
+            delivery={deliveryLocation}
+            route={route}
+            subtitle="Stored route geometry is shown for admin review and future tracking compatibility."
+          />
         </section>
 
         <section className={styles.formCard}>

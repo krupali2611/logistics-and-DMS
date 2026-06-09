@@ -1,12 +1,12 @@
-# Graph Report - D:\krupali\logistics and DMS  (2026-06-08)
+# Graph Report - D:\krupali\logistics and DMS  (2026-06-09)
 
 ## Corpus Check
-- 190 files · ~113,477 words
+- 206 files · ~131,400 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 809 nodes · 1122 edges · 132 communities detected
-- Extraction: 76% EXTRACTED · 24% INFERRED · 0% AMBIGUOUS · INFERRED: 264 edges (avg confidence: 0.8)
+- 903 nodes · 1288 edges · 144 communities detected
+- Extraction: 78% EXTRACTED · 22% INFERRED · 0% AMBIGUOUS · INFERRED: 282 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -142,6 +142,18 @@
 - [[_COMMUNITY_Community 129|Community 129]]
 - [[_COMMUNITY_Community 130|Community 130]]
 - [[_COMMUNITY_Community 131|Community 131]]
+- [[_COMMUNITY_Community 132|Community 132]]
+- [[_COMMUNITY_Community 133|Community 133]]
+- [[_COMMUNITY_Community 134|Community 134]]
+- [[_COMMUNITY_Community 135|Community 135]]
+- [[_COMMUNITY_Community 136|Community 136]]
+- [[_COMMUNITY_Community 137|Community 137]]
+- [[_COMMUNITY_Community 138|Community 138]]
+- [[_COMMUNITY_Community 139|Community 139]]
+- [[_COMMUNITY_Community 140|Community 140]]
+- [[_COMMUNITY_Community 141|Community 141]]
+- [[_COMMUNITY_Community 142|Community 142]]
+- [[_COMMUNITY_Community 143|Community 143]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `getFormValidationProps()` - 22 edges
@@ -149,11 +161,11 @@
 3. `getShipmentById()` - 17 edges
 4. `deleteFile()` - 16 edges
 5. `createShipment()` - 13 edges
-6. `updateShipment()` - 12 edges
-7. `toShipmentDetailDto()` - 11 edges
-8. `uploadFile()` - 11 edges
-9. `normalizeEmail()` - 9 edges
-10. `normalizePhone()` - 9 edges
+6. `getShipmentApiContext()` - 13 edges
+7. `updateShipment()` - 12 edges
+8. `toShipmentDetailDto()` - 11 edges
+9. `calculateRoute()` - 11 edges
+10. `uploadFile()` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `deleteCustomerDocument()` --calls--> `deleteFile()`  [INFERRED]
@@ -171,59 +183,59 @@
 
 ### Community 0 - "Community 0"
 Cohesion: 0.03
-Nodes (104): forgotPassword(), login(), logout(), refresh(), resetPassword(), getCustomerProfile(), updateCustomerProfile(), changePassword() (+96 more)
+Nodes (107): forgotPassword(), login(), logout(), refresh(), resetPassword(), getCustomerProfile(), updateCustomerProfile(), changePassword() (+99 more)
 
 ### Community 1 - "Community 1"
 Cohesion: 0.03
-Nodes (35): useAuth(), CustomerAddresses(), CustomerDetails(), CustomerForm(), CustomerList(), CustomerNotes(), CustomerOtpVerification(), CustomerRegister() (+27 more)
+Nodes (45): useAuth(), CustomerAddresses(), CustomerDetails(), CustomerDocuments(), CustomerForm(), CustomerList(), CustomerNotes(), CustomerOtpVerification() (+37 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.03
-Nodes (15): cleanParams(), deleteCustomerAddress(), deleteCustomerDocument(), deleteCustomerNote(), getCustomers(), deleteDriver(), deleteDriverDocument(), LocalStorageProvider (+7 more)
+Nodes (29): cleanParams(), deleteCustomerAddress(), deleteCustomerDocument(), deleteCustomerNote(), getCustomers(), deleteDriver(), deleteDriverDocument(), cancelShipment() (+21 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.12
-Nodes (43): generateShipmentNumber(), padSequence(), appendStatusHistory(), buildPagination(), buildShipmentCoordinatePair(), buildShipmentFilters(), buildShipmentPersistenceData(), calculateShipmentMetrics() (+35 more)
+Cohesion: 0.11
+Nodes (46): generateShipmentNumber(), padSequence(), appendStatusHistory(), buildPagination(), buildShipmentCoordinatePair(), buildShipmentFilters(), buildShipmentPersistenceData(), buildShipmentRouteDetails() (+38 more)
 
 ### Community 4 - "Community 4"
-Cohesion: 0.07
-Nodes (25): ApiResponse, authMiddleware(), buildAuthPayload(), createTokenSet(), forgotPassword(), login(), refresh(), resetPassword() (+17 more)
-
-### Community 5 - "Community 5"
 Cohesion: 0.09
 Nodes (26): createAuditLog(), assignVehicleToDriver(), returnAssignedVehicle(), assertCapacityWithinTypeRange(), assertUniqueVehicleFields(), assertUniqueVehicleTypeName(), assignVehicle(), buildPagination() (+18 more)
+
+### Community 5 - "Community 5"
+Cohesion: 0.14
+Nodes (31): activateCustomerUserIfEligible(), assertCustomerUserAvailability(), buildAuthPayload(), buildCustomerSummary(), buildCustomerUserProfile(), buildOtpResponse(), createCustomerCode(), createOtpRecord() (+23 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.14
 Nodes (25): createCustomerDocument(), updateCustomerDocument(), assertDocumentNameRules(), assertFutureOrTodayDate(), assertUniqueDocumentType(), normalizeOptionalText(), assertUniqueDriverFields(), buildDriverFilters() (+17 more)
 
 ### Community 7 - "Community 7"
-Cohesion: 0.17
-Nodes (26): activateCustomerUserIfEligible(), assertCustomerUserAvailability(), buildAuthPayload(), buildCustomerSummary(), buildCustomerUserProfile(), buildOtpResponse(), createCustomerCode(), createOtpRecord() (+18 more)
+Cohesion: 0.08
+Nodes (20): ApiResponse, authMiddleware(), buildAuthPayload(), createTokenSet(), forgotPassword(), login(), refresh(), resetPassword() (+12 more)
 
 ### Community 8 - "Community 8"
-Cohesion: 0.15
-Nodes (25): createPricingRule(), deletePricingRule(), estimateFare(), getPricingRuleById(), listPricingRules(), updatePricingRule(), buildFareBreakdown(), buildRuleFilters() (+17 more)
+Cohesion: 0.13
+Nodes (24): getCustomerAddressAttributes(), getCustomerAddressSchema(), loadCustomerAddressSchema(), assertUniqueCustomerFields(), buildCustomerAddressPayload(), buildCustomerFilters(), buildFormattedAddress(), buildPagination() (+16 more)
 
 ### Community 9 - "Community 9"
-Cohesion: 0.15
-Nodes (19): assertUniqueCustomerFields(), buildCustomerFilters(), buildPagination(), createCustomer(), createCustomerAddress(), createCustomerNote(), deleteCustomerDocument(), generateCustomerCode() (+11 more)
+Cohesion: 0.14
+Nodes (28): createPricingRule(), deletePricingRule(), estimateFare(), getPricingRuleById(), listPricingRules(), updatePricingRule(), buildFareBreakdown(), buildRuleFilters() (+20 more)
 
 ### Community 10 - "Community 10"
-Cohesion: 0.14
-Nodes (9): CustomerDocuments(), getAvailableDocumentTypes(), getTodayDate(), DriverDetails(), DriverDocuments(), getFileUrl(), isImageFile(), isImageMimeType() (+1 more)
+Cohesion: 0.17
+Nodes (17): calculateDistance(), calculateEstimatedEta(), roundToWhole(), buildLineStringGeometry(), buildRouteResult(), calculateHaversineDistanceKm(), calculateRoute(), fetchOpenRouteServiceRoute() (+9 more)
 
 ### Community 11 - "Community 11"
-Cohesion: 0.12
-Nodes (8): CustomerEntryRoute(), CustomerPublicRoute(), PublicRoute(), useCustomerAuth(), CustomerLogin(), CustomerPortalLayout(), CustomerProfile(), CustomerProtectedRoute()
+Cohesion: 0.2
+Nodes (15): trackShipment(), mapAddressSummary(), mapAssignment(), mapAttachment(), mapCustomerSummary(), mapCustomerUserSummary(), mapFareEstimation(), mapShipmentBase() (+7 more)
 
 ### Community 12 - "Community 12"
-Cohesion: 0.13
-Nodes (4): cleanParams(), deleteShipmentAttachment(), deleteShipmentPackage(), getShipments()
+Cohesion: 0.24
+Nodes (15): buildFormattedAddress(), extractCity(), getPlaceDetails(), mapCustomerAddressToLocation(), mapOpenStreetMapItem(), mergeLocationResults(), normalizeCoordinate(), normalizeLocationSnapshot() (+7 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.23
-Nodes (13): trackShipment(), mapAddressSummary(), mapAssignment(), mapAttachment(), mapCustomerSummary(), mapCustomerUserSummary(), mapShipmentBase(), mapStatusHistory() (+5 more)
+Cohesion: 0.12
+Nodes (8): CustomerEntryRoute(), CustomerPublicRoute(), PublicRoute(), useCustomerAuth(), CustomerLogin(), CustomerPortalLayout(), CustomerProfile(), CustomerProtectedRoute()
 
 ### Community 14 - "Community 14"
 Cohesion: 0.2
@@ -234,47 +246,47 @@ Cohesion: 0.33
 Nodes (5): createUser(), getProfile(), getUserWithRoles(), updateProfile(), updateUser()
 
 ### Community 16 - "Community 16"
-Cohesion: 0.25
-Nodes (3): up(), up(), seedDefaultAccessControl()
+Cohesion: 0.33
+Nodes (5): formatCurrency(), formatDistanceLabel(), formatDurationLabel(), formatEtaLabel(), ShipmentForm()
 
 ### Community 17 - "Community 17"
-Cohesion: 0.39
-Nodes (6): calculateDistance(), haversineDistanceProvider(), normalizeCoordinate(), resolveProvider(), roundToTwo(), toRadians()
+Cohesion: 0.25
+Nodes (3): up(), up(), seedDefaultAccessControl()
 
 ### Community 18 - "Community 18"
 Cohesion: 0.29
 Nodes (3): cleanParams(), deletePricingRule(), getPricingRules()
 
 ### Community 19 - "Community 19"
-Cohesion: 0.4
+Cohesion: 0.33
 Nodes (0): 
 
 ### Community 20 - "Community 20"
-Cohesion: 0.5
-Nodes (0): 
+Cohesion: 0.47
+Nodes (2): LocalStorageProvider, sanitizeBaseName()
 
 ### Community 21 - "Community 21"
-Cohesion: 0.5
+Cohesion: 0.33
 Nodes (0): 
 
 ### Community 22 - "Community 22"
-Cohesion: 0.67
+Cohesion: 0.4
 Nodes (0): 
 
 ### Community 23 - "Community 23"
-Cohesion: 0.67
-Nodes (0): 
+Cohesion: 0.6
+Nodes (3): cleanParams(), getLocationPlaceDetails(), searchLocations()
 
 ### Community 24 - "Community 24"
-Cohesion: 0.67
+Cohesion: 0.4
 Nodes (0): 
 
 ### Community 25 - "Community 25"
-Cohesion: 0.67
+Cohesion: 0.5
 Nodes (0): 
 
 ### Community 26 - "Community 26"
-Cohesion: 0.67
+Cohesion: 0.5
 Nodes (0): 
 
 ### Community 27 - "Community 27"
@@ -379,7 +391,7 @@ Nodes (0):
 
 ### Community 52 - "Community 52"
 Cohesion: 0.67
-Nodes (1): AppError
+Nodes (0): 
 
 ### Community 53 - "Community 53"
 Cohesion: 0.67
@@ -398,43 +410,43 @@ Cohesion: 0.67
 Nodes (0): 
 
 ### Community 57 - "Community 57"
-Cohesion: 1.0
-Nodes (2): AdminLayout(), getBreadcrumb()
+Cohesion: 0.67
+Nodes (0): 
 
 ### Community 58 - "Community 58"
 Cohesion: 0.67
 Nodes (0): 
 
 ### Community 59 - "Community 59"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 60 - "Community 60"
-Cohesion: 1.0
-Nodes (0): 
+Cohesion: 0.67
+Nodes (1): AppError
 
 ### Community 61 - "Community 61"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 62 - "Community 62"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 63 - "Community 63"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 64 - "Community 64"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 65 - "Community 65"
 Cohesion: 1.0
-Nodes (0): 
+Nodes (2): AdminLayout(), getBreadcrumb()
 
 ### Community 66 - "Community 66"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 67 - "Community 67"
@@ -697,161 +709,219 @@ Nodes (0):
 Cohesion: 1.0
 Nodes (0): 
 
+### Community 132 - "Community 132"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 133 - "Community 133"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 134 - "Community 134"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 135 - "Community 135"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 136 - "Community 136"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 137 - "Community 137"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 138 - "Community 138"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 139 - "Community 139"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 140 - "Community 140"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 141 - "Community 141"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 142 - "Community 142"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 143 - "Community 143"
+Cohesion: 1.0
+Nodes (0): 
+
 ## Knowledge Gaps
-- **Thin community `Community 59`** (2 nodes): `sequelizeOptions.js`, `buildSequelizeOptions()`
+- **Thin community `Community 67`** (2 nodes): `sequelizeOptions.js`, `buildSequelizeOptions()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 60`** (2 nodes): `permissionMiddleware.js`, `permissionMiddleware()`
+- **Thin community `Community 68`** (2 nodes): `permissionMiddleware.js`, `permissionMiddleware()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 61`** (2 nodes): `rateLimiter.js`, `authLimiter()`
+- **Thin community `Community 69`** (2 nodes): `rateLimiter.js`, `authLimiter()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 62`** (2 nodes): `asyncHandler()`, `asyncHandler.js`
+- **Thin community `Community 70`** (2 nodes): `asyncHandler()`, `asyncHandler.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 63`** (2 nodes): `pricingValidator.js`, `uuidParam()`
+- **Thin community `Community 71`** (2 nodes): `pricingValidator.js`, `uuidParam()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 64`** (2 nodes): `userValidator.js`, `nameRule()`
+- **Thin community `Community 72`** (2 nodes): `userValidator.js`, `nameRule()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 65`** (2 nodes): `ActionIcon()`, `ActionIcon.jsx`
+- **Thin community `Community 73`** (2 nodes): `ActionIcon()`, `ActionIcon.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 66`** (2 nodes): `Button()`, `Button.jsx`
+- **Thin community `Community 74`** (2 nodes): `Button()`, `Button.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 67`** (2 nodes): `Header.jsx`, `Header()`
+- **Thin community `Community 75`** (2 nodes): `Header.jsx`, `Header()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 68`** (2 nodes): `Input.jsx`, `Input()`
+- **Thin community `Community 76`** (2 nodes): `Input.jsx`, `Input()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 69`** (2 nodes): `Loader.jsx`, `Loader()`
+- **Thin community `Community 77`** (2 nodes): `Loader.jsx`, `Loader()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 70`** (2 nodes): `VehicleDetails.jsx`, `VehicleDetails()`
+- **Thin community `Community 78`** (2 nodes): `ShipmentBookingMap.jsx`, `ShipmentBookingMap()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 71`** (1 nodes): `config.js`
+- **Thin community `Community 79`** (2 nodes): `ShipmentRoutePreview.jsx`, `ShipmentRoutePreview()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 72`** (1 nodes): `app.js`
+- **Thin community `Community 80`** (2 nodes): `VehicleDetails.jsx`, `VehicleDetails()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 73`** (1 nodes): `database.js`
+- **Thin community `Community 81`** (1 nodes): `config.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 74`** (1 nodes): `customerAuthConstants.js`
+- **Thin community `Community 82`** (1 nodes): `app.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 75`** (1 nodes): `customerConstants.js`
+- **Thin community `Community 83`** (1 nodes): `database.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 76`** (1 nodes): `driverConstants.js`
+- **Thin community `Community 84`** (1 nodes): `customerAuthConstants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 77`** (1 nodes): `pricingConstants.js`
+- **Thin community `Community 85`** (1 nodes): `customerConstants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 78`** (1 nodes): `shipmentConstants.js`
+- **Thin community `Community 86`** (1 nodes): `driverConstants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 79`** (1 nodes): `vehicleConstants.js`
+- **Thin community `Community 87`** (1 nodes): `pricingConstants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 80`** (1 nodes): `AuditLog.js`
+- **Thin community `Community 88`** (1 nodes): `shipmentConstants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 81`** (1 nodes): `Customer.js`
+- **Thin community `Community 89`** (1 nodes): `vehicleConstants.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 82`** (1 nodes): `CustomerAddress.js`
+- **Thin community `Community 90`** (1 nodes): `AuditLog.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 83`** (1 nodes): `CustomerDocument.js`
+- **Thin community `Community 91`** (1 nodes): `Customer.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 84`** (1 nodes): `CustomerNote.js`
+- **Thin community `Community 92`** (1 nodes): `CustomerAddress.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 85`** (1 nodes): `CustomerOtp.js`
+- **Thin community `Community 93`** (1 nodes): `CustomerDocument.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 86`** (1 nodes): `CustomerUser.js`
+- **Thin community `Community 94`** (1 nodes): `CustomerNote.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 87`** (1 nodes): `Driver.js`
+- **Thin community `Community 95`** (1 nodes): `CustomerOtp.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 88`** (1 nodes): `DriverDocument.js`
+- **Thin community `Community 96`** (1 nodes): `CustomerUser.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 89`** (1 nodes): `DriverLocation.js`
+- **Thin community `Community 97`** (1 nodes): `Driver.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 90`** (1 nodes): `DriverVehicleAssignment.js`
+- **Thin community `Community 98`** (1 nodes): `DriverDocument.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 91`** (1 nodes): `FareEstimation.js`
+- **Thin community `Community 99`** (1 nodes): `DriverLocation.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 92`** (1 nodes): `index.js`
+- **Thin community `Community 100`** (1 nodes): `DriverVehicleAssignment.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 93`** (1 nodes): `Permission.js`
+- **Thin community `Community 101`** (1 nodes): `FareEstimation.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 94`** (1 nodes): `PricingRule.js`
+- **Thin community `Community 102`** (1 nodes): `index.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 95`** (1 nodes): `Role.js`
+- **Thin community `Community 103`** (1 nodes): `Permission.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 96`** (1 nodes): `RolePermission.js`
+- **Thin community `Community 104`** (1 nodes): `PricingRule.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 97`** (1 nodes): `Shipment.js`
+- **Thin community `Community 105`** (1 nodes): `Role.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 98`** (1 nodes): `ShipmentAssignment.js`
+- **Thin community `Community 106`** (1 nodes): `RolePermission.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 99`** (1 nodes): `ShipmentAttachment.js`
+- **Thin community `Community 107`** (1 nodes): `Shipment.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 100`** (1 nodes): `ShipmentPackage.js`
+- **Thin community `Community 108`** (1 nodes): `ShipmentAssignment.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 101`** (1 nodes): `ShipmentStatusHistory.js`
+- **Thin community `Community 109`** (1 nodes): `ShipmentAttachment.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 102`** (1 nodes): `ShipmentTrackingEvent.js`
+- **Thin community `Community 110`** (1 nodes): `ShipmentPackage.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 103`** (1 nodes): `User.js`
+- **Thin community `Community 111`** (1 nodes): `ShipmentStatusHistory.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 104`** (1 nodes): `UserRole.js`
+- **Thin community `Community 112`** (1 nodes): `ShipmentTrackingEvent.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 105`** (1 nodes): `Vehicle.js`
+- **Thin community `Community 113`** (1 nodes): `User.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 106`** (1 nodes): `VehicleAssignment.js`
+- **Thin community `Community 114`** (1 nodes): `UserRole.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 107`** (1 nodes): `VehicleDocument.js`
+- **Thin community `Community 115`** (1 nodes): `Vehicle.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 108`** (1 nodes): `VehicleType.js`
+- **Thin community `Community 116`** (1 nodes): `VehicleAssignment.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 109`** (1 nodes): `attachmentRoutes.js`
+- **Thin community `Community 117`** (1 nodes): `VehicleDocument.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 110`** (1 nodes): `authRoutes.js`
+- **Thin community `Community 118`** (1 nodes): `VehicleType.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 111`** (1 nodes): `customerAddressRoutes.js`
+- **Thin community `Community 119`** (1 nodes): `attachmentRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 112`** (1 nodes): `customerAuthRoutes.js`
+- **Thin community `Community 120`** (1 nodes): `authRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 113`** (1 nodes): `customerDocumentRoutes.js`
+- **Thin community `Community 121`** (1 nodes): `customerAddressRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 114`** (1 nodes): `customerNoteRoutes.js`
+- **Thin community `Community 122`** (1 nodes): `customerAuthRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 115`** (1 nodes): `customerPricingRoutes.js`
+- **Thin community `Community 123`** (1 nodes): `customerDocumentRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 116`** (1 nodes): `customerProfileRoutes.js`
+- **Thin community `Community 124`** (1 nodes): `customerNoteRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 117`** (1 nodes): `customerRoutes.js`
+- **Thin community `Community 125`** (1 nodes): `customerPricingRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 118`** (1 nodes): `customerShipmentRoutes.js`
+- **Thin community `Community 126`** (1 nodes): `customerProfileRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 119`** (1 nodes): `documentRoutes.js`
+- **Thin community `Community 127`** (1 nodes): `customerRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 120`** (1 nodes): `driverRoutes.js`
+- **Thin community `Community 128`** (1 nodes): `customerShipmentRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 121`** (1 nodes): `packageRoutes.js`
+- **Thin community `Community 129`** (1 nodes): `documentRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 122`** (1 nodes): `pricingRoutes.js`
+- **Thin community `Community 130`** (1 nodes): `driverRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 123`** (1 nodes): `shipmentRoutes.js`
+- **Thin community `Community 131`** (1 nodes): `locationRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 124`** (1 nodes): `userRoutes.js`
+- **Thin community `Community 132`** (1 nodes): `packageRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 125`** (1 nodes): `vehicleDocumentRoutes.js`
+- **Thin community `Community 133`** (1 nodes): `pricingRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 126`** (1 nodes): `vehicleRoutes.js`
+- **Thin community `Community 134`** (1 nodes): `shipmentRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 127`** (1 nodes): `vehicleTypeRoutes.js`
+- **Thin community `Community 135`** (1 nodes): `userRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 128`** (1 nodes): `authValidator.js`
+- **Thin community `Community 136`** (1 nodes): `vehicleDocumentRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 129`** (1 nodes): `customerAuthValidator.js`
+- **Thin community `Community 137`** (1 nodes): `vehicleRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 130`** (1 nodes): `vite.config.js`
+- **Thin community `Community 138`** (1 nodes): `vehicleTypeRoutes.js`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 131`** (1 nodes): `main.jsx`
+- **Thin community `Community 139`** (1 nodes): `authValidator.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 140`** (1 nodes): `customerAuthValidator.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 141`** (1 nodes): `locationValidator.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 142`** (1 nodes): `vite.config.js`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 143`** (1 nodes): `main.jsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `deleteFile()` connect `Community 6` to `Community 9`, `Community 2`, `Community 3`, `Community 5`?**
-  _High betweenness centrality (0.166) - this node is a cross-community bridge._
-- **Why does `createShipmentAttachment()` connect `Community 3` to `Community 6`?**
-  _High betweenness centrality (0.093) - this node is a cross-community bridge._
+- **Why does `saveCustomerAddress()` connect `Community 12` to `Community 0`, `Community 8`?**
+  _High betweenness centrality (0.134) - this node is a cross-community bridge._
+- **Why does `saveAddress()` connect `Community 0` to `Community 12`?**
+  _High betweenness centrality (0.133) - this node is a cross-community bridge._
+- **Why does `deleteFile()` connect `Community 6` to `Community 8`, `Community 2`, `Community 3`, `Community 4`?**
+  _High betweenness centrality (0.129) - this node is a cross-community bridge._
 - **Are the 21 inferred relationships involving `getFormValidationProps()` (e.g. with `Login()` and `CustomerLogin()`) actually correct?**
   _`getFormValidationProps()` has 21 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 19 inferred relationships involving `useAuth()` (e.g. with `PublicRoute()` and `Sidebar()`) actually correct?**
@@ -859,6 +929,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 15 inferred relationships involving `deleteFile()` (e.g. with `createCustomerDocument()` and `updateCustomerDocument()`) actually correct?**
   _`deleteFile()` has 15 INFERRED edges - model-reasoned connections that need verification._
 - **Should `Community 0` be split into smaller, more focused modules?**
-  _Cohesion score 0.03 - nodes in this community are weakly interconnected._
-- **Should `Community 1` be split into smaller, more focused modules?**
   _Cohesion score 0.03 - nodes in this community are weakly interconnected._

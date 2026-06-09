@@ -95,56 +95,89 @@ const packageRule = (path) => [
 const shipmentIdParamValidator = [uuidParam('id', 'Shipment ID')];
 const shipmentPackageIdParamValidator = [uuidParam('id', 'Shipment package ID')];
 const shipmentAttachmentIdParamValidator = [uuidParam('id', 'Shipment attachment ID')];
-const coordinateRules = [
-  body('pickup_address_snapshot')
+const locationRules = (prefix, label) => [
+  body(`${prefix}_address_id`)
+    .optional()
+    .isUUID()
+    .withMessage(`${label} saved address must be a valid UUID.`),
+  body(`${prefix}_address`)
     .optional()
     .trim()
     .notEmpty()
-    .withMessage('Pickup address snapshot cannot be empty.')
+    .withMessage(`${label} address cannot be empty.`)
     .isLength({ max: 5000 })
-    .withMessage('Pickup address snapshot must be at most 5000 characters.'),
-  body('delivery_address_snapshot')
+    .withMessage(`${label} address must be at most 5000 characters.`),
+  body(`${prefix}_address_snapshot`)
     .optional()
     .trim()
     .notEmpty()
-    .withMessage('Delivery address snapshot cannot be empty.')
+    .withMessage(`${label} address snapshot cannot be empty.`)
     .isLength({ max: 5000 })
-    .withMessage('Delivery address snapshot must be at most 5000 characters.'),
-  body('pickup_latitude')
+    .withMessage(`${label} address snapshot must be at most 5000 characters.`),
+  body(`${prefix}_latitude`)
     .optional({ values: 'falsy' })
     .isFloat({ min: -90, max: 90 })
-    .withMessage('Pickup latitude must be between -90 and 90.'),
-  body('pickup_longitude')
+    .withMessage(`${label} latitude must be between -90 and 90.`),
+  body(`${prefix}_longitude`)
     .optional({ values: 'falsy' })
     .isFloat({ min: -180, max: 180 })
-    .withMessage('Pickup longitude must be between -180 and 180.'),
-  body('delivery_latitude')
-    .optional({ values: 'falsy' })
-    .isFloat({ min: -90, max: 90 })
-    .withMessage('Delivery latitude must be between -90 and 90.'),
-  body('delivery_longitude')
-    .optional({ values: 'falsy' })
-    .isFloat({ min: -180, max: 180 })
-    .withMessage('Delivery longitude must be between -180 and 180.'),
-  body('pickup_place_id')
+    .withMessage(`${label} longitude must be between -180 and 180.`),
+  body(`${prefix}_place_id`)
     .optional()
     .trim()
     .isLength({ max: 255 })
-    .withMessage('Pickup place ID must be at most 255 characters.'),
-  body('delivery_place_id')
+    .withMessage(`${label} place ID must be at most 255 characters.`),
+  body(`${prefix}_city`)
     .optional()
     .trim()
-    .isLength({ max: 255 })
-    .withMessage('Delivery place ID must be at most 255 characters.')
+    .isLength({ max: 100 })
+    .withMessage(`${label} city must be at most 100 characters.`),
+  body(`${prefix}_state`)
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage(`${label} state must be at most 100 characters.`),
+  body(`${prefix}_country`)
+    .optional()
+    .trim()
+    .isLength({ max: 100 })
+    .withMessage(`${label} country must be at most 100 characters.`),
+  body(`${prefix}_pincode`)
+    .optional()
+    .trim()
+    .isLength({ max: 20 })
+    .withMessage(`${label} pincode must be at most 20 characters.`)
 ];
+
+const locationSelectionRule = (required) =>
+  body().custom((value) => {
+    const hasPickupSelection = Boolean(value.pickup_address_id || value.pickup_address);
+    const hasDeliverySelection = Boolean(value.delivery_address_id || value.delivery_address);
+
+    if (required && !hasPickupSelection) {
+      throw new Error('Pickup location is required.');
+    }
+
+    if (required && !hasDeliverySelection) {
+      throw new Error('Delivery location is required.');
+    }
+
+    if (
+      value.pickup_address_id &&
+      value.delivery_address_id &&
+      value.pickup_address_id === value.delivery_address_id
+    ) {
+      throw new Error('Pickup and delivery saved addresses must be different.');
+    }
+
+    return true;
+  });
 
 const baseShipmentValidators = [
   body('customer_id')
     .optional()
     .isUUID()
     .withMessage('Customer must be a valid UUID.'),
-  body('pickup_address_id').notEmpty().withMessage('Pickup address is required.').isUUID(),
-  body('delivery_address_id').notEmpty().withMessage('Delivery address is required.').isUUID(),
   body('vehicle_type_id').notEmpty().withMessage('Vehicle type is required.').isUUID(),
   body('shipment_type')
     .notEmpty()
@@ -179,18 +212,47 @@ const baseShipmentValidators = [
 
 const createShipmentValidator = [
   ...baseShipmentValidators,
-  ...coordinateRules,
+  ...locationRules('pickup', 'Pickup'),
+  ...locationRules('delivery', 'Delivery'),
+  locationSelectionRule(true),
   ...packageRule('packages.*')
+];
+
+const previewShipmentRouteValidator = [
+  body('pickup_coordinates.latitude')
+    .notEmpty()
+    .withMessage('Pickup latitude is required.')
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Pickup latitude must be between -90 and 90.'),
+  body('pickup_coordinates.longitude')
+    .notEmpty()
+    .withMessage('Pickup longitude is required.')
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Pickup longitude must be between -180 and 180.'),
+  body('delivery_coordinates.latitude')
+    .notEmpty()
+    .withMessage('Delivery latitude is required.')
+    .isFloat({ min: -90, max: 90 })
+    .withMessage('Delivery latitude must be between -90 and 90.'),
+  body('delivery_coordinates.longitude')
+    .notEmpty()
+    .withMessage('Delivery longitude is required.')
+    .isFloat({ min: -180, max: 180 })
+    .withMessage('Delivery longitude must be between -180 and 180.'),
+  body('departure_at')
+    .optional({ values: 'falsy' })
+    .isISO8601()
+    .withMessage('Departure time must be a valid date.'),
+  body('vehicle_type_name')
+    .optional()
+    .trim()
+    .isLength({ min: 1, max: 120 })
+    .withMessage('Vehicle type name must be between 1 and 120 characters.')
 ];
 
 const updateShipmentValidator = [
   ...shipmentIdParamValidator,
   body('customer_id').optional().isUUID().withMessage('Customer must be a valid UUID.'),
-  body('pickup_address_id').optional().isUUID().withMessage('Pickup address must be a valid UUID.'),
-  body('delivery_address_id')
-    .optional()
-    .isUUID()
-    .withMessage('Delivery address must be a valid UUID.'),
   body('vehicle_type_id').optional().isUUID().withMessage('Vehicle type must be a valid UUID.'),
   body('shipment_type')
     .optional()
@@ -221,7 +283,9 @@ const updateShipmentValidator = [
     .optional()
     .isUUID()
     .withMessage('Package ID must be a valid UUID.'),
-  ...coordinateRules,
+  ...locationRules('pickup', 'Pickup'),
+  ...locationRules('delivery', 'Delivery'),
+  locationSelectionRule(false),
   ...packageRule('packages.*')
 ];
 
@@ -349,6 +413,7 @@ module.exports = {
   shipmentIdParamValidator,
   shipmentPackageIdParamValidator,
   shipmentAttachmentIdParamValidator,
+  previewShipmentRouteValidator,
   createShipmentValidator,
   updateShipmentValidator,
   listShipmentsValidator,

@@ -25,19 +25,59 @@ module.exports = (sequelize) => {
       },
       pickup_address_id: {
         type: DataTypes.UUID,
+        allowNull: true
+      },
+      pickup_address: {
+        type: DataTypes.TEXT,
         allowNull: false
       },
       pickup_address_snapshot: {
         type: DataTypes.TEXT,
         allowNull: false
       },
+      pickup_city: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      },
+      pickup_state: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      },
+      pickup_country: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      },
+      pickup_pincode: {
+        type: DataTypes.STRING(20),
+        allowNull: true
+      },
       delivery_address_id: {
         type: DataTypes.UUID,
+        allowNull: true
+      },
+      delivery_address: {
+        type: DataTypes.TEXT,
         allowNull: false
       },
       delivery_address_snapshot: {
         type: DataTypes.TEXT,
         allowNull: false
+      },
+      delivery_city: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      },
+      delivery_state: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      },
+      delivery_country: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      },
+      delivery_pincode: {
+        type: DataTypes.STRING(20),
+        allowNull: true
       },
       pickup_latitude: {
         type: DataTypes.DECIMAL(10, 7),
@@ -93,6 +133,26 @@ module.exports = (sequelize) => {
       },
       estimated_distance: {
         type: DataTypes.DECIMAL(12, 2),
+        allowNull: true
+      },
+      route_distance_km: {
+        type: DataTypes.DECIMAL(12, 2),
+        allowNull: true
+      },
+      route_duration_minutes: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+      },
+      estimated_eta: {
+        type: DataTypes.DATE,
+        allowNull: true
+      },
+      route_provider: {
+        type: DataTypes.STRING(100),
+        allowNull: true
+      },
+      route_geometry: {
+        type: DataTypes.JSONB,
         allowNull: true
       },
       estimated_delivery_date: {

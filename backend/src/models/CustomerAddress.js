@@ -54,7 +54,20 @@ module.exports = (sequelize) => {
         type: DataTypes.DECIMAL(10, 7),
         allowNull: true
       },
+      place_id: {
+        type: DataTypes.STRING(255),
+        allowNull: true
+      },
+      formatted_address: {
+        type: DataTypes.TEXT,
+        allowNull: true
+      },
       is_default: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
+      },
+      is_favorite: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: false

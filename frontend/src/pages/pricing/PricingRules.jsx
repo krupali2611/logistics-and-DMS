@@ -5,7 +5,6 @@ import Loader from '../../components/Loader/Loader';
 import { useAuth } from '../../context/AuthContext';
 import {
   createPricingRule,
-  deletePricingRule,
   getPricingRules,
   updatePricingRule
 } from '../../api/pricingApi';
@@ -41,7 +40,6 @@ const PricingRules = () => {
 
   const canCreate = permissions.includes('pricing_create');
   const canUpdate = permissions.includes('pricing_update');
-  const canDelete = permissions.includes('pricing_delete');
 
   const loadData = async () => {
     setLoading(true);
@@ -50,7 +48,7 @@ const PricingRules = () => {
     try {
       const [pricingResponse, vehicleTypeResponse] = await Promise.all([
         getPricingRules(),
-        getVehicleTypes({ status: 'ACTIVE' })
+        getVehicleTypes()
       ]);
       setPricingRules(pricingResponse);
       setVehicleTypes(vehicleTypeResponse);
@@ -112,17 +110,21 @@ const PricingRules = () => {
     });
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm('Delete this pricing rule?')) {
+  const handleToggleStatus = async (pricingRule) => {
+    const nextStatus = pricingRule.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
+
+    if (!window.confirm(`${nextStatus === 'ACTIVE' ? 'Activate' : 'Deactivate'} this pricing rule?`)) {
       return;
     }
 
     setSaving(true);
     try {
-      await deletePricingRule(id);
+      await updatePricingRule(pricingRule.id, {
+        status: nextStatus
+      });
       await loadData();
     } catch (requestError) {
-      setError(requestError.response?.data?.message || 'Unable to delete pricing rule.');
+      setError(requestError.response?.data?.message || 'Unable to update pricing rule status.');
     } finally {
       setSaving(false);
     }
@@ -286,15 +288,15 @@ const PricingRules = () => {
                             <ActionIcon name="edit" />
                           </button>
                         ) : null}
-                        {canDelete ? (
+                        {canUpdate ? (
                           <button
                             type="button"
                             className={styles.actionIconDanger}
-                            title="Delete pricing rule"
-                            aria-label="Delete pricing rule"
-                            onClick={() => handleDelete(pricingRule.id)}
+                            title={pricingRule.status === 'ACTIVE' ? 'Deactivate pricing rule' : 'Activate pricing rule'}
+                            aria-label={pricingRule.status === 'ACTIVE' ? 'Deactivate pricing rule' : 'Activate pricing rule'}
+                            onClick={() => handleToggleStatus(pricingRule)}
                           >
-                            <ActionIcon name="delete" />
+                            <ActionIcon name={pricingRule.status === 'ACTIVE' ? 'deactivate' : 'activate'} />
                           </button>
                         ) : null}
                       </div>

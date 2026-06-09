@@ -247,7 +247,18 @@ const createCustomerAddressValidator = [
     .optional({ values: 'falsy' })
     .isFloat({ min: -180, max: 180 })
     .withMessage('Longitude must be a valid coordinate.'),
-  body('is_default').optional().isBoolean().withMessage('is_default must be true or false.')
+  body('place_id')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('place_id must be at most 255 characters.'),
+  body('formatted_address')
+    .optional()
+    .trim()
+    .isLength({ max: 5000 })
+    .withMessage('formatted_address must be at most 5000 characters.'),
+  body('is_default').optional().isBoolean().withMessage('is_default must be true or false.'),
+  body('is_favorite').optional().isBoolean().withMessage('is_favorite must be true or false.')
 ];
 
 const updateCustomerAddressValidator = [
@@ -291,7 +302,18 @@ const updateCustomerAddressValidator = [
     .optional({ values: 'falsy' })
     .isFloat({ min: -180, max: 180 })
     .withMessage('Longitude must be a valid coordinate.'),
-  body('is_default').optional().isBoolean().withMessage('is_default must be true or false.')
+  body('place_id')
+    .optional()
+    .trim()
+    .isLength({ max: 255 })
+    .withMessage('place_id must be at most 255 characters.'),
+  body('formatted_address')
+    .optional()
+    .trim()
+    .isLength({ max: 5000 })
+    .withMessage('formatted_address must be at most 5000 characters.'),
+  body('is_default').optional().isBoolean().withMessage('is_default must be true or false.'),
+  body('is_favorite').optional().isBoolean().withMessage('is_favorite must be true or false.')
 ];
 
 const createCustomerDocumentValidator = [

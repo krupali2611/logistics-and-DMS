@@ -10,8 +10,6 @@ import {
 import styles from '../../styles/Shipment.module.css';
 
 const CANCELLABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT', 'ASSIGNED'];
-const EDITABLE_SHIPMENT_STATUSES = ['DRAFT', 'PENDING_ASSIGNMENT'];
-
 const initialFilters = {
   search: '',
   status: '',
@@ -33,7 +31,6 @@ const ShipmentList = () => {
   const hasMountedFilters = useRef(false);
 
   const canCreate = permissions.includes('shipment_create');
-  const canUpdate = permissions.includes('shipment_update');
   const canCancel = permissions.includes('shipment_cancel');
 
   const fetchShipments = async (currentFilters = filters) => {
@@ -242,8 +239,8 @@ const ShipmentList = () => {
                   <tr key={shipment.id}>
                     <td>{shipment.shipment_number}</td>
                     <td>{shipment.customer?.company_name || 'Unknown customer'}</td>
-                    <td>{shipment.pickupAddress?.city || 'N/A'}</td>
-                    <td>{shipment.deliveryAddress?.city || 'N/A'}</td>
+                    <td>{shipment.pickup_city || shipment.pickup_location?.city || 'N/A'}</td>
+                    <td>{shipment.delivery_city || shipment.delivery_location?.city || 'N/A'}</td>
                     <td>{shipment.shipment_type}</td>
                     <td>
                       <span className={`${styles.badge} ${styles[`priority_${shipment.priority.toLowerCase()}`]}`}>
@@ -265,24 +262,6 @@ const ShipmentList = () => {
                           aria-label="View shipment"
                         >
                           <ActionIcon name="view" />
-                        </Link>
-                        {canUpdate && EDITABLE_SHIPMENT_STATUSES.includes(shipment.status) ? (
-                          <Link
-                            to={`/shipments/${shipment.id}/edit`}
-                            className={styles.actionIconLink}
-                            title="Edit shipment"
-                            aria-label="Edit shipment"
-                          >
-                            <ActionIcon name="edit" />
-                          </Link>
-                        ) : null}
-                        <Link
-                          to={`/shipments/${shipment.id}/timeline`}
-                          className={styles.actionIconLink}
-                          title="View timeline"
-                          aria-label="View timeline"
-                        >
-                          <ActionIcon name="history" />
                         </Link>
                         <Link
                           to={`/shipments/${shipment.id}/attachments`}

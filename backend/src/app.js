@@ -23,6 +23,7 @@ const customerShipmentRoutes = require('./routes/customerShipmentRoutes');
 const customerPricingRoutes = require('./routes/customerPricingRoutes');
 const shipmentRoutes = require('./routes/shipmentRoutes');
 const pricingRoutes = require('./routes/pricingRoutes');
+const locationRoutes = require('./routes/locationRoutes');
 const packageRoutes = require('./routes/packageRoutes');
 const attachmentRoutes = require('./routes/attachmentRoutes');
 const errorHandler = require('./middleware/errorHandler');
@@ -70,6 +71,7 @@ app.use('/api/customer/shipments', customerShipmentRoutes);
 app.use('/api/customer/pricing', customerPricingRoutes);
 app.use('/api/shipments', shipmentRoutes);
 app.use('/api/pricing', pricingRoutes);
+app.use('/api/locations', locationRoutes);
 app.use('/api/packages', packageRoutes);
 app.use('/api/attachments', attachmentRoutes);
 

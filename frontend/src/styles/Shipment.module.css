@@ -171,6 +171,10 @@
   flex-wrap: wrap;
 }
 
+.actionStack {
+  gap: 8px;
+}
+
 .filterActions {
   justify-content: flex-end;
 }
@@ -293,18 +297,25 @@
 .actionIconLink,
 .actionIconButton,
 .actionIconDanger {
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 10px;
+  border-radius: 9px;
   border: 1px solid #d8e3ef;
   background: #f7fbff;
   color: #1b5f96;
   text-decoration: none;
   cursor: pointer;
   transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.actionIconLink svg,
+.actionIconButton svg,
+.actionIconDanger svg {
+  width: 18px;
+  height: 18px;
 }
 
 .actionIconDanger {
@@ -398,6 +409,189 @@
   color: #c3472e;
 }
 
+.locationFieldShell,
+.locationSuggestionList {
+  display: grid;
+  gap: 12px;
+}
+
+.locationPlannerGrid {
+  display: grid;
+  gap: 16px;
+}
+
+.locationFieldHeader {
+  display: grid;
+  gap: 12px;
+}
+
+.locationSearchBox {
+  position: relative;
+}
+
+.locationActionRow,
+.locationChipRow,
+.mapPickerHeader,
+.locationMapActions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.locationHint {
+  color: #67829d;
+  font-size: 0.92rem;
+}
+
+.locationChip,
+.locationSuggestion {
+  border: 1px solid #d8e3ef;
+  border-radius: 14px;
+  background: #f7fbff;
+  color: #163558;
+  cursor: pointer;
+  font: inherit;
+}
+
+.locationChip {
+  padding: 8px 12px;
+}
+
+.locationSuggestionList {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 30;
+  padding: 8px;
+  border: 1px solid #d8e3ef;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 18px 34px rgba(17, 51, 82, 0.16);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.locationSuggestion {
+  padding: 12px 14px;
+  display: grid;
+  gap: 4px;
+  text-align: left;
+  width: 100%;
+}
+
+.locationSuggestion span,
+.mapPickerHeader span {
+  color: #67829d;
+}
+
+.locationPreviewCard {
+  border: 1px solid #e4edf6;
+  border-radius: 16px;
+  padding: 14px 16px;
+  background: #fbfdff;
+  display: grid;
+  gap: 6px;
+}
+
+.locationPreviewCard strong {
+  color: #183654;
+}
+
+.locationPreviewCard span {
+  color: #5f7692;
+}
+
+.locationMapActions {
+  justify-content: flex-start;
+}
+
+.mapPickerCard {
+  border: 1px solid #e4edf6;
+  border-radius: 16px;
+  padding: 14px;
+  background:
+    linear-gradient(180deg, rgba(216, 255, 244, 0.8), rgba(255, 255, 255, 0.95)),
+    #fbfdff;
+  display: grid;
+  gap: 12px;
+}
+
+.mapTargetToolbar {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.mapTargetButton {
+  border: 1px solid #cfe3dd;
+  border-radius: 12px;
+  padding: 0 14px;
+  min-height: 40px;
+  background: #f5fbf8;
+  color: #23485a;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.mapTargetButtonActive {
+  background: #1f8a76;
+  color: #ffffff;
+  border-color: #1f8a76;
+}
+
+.mapFrameShell {
+  min-height: 420px;
+  border: 1px solid #d9e2eb;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #eef5fb;
+}
+
+.mapFrame {
+  width: 100%;
+  min-height: 320px;
+  border: 0;
+  display: block;
+}
+
+.leafletMapShell {
+  position: relative;
+  min-height: 420px;
+}
+
+.leafletMapCanvas {
+  min-height: 420px;
+  width: 100%;
+}
+
+.mapOverlayHint {
+  position: absolute;
+  inset: 12px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: #67829d;
+  background: linear-gradient(135deg, rgba(247, 251, 255, 0.84), rgba(238, 248, 246, 0.84));
+  border-radius: 12px;
+  pointer-events: none;
+}
+
+.mapPlaceholder {
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  text-align: center;
+  color: #67829d;
+  background:
+    radial-gradient(circle at top left, rgba(121, 210, 197, 0.22), transparent 26%),
+    linear-gradient(135deg, #eef8f6 0%, #f7fbff 100%);
+}
+
 .textLink {
   color: #1b5f96;
 }
@@ -461,6 +655,11 @@
 
   .detailGridSingle {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .locationPlannerGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
   }
 }
 
